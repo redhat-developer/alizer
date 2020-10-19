@@ -1,0 +1,7 @@
+/home/luca/Public/github.com/other/recognizer/api/src/main/java/com.redhat.devtools.recognizer.api/LanguageRecognizer.java
+/home/luca/Public/github.com/other/recognizer/api/src/main/java/com.redhat.devtools.recognizer.api/LanguageFileItem.java
+/home/luca/Public/github.com/other/recognizer/api/src/main/java/com/redhat/devtools/recognizer/api/spi/LanguageEnricherProvider.java
+/home/luca/Public/github.com/other/recognizer/api/src/main/java/com.redhat.devtools.recognizer.api/LanguageFileHandler.java
+/home/luca/Public/github.com/other/recognizer/api/src/main/java/com/redhat/devtools/recognizer/api/spi/PythonLanguageEnricherProviderImpl.java
+/home/luca/Public/github.com/other/recognizer/api/src/main/java/com.redhat.devtools.recognizer.api/Language.java
+/home/luca/Public/github.com/other/recognizer/api/src/main/java/com/redhat/devtools/recognizer/api/spi/JavaLanguageEnricherProviderImpl.java

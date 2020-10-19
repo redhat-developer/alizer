@@ -1,0 +1,7 @@
+com/redhat/devtools/recognizer/api/spi/JavaLanguageEnricherProviderImpl.class
+com/redhat/devtools/recognizer/api/Language.class
+com/redhat/devtools/recognizer/api/spi/PythonLanguageEnricherProviderImpl.class
+com/redhat/devtools/recognizer/api/LanguageRecognizer.class
+com/redhat/devtools/recognizer/api/LanguageFileItem.class
+com/redhat/devtools/recognizer/api/spi/LanguageEnricherProvider.class
+com/redhat/devtools/recognizer/api/LanguageFileHandler.class

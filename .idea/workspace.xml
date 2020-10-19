@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="33621008-53ed-4bfe-b80b-efa4f10adc10" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1n3LRX7w0Ed0NjBBv6LsF9g7tXt" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/api/src/main/resources/META-INF" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="PsiViewer.ProjectComponent">
+    <option name="HIGHLIGHT" value="false" />
+    <option name="FILTER_WHITESPACE" value="false" />
+    <option name="SHOW_PROPERTIES" value="true" />
+    <option name="SPLIT_DIVIDER_POSITION" value="300" />
+    <option name="AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="AUTOSCROLL_FROM_SOURCE" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.redhat.devtools.recognizer" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/api/src/main/resources/META-INF" />
+      <recent name="$PROJECT_DIR$/api/src/main/resources" />
+      <recent name="$PROJECT_DIR$/api/src/test/resources/projects" />
+      <recent name="$PROJECT_DIR$/api/src/test/resources" />
+      <recent name="$PROJECT_DIR$/python-recognizer/src/main/resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.redhat.devtools.recognizer.api.spi" />
+      <recent name="recognizer" />
+      <recent name="com.redhat.devtools.recognizer.api" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/python-recognizer/src/main/resources/META-INF" />
+      <recent name="$PROJECT_DIR$/java-recognizer/src/main/resources/META-INF/services" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.MainApp">
+    <configuration name="MainApp" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.redhat.devtools.recognizer.app.MainApp" />
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.redhat.devtools.recognizer.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LanguageRecognizerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="api" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.redhat.devtools.recognizer.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.redhat.devtools.recognizer" />
+      <option name="MAIN_CLASS_NAME" value="com.redhat.devtools.recognizer.LanguageRecognizerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Unnamed" type="JarApplication" nameIsGenerated="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/target/recognizer-1.0-SNAPSHOT-jar-with-dependencies.jar" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.MainApp" />
+      <item itemvalue="JAR Application.Unnamed" />
+      <item itemvalue="JUnit.LanguageRecognizerTest" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.LanguageRecognizerTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="33621008-53ed-4bfe-b80b-efa4f10adc10" name="Default Changelist" comment="" />
+      <created>1610613819971</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1610613819971</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="555" y="215" width="800" height="684" key="#Project_Structure" timestamp="1611937681490">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state x="555" y="215" width="800" height="684" key="#Project_Structure/0.27.3840.1053@0.27.3840.1053" timestamp="1611937681490" />
+    <state x="540" y="86" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1611933237378">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state x="418" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1610614105094" />
+    <state x="540" y="86" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.3840.1053@0.27.3840.1053" timestamp="1611933237378" />
+    <state x="475" y="358" width="960" height="398" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1611926304990">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state x="475" y="358" width="960" height="398" key="#com.intellij.fileTypes.FileTypeChooser/0.27.3840.1053@0.27.3840.1053" timestamp="1611926304990" />
+    <state x="395" y="136" width="894" height="887" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1611932715947">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state x="395" y="136" width="894" height="887" key="#com.intellij.ide.macro.MacrosDialog/0.27.3840.1053@0.27.3840.1053" timestamp="1611932715947" />
+    <state x="2304" y="244" width="343" height="599" key="#com.intellij.ide.util.MemberChooser" timestamp="1612175753649">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2304" y="244" width="343" height="599" key="#com.intellij.ide.util.MemberChooser/0.27.1920.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1612175753649" />
+    <state x="768" y="265" width="374" height="584" key="#com.intellij.ide.util.MemberChooser/0.27.3840.1053@0.27.3840.1053" timestamp="1611943018617" />
+    <state x="801" y="445" width="307" height="223" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1610613979894">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="801" y="445" width="307" height="223" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1610613979894" />
+    <state x="534" y="471" width="851" height="172" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1611948651697">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state x="534" y="471" width="851" height="172" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.27.3840.1053@0.27.3840.1053" timestamp="1611948651697" />
+    <state x="703" y="412" width="513" height="302" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1611948670189">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state x="703" y="412" width="513" height="302" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.27.3840.1053@0.27.3840.1053" timestamp="1611948670189" />
+    <state x="2234" y="27" width="357" height="1043" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1612176469695">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2234" y="27" width="357" height="1043" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.27.1920.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1612176469695" />
+    <state x="628" y="53" width="643" height="1016" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.27.3840.1053@0.27.3840.1053" timestamp="1611936933479" />
+    <state x="2267" y="282" width="381" height="524" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1612175806233">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2267" y="282" width="381" height="524" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.27.1920.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1612175806233" />
+    <state x="693" y="302" width="524" height="510" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.27.3840.1053@0.27.3840.1053" timestamp="1611937835017" />
+    <state x="375" y="478" width="996" height="602" key="#xdebugger.evaluate" timestamp="1611944703948">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state x="375" y="478" width="996" height="602" key="#xdebugger.evaluate/0.27.3840.1053@0.27.3840.1053" timestamp="1611944703948" />
+    <state width="441" height="466" key="DebuggerActiveHint" timestamp="1611949074056">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state width="441" height="466" key="DebuggerActiveHint/0.27.3840.1053@0.27.3840.1053" timestamp="1611949074056" />
+    <state x="1072" y="311" width="424" height="491" key="FileChooserDialogImpl" timestamp="1611929800838">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state x="743" y="311" width="424" height="491" key="FileChooserDialogImpl/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1610614099844" />
+    <state x="1072" y="311" width="424" height="491" key="FileChooserDialogImpl/0.27.3840.1053@0.27.3840.1053" timestamp="1611929800838" />
+    <state width="1874" height="283" key="GridCell.Tab.0.bottom" timestamp="1612177204651">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1874" height="275" key="GridCell.Tab.0.bottom/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1610620377821" />
+    <state width="1874" height="283" key="GridCell.Tab.0.bottom/0.27.1920.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1612177204651" />
+    <state width="1874" height="278" key="GridCell.Tab.0.bottom/0.27.3840.1053@0.27.3840.1053" timestamp="1611949679568" />
+    <state width="1874" height="283" key="GridCell.Tab.0.center" timestamp="1612177204651">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1874" height="275" key="GridCell.Tab.0.center/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1610620377821" />
+    <state width="1874" height="283" key="GridCell.Tab.0.center/0.27.1920.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1612177204651" />
+    <state width="1874" height="278" key="GridCell.Tab.0.center/0.27.3840.1053@0.27.3840.1053" timestamp="1611949679568" />
+    <state width="1874" height="283" key="GridCell.Tab.0.left" timestamp="1612177204651">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1874" height="275" key="GridCell.Tab.0.left/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1610620377820" />
+    <state width="1874" height="283" key="GridCell.Tab.0.left/0.27.1920.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1612177204651" />
+    <state width="1874" height="278" key="GridCell.Tab.0.left/0.27.3840.1053@0.27.3840.1053" timestamp="1611949679567" />
+    <state width="1874" height="283" key="GridCell.Tab.0.right" timestamp="1612177204651">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1874" height="275" key="GridCell.Tab.0.right/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1610620377821" />
+    <state width="1874" height="283" key="GridCell.Tab.0.right/0.27.1920.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1612177204651" />
+    <state width="1874" height="278" key="GridCell.Tab.0.right/0.27.3840.1053@0.27.3840.1053" timestamp="1611949679568" />
+    <state width="1874" height="278" key="GridCell.Tab.1.bottom" timestamp="1611949679569">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state width="1874" height="278" key="GridCell.Tab.1.bottom/0.27.3840.1053@0.27.3840.1053" timestamp="1611949679569" />
+    <state width="1874" height="278" key="GridCell.Tab.1.center" timestamp="1611949679569">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state width="1874" height="278" key="GridCell.Tab.1.center/0.27.3840.1053@0.27.3840.1053" timestamp="1611949679569" />
+    <state width="1874" height="278" key="GridCell.Tab.1.left" timestamp="1611949679568">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state width="1874" height="278" key="GridCell.Tab.1.left/0.27.3840.1053@0.27.3840.1053" timestamp="1611949679568" />
+    <state width="1874" height="278" key="GridCell.Tab.1.right" timestamp="1611949679569">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state width="1874" height="278" key="GridCell.Tab.1.right/0.27.3840.1053@0.27.3840.1053" timestamp="1611949679569" />
+    <state x="2251" y="27" width="939" height="703" maximized="true" key="dock-window-1" timestamp="1611941404532">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state x="2251" y="27" width="939" height="703" maximized="true" key="dock-window-1/0.27.3840.1053@0.27.3840.1053" timestamp="1611941404532" />
+    <state x="554" y="134" width="802" height="845" key="new project wizard" timestamp="1611937073649">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state x="554" y="134" width="802" height="845" key="new project wizard/0.27.3840.1053@0.27.3840.1053" timestamp="1611937073649" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/java-recognizer/src/main/java/com/redhat/devtools/recognizer/java/JavaLanguageEnricherProviderImpl.java</url>
+          <line>39</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/api/src/main/java/com.redhat.devtools.recognizer.api/LanguageEnricher</url>
+          <line>24</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/api/src/main/java/com.redhat.devtools.recognizer.api/LanguageEnricher</url>
+          <line>26</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/redhat/devtools/recognizer/app/MainApp.java</url>
+          <line>24</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

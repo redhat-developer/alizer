@@ -1,0 +1,2 @@
+com.redhat.devtools.recognizer.api.spi.JavaLanguageEnricherProviderImpl
+com.redhat.devtools.recognizer.api.spi.PythonLanguageEnricherProviderImpl
