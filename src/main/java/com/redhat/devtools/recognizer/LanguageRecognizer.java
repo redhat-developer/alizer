@@ -31,14 +31,22 @@ public class LanguageRecognizer {
     public static void main(String[] args) {
         if (args.length == 0) return;
 
+        // get directory and extract all files
+
+        String t = analyze(args[0]);
+
+        // print language
+        System.out.println(t);
+    }
+
+    public static String analyze(String path) {
         Map<Language, Integer> languagesDetected = new HashMap<>();
         // init dictionary languages
         LanguageHandler handler = LanguageHandler.get();
 
-        // get directory and extract all files
         List<String> files = Collections.emptyList();
         try {
-            files = getFiles(Paths.get(args[0]));
+            files = getFiles(Paths.get(path));
         } catch (IOException e) {}
 
         // save all extensions extracted from files + their occurrences
@@ -71,9 +79,7 @@ public class LanguageRecognizer {
         programmingLanguagesDetected.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).forEachOrdered(e -> {
             t.updateAndGet(v1 -> v1 + e.getKey().getName() + String.format(" % .2f", e.getValue()) + "%\n");
         });
-
-        // print language
-        System.out.println(t.get());
+        return t.get();
     }
 
     private static Language getDetailedLanguage(Language language, List<String> files) {
