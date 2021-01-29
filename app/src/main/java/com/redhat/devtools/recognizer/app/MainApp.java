@@ -15,12 +15,11 @@ import com.redhat.devtools.recognizer.api.LanguageRecognizer;
 public class MainApp {
 
     public static void main(String[] args) {
-        //if (args.length == 0) return;
-
+        if (args.length == 0) return;
 
         System.out.printf("%-10s %-10s %-10s %-10s\n", "LANGUAGE", "FRAMEWORK", "TOOL", "USAGE");
 
-        LanguageRecognizer.analyze("/home/luca/Public/github.com/other/django-ex").forEach(
+        LanguageRecognizer.analyze(args[0]).forEach(
                 lang -> {
                     System.out.printf("%-10s %-10s %-10s %-10s\n",
                             lang.getName(),
