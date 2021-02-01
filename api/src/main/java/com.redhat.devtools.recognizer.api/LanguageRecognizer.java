@@ -10,13 +10,11 @@
  ******************************************************************************/
 package com.redhat.devtools.recognizer.api;
 
-import com.redhat.devtools.recognizer.api.psi.LanguageEnricherProvider;
+import com.redhat.devtools.recognizer.api.spi.LanguageEnricherProvider;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,15 +30,12 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class LanguageRecognizer {
 
-    public static List<Language> analyze(String path) {
+    public static List<Language> analyze(String path) throws IOException {
         Map<LanguageFileItem, Integer> languagesDetected = new HashMap<>();
         // init dictionary with languages file
         LanguageFileHandler handler = LanguageFileHandler.get();
 
-        List<String> files = Collections.emptyList();
-        try {
-            files = getFiles(Paths.get(path));
-        } catch (IOException e) {}
+        List<String> files = getFiles(Paths.get(path));
 
         // save all extensions extracted from files + their occurrences
         Map<String, Long> extensions = files.stream().collect(groupingBy(file -> "." + FilenameUtils.getExtension(file), counting()));

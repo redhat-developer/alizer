@@ -8,8 +8,15 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.recognizer.api.psi;
+package com.redhat.devtools.recognizer.api.spi;
+
+import com.redhat.devtools.recognizer.api.Language;
+import java.util.List;
 
 public interface LanguageEnricherProvider {
-    LanguageEnricher create();
+    LanguageEnricherProvider create();
+
+    List<String> getSupportedLanguages();
+
+    Language getEnrichedLanguage(Language language, List<String> files);
 }

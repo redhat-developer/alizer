@@ -12,6 +12,7 @@ package com.redhat.devtools.recognizer;
 
 import com.redhat.devtools.recognizer.api.Language;
 import com.redhat.devtools.recognizer.api.LanguageRecognizer;
+import java.io.IOException;
 import java.util.List;
 import org.junit.Test;
 
@@ -21,31 +22,31 @@ import static org.junit.Assert.assertTrue;
 public class LanguageRecognizerTest {
 
     @Test
-    public void testMySelf() {
+    public void testMySelf() throws IOException {
         List<Language> status = LanguageRecognizer.analyze(".");
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("JAVA")));
     }
 
     @Test
-    public void testQuarkus() {
+    public void testQuarkus() throws IOException {
         List<Language> status = LanguageRecognizer.analyze("src/test/resources/projects/quarkus");
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("JAVA")));
     }
 
     @Test
-    public void testMicronaut() {
+    public void testMicronaut() throws IOException {
         List<Language> status = LanguageRecognizer.analyze("src/test/resources/projects/micronaut");
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("JAVA")));
     }
 
     @Test
-    public void testNode() {
+    public void testNode() throws IOException {
         List<Language> status = LanguageRecognizer.analyze("src/test/resources/projects/nodejs-ex");
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("JavaScript")));
     }
 
     @Test
-    public void testDjango() {
+    public void testDjango() throws IOException {
         List<Language> status = LanguageRecognizer.analyze("src/test/resources/projects/django");
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("Python")));
     }

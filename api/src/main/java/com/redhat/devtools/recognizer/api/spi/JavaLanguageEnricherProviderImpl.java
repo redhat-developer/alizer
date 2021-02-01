@@ -8,10 +8,9 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.recognizer.java;
+package com.redhat.devtools.recognizer.api.spi;
 
 import com.redhat.devtools.recognizer.api.Language;
-import com.redhat.devtools.recognizer.api.psi.LanguageEnricher;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,7 +28,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class JavaLanguageEnricherImpl implements LanguageEnricher {
+public class JavaLanguageEnricherProviderImpl implements LanguageEnricherProvider {
+    @Override
+    public LanguageEnricherProvider create() {
+        return new JavaLanguageEnricherProviderImpl();
+    }
+
     @Override
     public List<String> getSupportedLanguages() {
         return Arrays.asList("JAVA");
