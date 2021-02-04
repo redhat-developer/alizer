@@ -20,6 +20,21 @@
         <connection>scm:git:git@github.com:redhat-developer/alizer.git</connection>
     </scm>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <nexusUrl>https://repository.jboss.org/nexus/</nexusUrl>
+                    <serverId>${jboss.releases.repo.id}</serverId>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <modules>
         <module>api</module>
         <module>app</module>
