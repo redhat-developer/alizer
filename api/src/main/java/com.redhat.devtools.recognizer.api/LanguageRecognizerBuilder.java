@@ -10,9 +10,8 @@
  ******************************************************************************/
 package com.redhat.devtools.recognizer.api;
 
-import java.io.IOException;
-import java.util.List;
-
-public interface LanguageRecognizer {
-    List<Language> analyze(String path) throws IOException;
+public class LanguageRecognizerBuilder {
+    public LanguageRecognizer build() {
+        return new LanguageRecognizerImpl(this);
+    }
 }
