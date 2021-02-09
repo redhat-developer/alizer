@@ -10,7 +10,8 @@
  ******************************************************************************/
 package com.redhat.devtools.recognizer.app;
 
-import com.redhat.devtools.recognizer.api.LanguageRecognizer;
+import com.redhat.devtools.recognizer.api.LanguageRecognizerBuilder;
+import com.redhat.devtools.recognizer.api.LanguageRecognizerImpl;
 import java.io.IOException;
 
 public class MainApp {
@@ -20,7 +21,7 @@ public class MainApp {
 
         System.out.printf("%-10s %-10s %-10s %-10s\n", "LANGUAGE", "FRAMEWORK", "TOOL", "USAGE");
 
-        LanguageRecognizer.analyze(args[0]).forEach(
+        new LanguageRecognizerBuilder().build().analyze(args[0]).forEach(
                 lang -> {
                     System.out.printf("%-10s %-10s %-10s %-10s\n",
                             lang.getName(),
