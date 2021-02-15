@@ -22,7 +22,7 @@ public class AlizerCli implements Runnable{
     @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true, description = "Help for alizer")
     boolean usageHelpRequested;
 
-    @CommandLine.Parameters(index = "0", description = "The project to analyze")
+    @CommandLine.Parameters(index = "0", description = "The project path to analyze")
     String name;
 
     @Override
