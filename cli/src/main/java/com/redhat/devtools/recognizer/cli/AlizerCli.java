@@ -33,8 +33,8 @@ public class AlizerCli implements Runnable{
                         lang -> {
                             System.out.printf("%-10s %-10s %-10s %-10s\n",
                                     lang.getName(),
-                                    (!lang.getFrameworks().isEmpty() ? lang.getFrameworks().get(0) : ""),
-                                    (!lang.getTools().isEmpty() ? lang.getTools().get(0) : ""),
+                                    String.join(", ", lang.getFrameworks()),
+                                    String.join(", ", lang.getTools()),
                                     String.format(" % .2f", lang.getUsageInPercentage()) + "%");
                         }
                 );
