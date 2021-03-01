@@ -14,14 +14,11 @@ import com.redhat.devtools.recognizer.api.DevfileType;
 import com.redhat.devtools.recognizer.api.Language;
 import com.redhat.devtools.recognizer.api.LanguageRecognizer;
 import com.redhat.devtools.recognizer.api.LanguageRecognizerBuilder;
-import com.redhat.devtools.recognizer.api.LanguageRecognizerImpl;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,12 +58,6 @@ public class LanguageRecognizerTest {
     public void testMySelf() throws IOException {
         List<Language> status = recognizer.analyze(".");
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("JAVA")));
-    }
-
-    @Test
-    public void testMySelfDevFile() throws IOException {
-        String devFile = recognizer.selectDevFileFromTypes(".", devfileTypes);
-        assertTrue(devFile.equalsIgnoreCase("devfile3"));
     }
 
     @Test
