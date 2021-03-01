@@ -12,34 +12,43 @@ package com.redhat.devtools.recognizer.api;
 
 import java.util.List;
 
-public class LanguageFileItem {
-    private String name;
-    private List<String> aliases;
-    private String type;
-    private String group;
+public class DevfileType {
 
-    public LanguageFileItem(String name, List<String> aliases, String type, String group) {
-        this.name = name;
-        this.aliases = aliases;
-        this.type = type;
-        this.group = group;
+    private String name, language;
+    private List<String> tags;
+
+    public DevfileType() {
+
     }
 
-    public String getName() {
-        return name;
+    public DevfileType(String name, String language, List<String> tags) {
+        this.name = name;
+        this.language = language;
+        this.tags = tags;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public List<String> getAliases() { return aliases; }
-
-    public String getGroup() {
-        return group;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
-    public String getType() {
-        return type;
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public List<String> getTags() {
+        return tags;
     }
 }
+

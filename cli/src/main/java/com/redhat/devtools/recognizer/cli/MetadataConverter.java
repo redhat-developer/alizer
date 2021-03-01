@@ -6,16 +6,22 @@
  * and is available at http://www.eclipse.org/legal/epl-v20.html
  *
  * Contributors:
- * Red Hat, Inc. - initial API and implementation
+ * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.recognizer.api;
+package com.redhat.devtools.recognizer.cli;
 
-import java.io.File;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.devtools.recognizer.api.DevfileType;
 import java.io.IOException;
-import java.util.List;
+import picocli.CommandLine;
 
-public interface LanguageRecognizer {
-    String selectDevFile(String srcPath, List<DevfileType> devfileTypes, List<File> devfiles) throws IOException;
-    String selectDevFileFromTypes(String srcPath, List<DevfileType> devfileTypes) throws IOException;
-    List<Language> analyze(String path) throws IOException;
+public class MetadataConverter implements CommandLine.ITypeConverter<DevfileType> {
+
+    public MetadataConverter() {}
+
+    @Override
+    public DevfileType convert(String s) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(s, DevfileType.class);
+    }
 }
