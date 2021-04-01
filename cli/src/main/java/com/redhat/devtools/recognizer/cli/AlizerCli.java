@@ -26,12 +26,6 @@ public class AlizerCli implements Runnable{
     @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true, description = "Help for alizer")
     boolean usageHelpRequested;
 
-    @CommandLine.Option(names = {"-m", "--meta"}, description = "Pass the devfile type in json format {\"name\":\"value\", \"language\":\"java\", \"tags\":[\"tag1\",\"tag2\"]}", converter = MetadataConverter.class)
-    List<DevfileType> devfileTypes;
-
-    @CommandLine.Option(names = {"-d", "--devfile"}, description = "Pass the meta devfile path")
-    List<File> devfiles;
-
     @CommandLine.Parameters(index = "0", description = "The project to analyze")
     String name;
 
@@ -39,16 +33,6 @@ public class AlizerCli implements Runnable{
     public void run() {
         if (name == null) return;
 
-        if (devfileTypes != null || devfiles != null) {
-            devfileTypes = devfileTypes == null ? Collections.emptyList() : devfileTypes;
-            devfiles = devfiles == null ? Collections.emptyList() : devfiles;
-            try {
-                String devfile = new LanguageRecognizerBuilder().build().selectDevFile(name, devfileTypes, devfiles);
-                if (devfile != null) {
-                    System.out.println(devfile);
-                }
-            } catch (IOException e) {}
-        } else {
             try {
                 new LanguageRecognizerBuilder().build().analyze(name).forEach(
                         lang -> {
@@ -61,5 +45,4 @@ public class AlizerCli implements Runnable{
                 );
             } catch (IOException e) {}
         }
-    }
 }
