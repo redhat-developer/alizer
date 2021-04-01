@@ -52,8 +52,12 @@
           <groupId>com.redhat.devtools.alizer</groupId>
           <artifactId>api</artifactId>
           <version>${project.version}</version>
-          <scope>compile</scope>
       </dependency>
+    <dependency>
+      <groupId>com.redhat.devtools.alizer</groupId>
+      <artifactId>registry-support</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

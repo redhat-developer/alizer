@@ -38,5 +38,6 @@
     <modules>
         <module>api</module>
         <module>cli</module>
+        <module>registry-support</module>
     </modules>
 </project>
