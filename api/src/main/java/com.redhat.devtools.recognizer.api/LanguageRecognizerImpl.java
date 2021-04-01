@@ -36,9 +36,9 @@ public class LanguageRecognizerImpl implements LanguageRecognizer {
     public DevfileType selectDevFileFromTypes(String srcPath, List<DevfileType> devfileTypes) throws IOException {
         List<Language> languages = analyze(srcPath);
         for (Language language: languages) {
-            Optional<DevfileType> devFile = getDevFileByLanguage(language, devfileTypes);
-            if (devFile.isPresent()) {
-                return devFile.get();
+            Optional<LanguageScore> score = devfileTypes.stream().map(devfileType -> new LanguageScore(language, devfileType)).sorted().findFirst();
+            if (score.isPresent() && score.get().getScore() > 0) {
+                return score.get().getDevfileType();
             }
         }
         return null;
@@ -96,40 +96,6 @@ public class LanguageRecognizerImpl implements LanguageRecognizer {
                 .collect(Collectors.toList());
 
     }
-
-    private Optional<DevfileType> getDevFileByLanguage(Language language, List<DevfileType> devfileTypes) {
-        List<DevfileType> devFiles;
-        List<DevfileType> devFilesByLanguage = devfileTypes
-                .stream()
-                .filter(devfile -> devfile.getLanguage().equalsIgnoreCase(language.getName()) ||
-                                        language.getAliases().stream().anyMatch(alias -> alias.equalsIgnoreCase(devfile.getLanguage())))
-                .collect(Collectors.toList());
-        if (devFilesByLanguage.isEmpty()) {
-            return Optional.empty();
-        }
-
-        List<DevfileType> devFilesByFrameworks = filterDevFilesByProperties(devFilesByLanguage, language.getFrameworks());
-        if (devFilesByFrameworks.isEmpty()) {
-            devFiles = filterDevFilesByProperties(devFilesByLanguage, language.getTools());
-            if (devFiles.isEmpty()) {
-                devFiles = devFilesByLanguage;
-            }
-        } else {
-            devFiles = filterDevFilesByProperties(devFilesByFrameworks, language.getTools());
-            if (devFiles.isEmpty()) {
-                devFiles = devFilesByFrameworks;
-            }
-        }
-        return devFiles.stream().findFirst();
-    }
-
-    private List<DevfileType> filterDevFilesByProperties(List<DevfileType> devFiles, List<String> properties) {
-        return devFiles
-                .stream()
-                .filter(devfile -> devfile.getTags().stream().anyMatch(tag -> properties.stream().anyMatch(property -> property.equalsIgnoreCase(tag))))
-                .collect(Collectors.toList());
-    }
-
 
     public static LanguageEnricherProvider getEnricherByLanguage(String language) {
         ServiceLoader<LanguageEnricherProvider> loader = ServiceLoader.load(LanguageEnricherProvider.class);

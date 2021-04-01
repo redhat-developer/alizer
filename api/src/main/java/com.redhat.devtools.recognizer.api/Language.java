@@ -18,8 +18,8 @@ public class Language {
     private String name;
     private List<String> aliases;
     private double usageInPercentage;
-    private List<String> frameworks;
-    private List<String> tools;
+    private List<String> frameworks = Collections.emptyList();
+    private List<String> tools = Collections.emptyList();
 
     public Language(String name, List<String> aliases, double usageInPercentage) {
         this(name, aliases, usageInPercentage, Collections.emptyList(), Collections.emptyList());

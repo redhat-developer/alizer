@@ -37,7 +37,6 @@
 
     <modules>
         <module>api</module>
-        <module>app</module>
         <module>cli</module>
     </modules>
 </project>

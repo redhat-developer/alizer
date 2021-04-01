@@ -18,54 +18,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-public class LanguageRecognizerTest {
+public class LanguageRecognizerTest extends AbstractRecognizerTest {
     private LanguageRecognizer recognizer;
-    private List<DevfileType> devfileTypes;
 
-    private static DevfileType createDevfileType(String name, String language, String ...tags) {
-        return new DevfileType() {
-            @Override
-            public String getName() {
-                return name;
-            }
-
-            @Override
-            public String getLanguage() {
-                return language;
-            }
-
-            @Override
-            public String getProjectType() {
-                return null;
-            }
-
-            @Override
-            public List<String> getTags() {
-                return Arrays.asList(tags);
-            }
-        };
-    }
 
     @Before
     public void setup() {
         recognizer = new LanguageRecognizerBuilder().build();
-        devfileTypes = Arrays.asList(
-                createDevfileType("java-maven", "java", "Java", "Maven"),
-                createDevfileType("java", "java"),
-                createDevfileType("java-quarkus", "java", "Java", "Quarkus"),
-                createDevfileType("java-spring", "java", "Java", "Spring"),
-                createDevfileType("java-vertx", "java", "Java", "Vert.x"),
-                createDevfileType("java-wildfly-bootable", "java", "RHEL8", "Java", "OpenJDK", "Maven", "WildFly", "Microprofile", "WildFly Bootable"),
-                createDevfileType("java-wildfly", "java", "Java", "WildFly"),
-                createDevfileType("nodejs", "nodejs", "NodeJS", "Express", "ubi8"),
-                createDevfileType("python-django", "python", "Python", "pip", "Django"),
-                createDevfileType("python", "python", "Python", "pip")
-        );
     }
 
     @Test
