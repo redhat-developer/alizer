@@ -14,43 +14,57 @@ import com.redhat.devtools.recognizer.api.DevfileType;
 import com.redhat.devtools.recognizer.api.Language;
 import com.redhat.devtools.recognizer.api.LanguageRecognizer;
 import com.redhat.devtools.recognizer.api.LanguageRecognizerBuilder;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
 public class LanguageRecognizerTest {
     private LanguageRecognizer recognizer;
     private List<DevfileType> devfileTypes;
-    private List<File> devfiles;
+
+    private static DevfileType createDevfileType(String name, String language, String ...tags) {
+        return new DevfileType() {
+            @Override
+            public String getName() {
+                return name;
+            }
+
+            @Override
+            public String getLanguage() {
+                return language;
+            }
+
+            @Override
+            public String getProjectType() {
+                return null;
+            }
+
+            @Override
+            public List<String> getTags() {
+                return Arrays.asList(tags);
+            }
+        };
+    }
 
     @Before
     public void setup() {
         recognizer = new LanguageRecognizerBuilder().build();
         devfileTypes = Arrays.asList(
-                new DevfileType("devfile1", "java", Arrays.asList("Java", "Maven")),
-                new DevfileType("devfile2", "java", Collections.emptyList()),
-                new DevfileType("devfile3", "java", Arrays.asList("Java", "Quarkus")),
-                new DevfileType("devfile4", "java", Arrays.asList("Java", "Spring")),
-                new DevfileType("devfile5", "java", Arrays.asList("Java", "Vert.x")),
-                new DevfileType("devfile6", "java", Arrays.asList("RHEL8", "Java", "OpenJDK", "Maven", "WildFly", "Microprofile", "WildFly Bootable")),
-                new DevfileType("devfile7", "java", Arrays.asList("Java", "WildFly")),
-                new DevfileType("devfile8", "nodejs", Arrays.asList("NodeJS", "Express", "ubi8")),
-                new DevfileType("devfile9", "python", Arrays.asList("Python", "pip", "Django")),
-                new DevfileType("devfile10", "python", Arrays.asList("Python", "pip"))
-        );
-        devfiles = Arrays.asList(
-                new File("src/test/resources/devfiles/quarkus.yaml"),
-                new File("src/test/resources/devfiles/java.yaml"),
-                new File("src/test/resources/devfiles/nodejs.yaml"),
-                new File("src/test/resources/devfiles/django.yaml"),
-                new File("src/test/resources/devfiles/python.yaml")
+                createDevfileType("java-maven", "java", "Java", "Maven"),
+                createDevfileType("java", "java"),
+                createDevfileType("java-quarkus", "java", "Java", "Quarkus"),
+                createDevfileType("java-spring", "java", "Java", "Spring"),
+                createDevfileType("java-vertx", "java", "Java", "Vert.x"),
+                createDevfileType("java-wildfly-bootable", "java", "RHEL8", "Java", "OpenJDK", "Maven", "WildFly", "Microprofile", "WildFly Bootable"),
+                createDevfileType("java-wildfly", "java", "Java", "WildFly"),
+                createDevfileType("nodejs", "nodejs", "NodeJS", "Express", "ubi8"),
+                createDevfileType("python-django", "python", "Python", "pip", "Django"),
+                createDevfileType("python", "python", "Python", "pip")
         );
     }
 
@@ -62,8 +76,8 @@ public class LanguageRecognizerTest {
 
     @Test
     public void testJAVAMetaDevFile() throws IOException {
-        String devFile = recognizer.selectDevFile("src/test/resources/projects/micronaut", Collections.emptyList(), devfiles);
-        assertTrue(devFile.equalsIgnoreCase("java-maven"));
+        DevfileType devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/micronaut", devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("java-maven"));
     }
 
     @Test
@@ -74,14 +88,8 @@ public class LanguageRecognizerTest {
 
     @Test
     public void testQuarkusDevFileType() throws IOException {
-        String devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/quarkus", devfileTypes);
-        assertTrue(devFile.equalsIgnoreCase("devfile3"));
-    }
-
-    @Test
-    public void testQuarkusMetaDevFile() throws IOException {
-        String devFile = recognizer.selectDevFile("src/test/resources/projects/quarkus", Collections.emptyList(), devfiles);
-        assertTrue(devFile.equalsIgnoreCase("java-quarkus"));
+        DevfileType devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/quarkus", devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("java-quarkus"));
     }
 
     @Test
@@ -92,8 +100,8 @@ public class LanguageRecognizerTest {
 
     @Test
     public void testMicronautDevFile() throws IOException {
-        String devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/micronaut", devfileTypes);
-        assertTrue(devFile.equalsIgnoreCase("devfile1"));
+        DevfileType devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/micronaut", devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("java-maven"));
     }
 
     @Test
@@ -104,15 +112,10 @@ public class LanguageRecognizerTest {
 
     @Test
     public void testNodeDevFile() throws IOException {
-        String devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/nodejs-ex", devfileTypes);
-        assertTrue(devFile.equalsIgnoreCase("devfile8"));
+        DevfileType devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/nodejs-ex", devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("nodejs"));
     }
 
-    @Test
-    public void testNodejsMetaDevFile() throws IOException {
-        String devFile = recognizer.selectDevFile("src/test/resources/projects/nodejs-ex", Collections.emptyList(), devfiles);
-        assertTrue(devFile.equalsIgnoreCase("nodejs"));
-    }
 
     @Test
     public void testDjango() throws IOException {
@@ -122,13 +125,7 @@ public class LanguageRecognizerTest {
 
     @Test
     public void testDjangoDevFile() throws IOException {
-        String devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/django", devfileTypes);
-        assertTrue(devFile.equalsIgnoreCase("devfile9"));
-    }
-
-    @Test
-    public void testDjangoMetaDevFile() throws IOException {
-        String devFile = recognizer.selectDevFile("src/test/resources/projects/django", Collections.emptyList(), devfiles);
-        assertTrue(devFile.equalsIgnoreCase("python-django"));
+        DevfileType devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/django", devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("python-django"));
     }
 }

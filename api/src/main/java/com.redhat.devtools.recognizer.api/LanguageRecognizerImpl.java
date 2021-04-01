@@ -10,16 +10,13 @@
  ******************************************************************************/
 package com.redhat.devtools.recognizer.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.redhat.devtools.recognizer.api.spi.LanguageEnricherProvider;
-import java.io.File;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,8 +25,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FilenameUtils;
-
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -38,18 +33,10 @@ public class LanguageRecognizerImpl implements LanguageRecognizer {
 
     LanguageRecognizerImpl(LanguageRecognizerBuilder builder) {}
 
-    public String selectDevFile(String srcPath,  List<DevfileType> devfileTypes, List<File> devfiles) throws IOException {
-        if (devfileTypes.isEmpty()) {
-            devfileTypes = new ArrayList<>();
-        }
-        devfileTypes.addAll(getTypesFromFiles(devfiles));
-        return selectDevFileFromTypes(srcPath, devfileTypes);
-    }
-
-    public String selectDevFileFromTypes(String srcPath, List<DevfileType> devfileTypes) throws IOException {
+    public DevfileType selectDevFileFromTypes(String srcPath, List<DevfileType> devfileTypes) throws IOException {
         List<Language> languages = analyze(srcPath);
         for (Language language: languages) {
-            Optional<String> devFile = getDevFileByLanguage(language, devfileTypes);
+            Optional<DevfileType> devFile = getDevFileByLanguage(language, devfileTypes);
             if (devFile.isPresent()) {
                 return devFile.get();
             }
@@ -110,7 +97,7 @@ public class LanguageRecognizerImpl implements LanguageRecognizer {
 
     }
 
-    private Optional<String> getDevFileByLanguage(Language language, List<DevfileType> devfileTypes) {
+    private Optional<DevfileType> getDevFileByLanguage(Language language, List<DevfileType> devfileTypes) {
         List<DevfileType> devFiles;
         List<DevfileType> devFilesByLanguage = devfileTypes
                 .stream()
@@ -133,7 +120,7 @@ public class LanguageRecognizerImpl implements LanguageRecognizer {
                 devFiles = devFilesByFrameworks;
             }
         }
-        return devFiles.stream().map(devfile -> devfile.getName()).findFirst();
+        return devFiles.stream().findFirst();
     }
 
     private List<DevfileType> filterDevFilesByProperties(List<DevfileType> devFiles, List<String> properties) {
@@ -143,32 +130,6 @@ public class LanguageRecognizerImpl implements LanguageRecognizer {
                 .collect(Collectors.toList());
     }
 
-    private List<DevfileType> getTypesFromFiles(List<File> devfiles) {
-        List<DevfileType> devfileTypes = new ArrayList<>();
-        ObjectMapper om = new ObjectMapper(new YAMLFactory());
-
-        devfiles.forEach(devfile -> {
-            try {
-                JsonNode node = om.readTree(devfile);
-                if (!node.has("name") || !node.has("language")) {
-                    return;
-                }
-                String name = node.get("name").asText();
-                String language = node.get("language").asText();
-                List<String> tags = new ArrayList<>();
-                if (node.has("tags")) {
-                    JsonNode tagsNode = node.get("tags");
-                    for (JsonNode tagNode: tagsNode) {
-                        tags.add(tagNode.asText());
-                    }
-                }
-                devfileTypes.add(new DevfileType(name, language, tags));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        return devfileTypes;
-    }
 
     public static LanguageEnricherProvider getEnricherByLanguage(String language) {
         ServiceLoader<LanguageEnricherProvider> loader = ServiceLoader.load(LanguageEnricherProvider.class);

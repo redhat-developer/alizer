@@ -12,43 +12,15 @@ package com.redhat.devtools.recognizer.api;
 
 import java.util.List;
 
-public class DevfileType {
+public interface DevfileType {
 
-    private String name, language;
-    private List<String> tags;
 
-    public DevfileType() {
+    String getName();
 
-    }
+    String getLanguage();
 
-    public DevfileType(String name, String language, List<String> tags) {
-        this.name = name;
-        this.language = language;
-        this.tags = tags;
-    }
+    String getProjectType();
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
+    List<String> getTags();
 }
 
