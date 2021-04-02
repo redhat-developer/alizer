@@ -49,7 +49,7 @@
     </dependency>
       <dependency>
           <groupId>com.redhat.devtools.alizer</groupId>
-          <artifactId>api</artifactId>
+          <artifactId>alizer-api</artifactId>
           <version>${project.version}</version>
       </dependency>
     <dependency>
