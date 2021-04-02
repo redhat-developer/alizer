@@ -8,18 +8,16 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.recognizer.cli;
+package com.redhat.devtools.alizer.cli;
 
 import com.redhat.devtools.alizer.registry.support.DevfileMetadata;
 import com.redhat.devtools.alizer.registry.support.DevfileRegistryMetadataProviderBuilder;
 import com.redhat.devtools.recognizer.api.DevfileType;
-import com.redhat.devtools.recognizer.api.Language;
 import com.redhat.devtools.recognizer.api.LanguageRecognizer;
 import com.redhat.devtools.recognizer.api.LanguageRecognizerBuilder;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
-import java.io.File;
+
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

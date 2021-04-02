@@ -36,8 +36,8 @@
     </build>
 
     <modules>
-        <module>api</module>
-        <module>cli</module>
-        <module>registry-support</module>
+        <module>alizer-api</module>
+        <module>alizer-cli</module>
+        <module>alizer-registry-support</module>
     </modules>
 </project>
