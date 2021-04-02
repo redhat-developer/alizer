@@ -27,3 +27,26 @@ jobs:
         restore-keys: ${{ runner.os }}-m2        
     - name: Build with Maven
       run: mvn -B verify --file pom.xml
+
+  build-native:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Graalvm
+        uses: DeLaGuardo/setup-graalvm@4.0
+        with:
+          graalvm: '21.0.0.2'
+          java: java11
+      - name: Install native-image
+        run: |
+          gu install native-image
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build with Maven
+        run: mvn -B verify -Pnative
