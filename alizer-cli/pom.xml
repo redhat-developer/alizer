@@ -7,7 +7,7 @@
     <version>0.1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>cli</artifactId>
+  <artifactId>alizer-cli</artifactId>
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -49,12 +49,12 @@
     </dependency>
       <dependency>
           <groupId>com.redhat.devtools.alizer</groupId>
-          <artifactId>api</artifactId>
+          <artifactId>alizer-api</artifactId>
           <version>${project.version}</version>
       </dependency>
     <dependency>
       <groupId>com.redhat.devtools.alizer</groupId>
-      <artifactId>registry-support</artifactId>
+      <artifactId>alizer-registry-support</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

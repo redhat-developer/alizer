@@ -1,4 +1,4 @@
-package com.redhat.devtools.recognizer.cli;
+package com.redhat.devtools.alizer.cli;
 
 import com.redhat.devtools.alizer.registry.support.DevfileMetadata;
 import io.quarkus.runtime.annotations.RegisterForReflection;
