@@ -28,7 +28,6 @@ public class LanguageFileHandler {
     private static LanguageFileHandler INSTANCE;
     private Map<String, LanguageFileItem> languages = new HashMap<>();
     private Map<String, List<LanguageFileItem>> extensionXLanguage = new HashMap<>();
-    private Map<String, List<LanguageFileItem>> filenameXLanguage = new HashMap<>();
 
     private LanguageFileHandler(){
         initLanguages();
@@ -51,29 +50,10 @@ public class LanguageFileHandler {
                 JsonNode languageAttributes = entry.getValue();
                 String type = languageAttributes.get("type").asText();
                 String group = languageAttributes.has("group") ? languageAttributes.get("group").asText() : "";
-                LanguageFileItem language = new LanguageFileItem(nameLanguage, type, group);
-                languages.put(nameLanguage, language);
-                if (languageAttributes.has("extensions")) {
-                    JsonNode extensions = languageAttributes.get("extensions");
-                    for (JsonNode extension: extensions) {
-                        if (!extension.asText("").isEmpty()) {
-                            List<LanguageFileItem> languagesPerExtension = extensionXLanguage.getOrDefault(extension.asText(), new ArrayList<>());
-                            languagesPerExtension.add(language);
-                            extensionXLanguage.put(extension.asText(), languagesPerExtension);
-                        }
-                    }
-                }
-
-                if (languageAttributes.has("filenames")) {
-                    JsonNode filenames = languageAttributes.get("filenames");
-                    for (JsonNode filename: filenames) {
-                        if (!filename.asText("").isEmpty()) {
-                            List<LanguageFileItem> languagesPerFilename = filenameXLanguage.getOrDefault(filename.asText(), new ArrayList<>());
-                            languagesPerFilename.add(language);
-                            filenameXLanguage.put(filename.asText(), languagesPerFilename);
-                        }
-                    }
-                }
+                List<String> aliases = getValueAsList(languageAttributes, "aliases");
+                LanguageFileItem languageFileItem = new LanguageFileItem(nameLanguage, aliases, type, group);
+                languages.put(nameLanguage, languageFileItem);
+                populateLanguageList(extensionXLanguage, languageAttributes, "extensions", languageFileItem);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -81,6 +61,32 @@ public class LanguageFileHandler {
 
 
     }
+
+    private List<String> getValueAsList(JsonNode languageAttributes, String field) {
+        List<String> values = new ArrayList<>();
+        if (languageAttributes.has(field)) {
+            JsonNode fieldValues = languageAttributes.get(field);
+            for (JsonNode node : fieldValues) {
+                values.add(node.asText());
+            }
+        }
+        return values;
+    }
+
+    private void populateLanguageList(Map<String, List<LanguageFileItem>> languageMap, JsonNode languageAttributes, String field, LanguageFileItem language) {
+        if (languageAttributes.has(field)) {
+            JsonNode fieldValues = languageAttributes.get(field);
+            for (JsonNode value: fieldValues) {
+                if (!value.asText("").isEmpty()) {
+                    List<LanguageFileItem> languageMapValue = languageMap.getOrDefault(value.asText(), new ArrayList<>());
+                    languageMapValue.add(language);
+                    languageMap.put(value.asText(), languageMapValue);
+                }
+            }
+        }
+    }
+
+
 
     public List<LanguageFileItem> getLanguagesByExtension(String extension) {
         return extensionXLanguage.getOrDefault(extension, Collections.emptyList());

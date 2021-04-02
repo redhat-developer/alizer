@@ -10,21 +10,21 @@
  ******************************************************************************/
 package com.redhat.devtools.recognizer;
 
+import com.redhat.devtools.recognizer.api.DevfileType;
 import com.redhat.devtools.recognizer.api.Language;
 import com.redhat.devtools.recognizer.api.LanguageRecognizer;
 import com.redhat.devtools.recognizer.api.LanguageRecognizerBuilder;
-import com.redhat.devtools.recognizer.api.LanguageRecognizerImpl;
-import java.io.IOException;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-public class LanguageRecognizerTest {
+public class LanguageRecognizerTest extends AbstractRecognizerTest {
     private LanguageRecognizer recognizer;
+
 
     @Before
     public void setup() {
@@ -38,9 +38,21 @@ public class LanguageRecognizerTest {
     }
 
     @Test
+    public void testJAVAMetaDevFile() throws IOException {
+        DevfileType devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/micronaut", devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("java-maven"));
+    }
+
+    @Test
     public void testQuarkus() throws IOException {
         List<Language> status = recognizer.analyze("src/test/resources/projects/quarkus");
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("JAVA")));
+    }
+
+    @Test
+    public void testQuarkusDevFileType() throws IOException {
+        DevfileType devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/quarkus", devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("java-quarkus"));
     }
 
     @Test
@@ -50,14 +62,33 @@ public class LanguageRecognizerTest {
     }
 
     @Test
+    public void testMicronautDevFile() throws IOException {
+        DevfileType devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/micronaut", devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("java-maven"));
+    }
+
+    @Test
     public void testNode() throws IOException {
         List<Language> status = recognizer.analyze("src/test/resources/projects/nodejs-ex");
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("JavaScript")));
     }
 
     @Test
+    public void testNodeDevFile() throws IOException {
+        DevfileType devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/nodejs-ex", devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("nodejs"));
+    }
+
+
+    @Test
     public void testDjango() throws IOException {
         List<Language> status = recognizer.analyze("src/test/resources/projects/django");
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("Python")));
+    }
+
+    @Test
+    public void testDjangoDevFile() throws IOException {
+        DevfileType devFile = recognizer.selectDevFileFromTypes("src/test/resources/projects/django", devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("python-django"));
     }
 }

@@ -11,10 +11,10 @@
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <quarkus-plugin.version>1.11.3.Final</quarkus-plugin.version>
+    <quarkus-plugin.version>1.12.0.Final</quarkus-plugin.version>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-    <quarkus.platform.version>1.11.3.Final</quarkus.platform.version>
+    <quarkus.platform.version>1.12.0.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
   </properties>
   <dependencyManagement>
@@ -29,6 +29,7 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-picocli -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-picocli</artifactId>
@@ -42,12 +43,20 @@
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli-codegen</artifactId>
+    </dependency>
       <dependency>
           <groupId>com.redhat.devtools.alizer</groupId>
           <artifactId>api</artifactId>
           <version>${project.version}</version>
-          <scope>compile</scope>
       </dependency>
+    <dependency>
+      <groupId>com.redhat.devtools.alizer</groupId>
+      <artifactId>registry-support</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

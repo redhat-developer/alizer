@@ -16,16 +16,18 @@ import java.util.List;
 public class Language {
 
     private String name;
+    private List<String> aliases;
     private double usageInPercentage;
-    private List<String> frameworks;
-    private List<String> tools;
+    private List<String> frameworks = Collections.emptyList();
+    private List<String> tools = Collections.emptyList();
 
-    public Language(String name, double usageInPercentage) {
-        this(name, usageInPercentage, Collections.emptyList(), Collections.emptyList());
+    public Language(String name, List<String> aliases, double usageInPercentage) {
+        this(name, aliases, usageInPercentage, Collections.emptyList(), Collections.emptyList());
     }
 
-    public Language(String name, double usageInPercentage, List<String> frameworks, List<String> tools) {
+    public Language(String name, List<String> aliases, double usageInPercentage, List<String> frameworks, List<String> tools) {
         this.name = name;
+        this.aliases = aliases;
         this.usageInPercentage = usageInPercentage;
         this.frameworks = frameworks;
         this.tools = tools;
@@ -34,6 +36,8 @@ public class Language {
     public String getName() {
         return name;
     }
+
+    public List<String> getAliases() { return aliases; }
 
     public double getUsageInPercentage() {
         return usageInPercentage;

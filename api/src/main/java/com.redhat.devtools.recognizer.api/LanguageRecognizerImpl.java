@@ -11,6 +11,8 @@
 package com.redhat.devtools.recognizer.api;
 
 import com.redhat.devtools.recognizer.api.spi.LanguageEnricherProvider;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,10 +22,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FilenameUtils;
-
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -31,6 +32,17 @@ import static java.util.stream.Collectors.groupingBy;
 public class LanguageRecognizerImpl implements LanguageRecognizer {
 
     LanguageRecognizerImpl(LanguageRecognizerBuilder builder) {}
+
+    public DevfileType selectDevFileFromTypes(String srcPath, List<DevfileType> devfileTypes) throws IOException {
+        List<Language> languages = analyze(srcPath);
+        for (Language language: languages) {
+            Optional<LanguageScore> score = devfileTypes.stream().map(devfileType -> new LanguageScore(language, devfileType)).sorted().findFirst();
+            if (score.isPresent() && score.get().getScore() > 0) {
+                return score.get().getDevfileType();
+            }
+        }
+        return null;
+    }
 
     public List<Language> analyze(String path) throws IOException {
         Map<LanguageFileItem, Integer> languagesDetected = new HashMap<>();
@@ -63,7 +75,7 @@ public class LanguageRecognizerImpl implements LanguageRecognizer {
         List<Language> programmingLanguagesDetected = languagesDetected.keySet().stream().
                 filter(lang -> lang.getType().equalsIgnoreCase("programming")).
                 filter(lang -> (double)languagesDetected.get(lang) / totalProgrammingOccurences > 0.02).
-                map(lang -> new Language(lang.getName(), (double)languagesDetected.get(lang) / totalProgrammingOccurences * 100)).
+                map(lang -> new Language(lang.getName(), lang.getAliases(), (double)languagesDetected.get(lang) / totalProgrammingOccurences * 100)).
                 map(lang -> getDetailedLanguage(lang, finalFiles)).
                 sorted(Comparator.comparingDouble(Language::getUsageInPercentage).reversed()).
                 collect(Collectors.toList());

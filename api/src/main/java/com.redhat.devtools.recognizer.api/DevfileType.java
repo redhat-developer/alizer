@@ -6,14 +6,21 @@
  * and is available at http://www.eclipse.org/legal/epl-v20.html
  *
  * Contributors:
- * Red Hat, Inc. - initial API and implementation
+ * Red Hat, Inc.
  ******************************************************************************/
 package com.redhat.devtools.recognizer.api;
 
-import java.io.IOException;
 import java.util.List;
 
-public interface LanguageRecognizer {
-    DevfileType selectDevFileFromTypes(String srcPath, List<DevfileType> devfileTypes) throws IOException;
-    List<Language> analyze(String path) throws IOException;
+public interface DevfileType {
+
+
+    String getName();
+
+    String getLanguage();
+
+    String getProjectType();
+
+    List<String> getTags();
 }
+
