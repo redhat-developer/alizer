@@ -10,14 +10,10 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.cli;
 
-import io.quarkus.picocli.runtime.annotations.TopCommand;
 import picocli.CommandLine;
 
-@TopCommand
-@CommandLine.Command(subcommands = {AnalyzeCommand.class, DevfileCommand.class})
-public class AlizerCli {
-
-    @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true, description = "Help for alizer")
-    boolean usageHelpRequested;
+public abstract class BaseCommand {
+    @CommandLine.Parameters(index = "0", description = "The project to analyze")
+    String name;
 
 }
