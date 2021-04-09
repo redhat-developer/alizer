@@ -8,16 +8,17 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.recognizer.api.spi;
+package com.redhat.devtools.alizer.api.spi;
 
-import com.redhat.devtools.recognizer.api.Language;
+import com.redhat.devtools.alizer.api.Language;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.io.FilenameUtils;
 
 public class PythonLanguageEnricherProviderImpl implements LanguageEnricherProvider {
     @Override

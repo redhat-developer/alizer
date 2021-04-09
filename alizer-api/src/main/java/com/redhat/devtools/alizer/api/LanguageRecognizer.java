@@ -8,10 +8,14 @@
  * Contributors:
  * Red Hat, Inc. - initial API and implementation
  ******************************************************************************/
-package com.redhat.devtools.recognizer.api;
+package com.redhat.devtools.alizer.api;
 
-public class LanguageRecognizerBuilder {
-    public LanguageRecognizer build() {
-        return new LanguageRecognizerImpl(this);
-    }
+import com.redhat.devtools.alizer.api.DevfileType;
+
+import java.io.IOException;
+import java.util.List;
+
+public interface LanguageRecognizer {
+    DevfileType selectDevFileFromTypes(String srcPath, List<DevfileType> devfileTypes) throws IOException;
+    List<Language> analyze(String path) throws IOException;
 }

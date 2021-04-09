@@ -8,9 +8,9 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.recognizer.api;
+package com.redhat.devtools.alizer.api;
 
-import com.redhat.devtools.recognizer.api.spi.LanguageEnricherProvider;
+import com.redhat.devtools.alizer.api.spi.LanguageEnricherProvider;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;

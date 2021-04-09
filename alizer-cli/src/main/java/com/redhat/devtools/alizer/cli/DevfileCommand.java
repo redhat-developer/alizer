@@ -10,11 +10,11 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.cli;
 
+import com.redhat.devtools.alizer.api.DevfileType;
+import com.redhat.devtools.alizer.api.LanguageRecognizer;
+import com.redhat.devtools.alizer.api.LanguageRecognizerBuilder;
 import com.redhat.devtools.alizer.registry.support.DevfileMetadata;
 import com.redhat.devtools.alizer.registry.support.DevfileRegistryMetadataProviderBuilder;
-import com.redhat.devtools.recognizer.api.DevfileType;
-import com.redhat.devtools.recognizer.api.LanguageRecognizer;
-import com.redhat.devtools.recognizer.api.LanguageRecognizerBuilder;
 import picocli.CommandLine;
 
 import java.io.IOException;
