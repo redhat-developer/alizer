@@ -15,6 +15,8 @@ import com.redhat.devtools.alizer.api.LanguageRecognizer;
 import com.redhat.devtools.alizer.api.LanguageRecognizerBuilder;
 import com.redhat.devtools.alizer.registry.support.DevfileMetadata;
 import com.redhat.devtools.alizer.registry.support.DevfileRegistryMetadataProviderBuilder;
+import io.quarkus.qute.TemplateInstance;
+import io.quarkus.qute.api.CheckedTemplate;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -27,20 +29,23 @@ public class DevfileCommand extends BaseCommand implements Runnable{
     @CommandLine.Option(names = {"-r", "--registry"}, description = "Pass the registry")
     List<String> registries;
 
+    @CheckedTemplate
+    public static class Templates {
+        public static native TemplateInstance result(DevfileType result);
+    }
+
+
     @Override
     public void run() {
         LanguageRecognizer reco = new LanguageRecognizerBuilder().build();
+        DevfileType type = null;
 
             try {
                 if (registries != null && !registries.isEmpty()) {
                     List<DevfileMetadata> devfiles = new DevfileRegistryMetadataProviderBuilder().withURLs(registries).build().getDevfileMetada();
-                    DevfileType type = reco.selectDevFileFromTypes(name,devfiles.stream().map(it -> new DevfileTypeAdapter(it)).collect(Collectors.toList()));
-                    if (type != null) {
-                        System.out.println("Devfile " + type.getName() + " matched");
-                    } else {
-                        System.out.println("No devfile found to match");
-                    }
+                    type = reco.selectDevFileFromTypes(name,devfiles.stream().map(it -> new DevfileTypeAdapter(it)).collect(Collectors.toList()));
                 }
+                System.out.println(getTemplateForFormat(Templates.result(type)).render());
             } catch (IOException e) {}
         }
 }
