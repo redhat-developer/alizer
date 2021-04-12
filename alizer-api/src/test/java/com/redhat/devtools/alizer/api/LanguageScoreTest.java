@@ -8,10 +8,8 @@
  * Contributors:
  * Red Hat, Inc. - initial API and implementation
  ******************************************************************************/
-package com.redhat.devtools.recognizer;
+package com.redhat.devtools.alizer.api;
 
-import com.redhat.devtools.recognizer.api.Language;
-import com.redhat.devtools.recognizer.api.LanguageScore;
 import org.junit.Assert;
 import org.junit.Test;
 

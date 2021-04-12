@@ -8,9 +8,9 @@
  * Contributors:
  * Red Hat, Inc. - initial API and implementation
  ******************************************************************************/
-package com.redhat.devtools.recognizer;
+package com.redhat.devtools.alizer.api;
 
-import com.redhat.devtools.recognizer.api.DevfileType;
+import com.redhat.devtools.alizer.api.DevfileType;
 import org.junit.BeforeClass;
 
 import java.util.Arrays;

@@ -10,8 +10,8 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.cli;
 
-import com.redhat.devtools.recognizer.api.LanguageRecognizer;
-import com.redhat.devtools.recognizer.api.LanguageRecognizerBuilder;
+import com.redhat.devtools.alizer.api.LanguageRecognizer;
+import com.redhat.devtools.alizer.api.LanguageRecognizerBuilder;
 import picocli.CommandLine;
 
 import java.io.IOException;

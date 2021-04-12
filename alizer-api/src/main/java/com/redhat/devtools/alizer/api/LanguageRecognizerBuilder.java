@@ -6,21 +6,12 @@
  * and is available at http://www.eclipse.org/legal/epl-v20.html
  *
  * Contributors:
- * Red Hat, Inc.
+ * Red Hat, Inc. - initial API and implementation
  ******************************************************************************/
-package com.redhat.devtools.recognizer.api;
+package com.redhat.devtools.alizer.api;
 
-import java.util.List;
-
-public interface DevfileType {
-
-
-    String getName();
-
-    String getLanguage();
-
-    String getProjectType();
-
-    List<String> getTags();
+public class LanguageRecognizerBuilder {
+    public LanguageRecognizer build() {
+        return new LanguageRecognizerImpl(this);
+    }
 }
-

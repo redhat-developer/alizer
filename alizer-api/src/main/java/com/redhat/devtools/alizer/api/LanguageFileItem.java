@@ -8,7 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.recognizer.api;
+package com.redhat.devtools.alizer.api;
 
 import java.util.List;
 

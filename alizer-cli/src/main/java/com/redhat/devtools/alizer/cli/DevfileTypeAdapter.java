@@ -11,7 +11,7 @@
 package com.redhat.devtools.alizer.cli;
 
 import com.redhat.devtools.alizer.registry.support.DevfileMetadata;
-import com.redhat.devtools.recognizer.api.DevfileType;
+import com.redhat.devtools.alizer.api.DevfileType;
 
 import java.util.List;
 
