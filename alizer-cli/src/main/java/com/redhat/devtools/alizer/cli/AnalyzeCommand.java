@@ -10,22 +10,31 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.cli;
 
+import com.redhat.devtools.alizer.api.Language;
 import com.redhat.devtools.alizer.api.LanguageRecognizer;
 import com.redhat.devtools.alizer.api.LanguageRecognizerBuilder;
+import io.quarkus.qute.TemplateInstance;
+import io.quarkus.qute.api.CheckedTemplate;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.List;
 
 @CommandLine.Command(name = "analyze")
 public class AnalyzeCommand extends BaseCommand implements Runnable{
 
+    @CheckedTemplate
+    public static class Templates {
+        public static native TemplateInstance result(List<Language> result);
+    }
 
     @Override
     public void run() {
         LanguageRecognizer reco = new LanguageRecognizerBuilder().build();
 
             try {
-                reco.analyze(name).forEach(
+                List<Language> languages = reco.analyze(name);
+                /*.forEach(
                         lang -> {
                             System.out.printf("%-10s %-10s %-10s %-10s\n",
                                     lang.getName(),
@@ -33,7 +42,8 @@ public class AnalyzeCommand extends BaseCommand implements Runnable{
                                     String.join(", ", lang.getTools()),
                                     String.format(" % .2f", lang.getUsageInPercentage()) + "%");
                         }
-                );
+                );*/
+                System.out.println(getTemplateForFormat(Templates.result(languages)).render());
             } catch (IOException e) {}
         }
 }
