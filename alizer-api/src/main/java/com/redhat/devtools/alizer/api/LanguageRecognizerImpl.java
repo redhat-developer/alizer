@@ -33,12 +33,12 @@ public class LanguageRecognizerImpl implements LanguageRecognizer {
 
     LanguageRecognizerImpl(LanguageRecognizerBuilder builder) {}
 
-    public DevfileType selectDevFileFromTypes(String srcPath, List<DevfileType> devfileTypes) throws IOException {
+    public <T extends DevfileType> T selectDevFileFromTypes(String srcPath, List<T> devfileTypes) throws IOException {
         List<Language> languages = analyze(srcPath);
         for (Language language: languages) {
             Optional<LanguageScore> score = devfileTypes.stream().map(devfileType -> new LanguageScore(language, devfileType)).sorted().findFirst();
             if (score.isPresent() && score.get().getScore() > 0) {
-                return score.get().getDevfileType();
+                return (T) score.get().getDevfileType();
             }
         }
         return null;
