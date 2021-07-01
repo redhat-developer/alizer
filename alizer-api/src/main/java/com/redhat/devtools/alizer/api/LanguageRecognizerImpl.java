@@ -98,7 +98,7 @@ public class LanguageRecognizerImpl implements LanguageRecognizer {
     }
 
     public static LanguageEnricherProvider getEnricherByLanguage(String language) {
-        ServiceLoader<LanguageEnricherProvider> loader = ServiceLoader.load(LanguageEnricherProvider.class);
+        ServiceLoader<LanguageEnricherProvider> loader = ServiceLoader.load(LanguageEnricherProvider.class, LanguageRecognizerImpl.class.getClassLoader());
         Iterator<LanguageEnricherProvider> it = loader.iterator();
         while (it.hasNext()) {
             LanguageEnricherProvider provider = it.next();
