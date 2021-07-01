@@ -63,7 +63,7 @@ Contributing
 ============
 This is an open source project open to anyone. This project welcomes contributions and suggestions!
 
-For information on getting started, refer to the [CONTRIBUTING instructions](java/CONTRIBUTING.md).
+For information on getting started, refer to the [CONTRIBUTING instructions](CONTRIBUTING.md).
 
 
 Feedback & Questions
