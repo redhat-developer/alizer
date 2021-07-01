@@ -21,4 +21,4 @@ The [prom-client](https://www.npmjs.com/package/prom-client) module will collect
 
 ## License
 
-This stack is licensed under the [EPL 2.0](./LICENSE) license.
+This stack is licensed under the [EPL 2.0](LICENSE) license.
