@@ -16,6 +16,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface LanguageRecognizer {
-    DevfileType selectDevFileFromTypes(String srcPath, List<DevfileType> devfileTypes) throws IOException;
+    <T extends DevfileType> T selectDevFileFromTypes(String srcPath, List<T> devfileTypes) throws IOException;
     List<Language> analyze(String path) throws IOException;
 }
