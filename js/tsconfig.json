@@ -7,7 +7,7 @@
             "ES2017"
         ],
         "outDir": "lib",
-        "rootDir": "src",
+        "rootDir": ".",
         "strictPropertyInitialization": false,
         "sourceMap": true,
         "noUnusedLocals": true
