@@ -1,5 +1,5 @@
 {
-  "name": "language-recognizer",
+  "name": "@redhat-developer/alizer",
   "version": "0.0.1",
   "description": "",
   "main": "lib/src/recognizer.js",
