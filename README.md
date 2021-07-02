@@ -65,7 +65,7 @@ Alizer also offers a NPM package providing helpers for recognize languages/frame
 The syntax is the following:
 
 ```
-import * as recognizer from 'language-recognizer';
+import * as recognizer from '@redhat-developer/alizer';
 
 .....
 
