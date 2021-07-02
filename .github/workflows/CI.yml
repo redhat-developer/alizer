@@ -9,7 +9,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-java:
 
     runs-on: ubuntu-latest
 
@@ -50,3 +50,21 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: mvn -B verify -Pnative -f java
+
+  build-js:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      # Run install dependencies
+      - name: Install dependencies
+        run: npm install
+      # Run tests
+      - name: Build
+        run: npm run test
