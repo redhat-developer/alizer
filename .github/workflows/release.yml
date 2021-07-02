@@ -46,13 +46,13 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
-          call mvn -B verify -Pnative
-          7z a alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-${{ matrix.suffix }} alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-runner.exe
+          call mvn -B verify -Pnative -f java
+          7z a java/alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-${{ matrix.suffix }} java/alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-runner.exe
         if: ${{ matrix.os == 'windows-latest' }}
       - name: Build with Maven
         run: |
-          mvn -B verify -Pnative
-          tar cfJ alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-${{ matrix.suffix }} alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-runner
+          mvn -B verify -Pnative -f java
+          tar cfJ java/alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-${{ matrix.suffix }} java/alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-runner
         if: ${{ matrix.os != 'windows-latest' }}
       - name: Simple conventional changelog
         uses: lstocchi/simple-conventional-changelog@0.0.6
@@ -70,7 +70,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           allowUpdates: true
-          artifact: alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-${{ matrix.suffix }}
+          artifact: java/alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-${{ matrix.suffix }}
           artifactContentType: application/zip
           body: ${{ steps.changelog.outputs.changelog }}
           name: ${{ steps.get_version.outputs.version }}
