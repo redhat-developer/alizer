@@ -1,0 +1,19 @@
+{
+  "name": "language-recognizer",
+  "version": "0.0.1",
+  "description": "",
+  "main": "lib/recognizer.js",
+  "scripts": {
+    "compile": "tsc -p ."
+  },
+  "author": "Red Hat",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^14.14.7",
+    "glob": "^7.1.6",
+    "js-yaml": "^3.14.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.5"
+  }
+}
