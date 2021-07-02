@@ -59,6 +59,59 @@ alizer-cli-$version-runner analyze [-o json] <path>
 alizer-cli-$version-runner devfile [-o json] [-r registry-url] <path>
 ```
 
+### NPM Package
+
+Alizer also offers a NPM package providing helpers for recognize languages/frameworks in a project. It still doesn't support devfile selection.
+The syntax is the following:
+
+```
+import * as recognizer from 'language-recognizer';
+
+.....
+
+const languages = await recognizer.detectLanguages('my_project_folder');
+
+.....
+
+```
+
+### Outputs 
+
+Quarkus project output example
+
+```
+[
+  { name: 'java', builder: 'maven', frameworks: [ 'quarkus' ] },
+  { name: 'gcc machine description' }
+]
+```
+
+SpringBoot project output example
+
+```
+[
+  { name: 'java', builder: 'maven', frameworks: [ 'springboot' ] },
+  { name: 'plsql' },
+  { name: 'plpgsql' },
+  { name: 'sqlpl' },
+  { name: 'tsql' },
+  { name: 'javascript' },
+  { name: 'batchfile' },
+  { name: 'gcc machine description' }
+]
+```
+
+Django project output example
+
+```
+[
+  { name: 'python', frameworks: [ 'django' ] },
+  { name: 'gcc machine description' },
+  { name: 'shell' }
+]
+```
+
+
 Contributing
 ============
 This is an open source project open to anyone. This project welcomes contributions and suggestions!

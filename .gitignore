@@ -37,3 +37,8 @@ nb-configuration.xml
 
 # Local environment
 .env
+
+# node
+lib/
+node_modules/
+.npmignore
