@@ -86,5 +86,3 @@ async function getFiles(root: string): Promise<string[]> {
         })
     });
 }
-
-detectLanguages('/home/luca/Public/github.com/redhat-developer/empty-dir');
