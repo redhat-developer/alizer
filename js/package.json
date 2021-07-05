@@ -6,13 +6,14 @@
   "scripts": {
     "compile": "tsc -p . && npm run copy-files",
     "clean": "rm -rf lib || rmdir lib /s /q",
+    "build": "npm run clean && npm run compile",
     "copy-files": "cp -r ./resources ./lib/resources",
     "test": "npm run clean && npm run compile && mocha ./lib/test/recognizer.test.js"
   },
   "author": "Red Hat",
   "license": "MIT",
   "dependencies": {
-    "glob": "^7.1.6",
+    "glob-gitignore": "^1.0.14",
     "js-yaml": "^3.14.0"
   },
   "devDependencies": {
