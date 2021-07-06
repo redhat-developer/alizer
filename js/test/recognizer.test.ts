@@ -30,4 +30,9 @@ describe('Recognizer', () => {
         assert.match(languages.some(l => l.name === PYTHON), true);
     });
 
+    it('TestWithoutGitIgnore', async () => {
+        const languages = await recognizer.detectLanguages(path.join(__dirname, '..', '..', '..', 'resources/projects/simple'));
+        assert.match(languages.some(l => l.name === 'javascript'), true);
+    });
+
 });
