@@ -75,6 +75,12 @@ async function getDetailedLanguage(language: string, files: string[]): Promise<L
 }
 
 async function getFiles(root: string): Promise<string[]> {
+    const ignores = await getIgnores(root);
+    const searchResult = await glob(`**`, {cwd: root, ignore: ignores});
+    return searchResult.map(it => path.join(root, it));
+}
+
+async function getIgnores(root: string): Promise<string[]> {
     const ignorePath = path.join(root, '.gitignore');
     let ignores = [];
     try{
@@ -89,6 +95,5 @@ async function getFiles(root: string): Promise<string[]> {
     } catch (err) {
         //file doesn't exist
     }
-    const searchResult = await glob(`**`, {cwd: root, ignore: ignores});
-    return searchResult.map(it => path.join(root, it));
+    return ignores;
 }
