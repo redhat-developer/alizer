@@ -45,7 +45,7 @@ node('rhel8') {
                 withCredentials([[$class: 'StringBinding', credentialsId: 'npm-token', variable: 'TOKEN']]) {
                     sh "echo registry=https://registry.npmjs.com > .npmrc"
                     sh "echo //registry.npmjs.com/:_authToken=${TOKEN} >> .npmrc"
-                    sh "npm publish"
+                    sh "npm publish --access=public"
                 }
                 currentBuild.keepLog = true
                 currentBuild.description = "${packageJson.version}.${env.BUILD_NUMBER}"
