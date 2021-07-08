@@ -6,7 +6,7 @@
 import * as jsyaml from 'js-yaml';
 import {promises as fs} from 'fs';
 import * as path from 'path';
-import * as glob from 'glob';
+import { glob } from 'glob-gitignore';
 import { Language } from './types';
 import { JAVA, PYTHON } from './constants';
 import { getJava } from './javaRecognizer';
@@ -14,7 +14,7 @@ import { getPython } from './pythonRecognizer';
 
 export async function detectLanguages(root: string): Promise<Language[]> {
     if (!root) {
-        return Promise.reject(new Error('The project root is not valid'));
+        throw new Error('The project root is not valid');
     }
     const fileWithLanguages = await fs.readFile(path.join(__dirname, '..', 'resources', 'languages.yaml'), 'utf-8');
     const allLanguages = jsyaml.safeLoad(fileWithLanguages);
@@ -53,7 +53,6 @@ export async function detectLanguages(root: string): Promise<Language[]> {
     for(const language of Object.entries(languagesFiltered).sort(([_k1, v1], [_k2, v2]) => (v2 as number)-(v1 as number))) {
         languagesDetected.push(await getDetailedLanguage(language[0], files));
     }
-    console.log(languagesDetected)
     return languagesDetected;
     
 }
@@ -76,12 +75,25 @@ async function getDetailedLanguage(language: string, files: string[]): Promise<L
 }
 
 async function getFiles(root: string): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-        glob(`${root}/**/*.*`, `!${root}/**`, (err: any, files: string[] | PromiseLike<string[]>) => {
-            if (err) {
-                reject(`Unable to retrieve files from current project ${root}. ${err}`);
+    const ignores = await getIgnores(root);
+    const searchResult = await glob(`**`, {cwd: root, ignore: ignores});
+    return searchResult.map(it => path.join(root, it));
+}
+
+async function getIgnores(root: string): Promise<string[]> {
+    const ignorePath = path.join(root, '.gitignore');
+    let ignores = [];
+    try{
+        const stat = await fs.stat(ignorePath);
+        if(stat){
+            const ignoreContent = await fs.readFile(ignorePath, {encoding: 'utf-8'});
+            if(ignoreContent) {
+                ignores =  ignoreContent.split('\n').filter(it => it && !it.trim().startsWith('#'));
             }
-            return resolve(files);
-        })
-    });
+        }
+        
+    } catch (err) {
+        //file doesn't exist
+    }
+    return ignores;
 }
