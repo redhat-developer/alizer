@@ -2588,6 +2588,7 @@ JavaScript:
   aliases:
     - js
     - node
+    - nodejs
   extensions:
     - ".js"
     - "._js"
