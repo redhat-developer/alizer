@@ -55,7 +55,8 @@ function computeLanguageScore(language: Language, devfileType: DevfileType) {
 }
 
 function matches(value: string, list?: string[]) {
-    return list && list.filter(s => s.toLowerCase() === value.toLowerCase()).length > 0;
+    value = value.toLowerCase();
+    return list && list.filter(s => s.toLowerCase() === value).length > 0;
 }
 
 export async function detectLanguages(root: string): Promise<Language[]> {
