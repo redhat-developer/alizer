@@ -17,3 +17,6 @@ export const MICRONAUT = 'micronaut';
 export const PYTHON = 'python';
 
 export const DJANGO = "django";
+
+export const FRAMEWORK_WEIGHT = 10;
+export const TOOL_WEIGHT = 5;

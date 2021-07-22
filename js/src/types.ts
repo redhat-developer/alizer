@@ -4,6 +4,14 @@
  *-----------------------------------------------------------------------------------------------*/
 export interface Language {
     name: string;
+    aliases?: string[];
     builder?: string;
     frameworks?: string[];
+}
+
+export interface DevfileType {
+    getName(): string;
+    getLanguage(): string;
+    getProjectType(): string;
+    getTags(): string[];
 }
