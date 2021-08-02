@@ -17,12 +17,15 @@ public class LanguageFileItem {
     private List<String> aliases;
     private String type;
     private String group;
+    private List<String> configurationFiles, excludeFolders;
 
-    public LanguageFileItem(String name, List<String> aliases, String type, String group) {
+    public LanguageFileItem(String name, List<String> aliases, String type, String group, List<String> configurationFiles, List<String> excludeFolders) {
         this.name = name;
         this.aliases = aliases;
         this.type = type;
         this.group = group;
+        this.configurationFiles = configurationFiles;
+        this.excludeFolders = excludeFolders;
     }
 
     public String getName() {
@@ -41,5 +44,13 @@ public class LanguageFileItem {
 
     public String getType() {
         return type;
+    }
+
+    public List<String> getConfigurationFiles() {
+        return configurationFiles;
+    }
+
+    public List<String> getExcludeFolders() {
+        return excludeFolders;
     }
 }

@@ -6,12 +6,22 @@
  * and is available at http://www.eclipse.org/legal/epl-v20.html
  *
  * Contributors:
- * Red Hat, Inc. - initial API and implementation
+ * Red Hat, Inc.
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
-public class LanguageRecognizerBuilder {
-    public LanguageRecognizer build() {
-        return new LanguageRecognizerImpl(this);
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class Recognizer {
+    public Recognizer(RecognizerBuilder builder) {}
+
+    protected List<String> getFiles(Path rootDirectory) throws IOException {
+        return Files.walk(rootDirectory, Integer.MAX_VALUE).filter(Files::isRegularFile).map(String::valueOf)
+                .collect(Collectors.toList());
+
     }
 }

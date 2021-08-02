@@ -51,7 +51,9 @@ public class LanguageFileHandler {
                 String type = languageAttributes.get("type").asText();
                 String group = languageAttributes.has("group") ? languageAttributes.get("group").asText() : "";
                 List<String> aliases = getValueAsList(languageAttributes, "aliases");
-                LanguageFileItem languageFileItem = new LanguageFileItem(nameLanguage, aliases, type, group);
+                List<String> configurationFiles = getValueAsList(languageAttributes, "configuration_files");
+                List<String> excludeFolders = getValueAsList(languageAttributes, "exclude_folders");
+                LanguageFileItem languageFileItem = new LanguageFileItem(nameLanguage, aliases, type, group, configurationFiles, excludeFolders);
                 languages.put(nameLanguage, languageFileItem);
                 populateLanguageList(extensionXLanguage, languageAttributes, "extensions", languageFileItem);
             }
@@ -94,5 +96,18 @@ public class LanguageFileHandler {
 
     public LanguageFileItem getLanguageByName(String name) {
         return languages.get(name);
+    }
+
+    public Map<String, String> getConfigurationPerLanguageMapping() {
+        Map<String, String> configurationPerLanguage = new HashMap<>();
+        for (LanguageFileItem fileItem: languages.values()) {
+            List<String> configurationFiles = fileItem.getConfigurationFiles();
+            if (!configurationFiles.isEmpty()) {
+                for (String configFile: configurationFiles) {
+                    configurationPerLanguage.put(configFile, fileItem.getName());
+                }
+            }
+        }
+        return configurationPerLanguage;
     }
 }

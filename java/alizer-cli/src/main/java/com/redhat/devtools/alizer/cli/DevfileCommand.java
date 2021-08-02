@@ -12,7 +12,7 @@ package com.redhat.devtools.alizer.cli;
 
 import com.redhat.devtools.alizer.api.DevfileType;
 import com.redhat.devtools.alizer.api.LanguageRecognizer;
-import com.redhat.devtools.alizer.api.LanguageRecognizerBuilder;
+import com.redhat.devtools.alizer.api.RecognizerBuilder;
 import com.redhat.devtools.alizer.registry.support.DevfileMetadata;
 import com.redhat.devtools.alizer.registry.support.DevfileRegistryMetadataProviderBuilder;
 import io.quarkus.qute.TemplateInstance;
@@ -37,7 +37,7 @@ public class DevfileCommand extends BaseCommand implements Runnable{
 
     @Override
     public void run() {
-        LanguageRecognizer reco = new LanguageRecognizerBuilder().build();
+        LanguageRecognizer reco = new RecognizerBuilder().build();
         DevfileType type = null;
 
             try {
