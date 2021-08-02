@@ -30,5 +30,4 @@ public class Component {
     public List<Language> getLanguages() {
         return languages;
     }
-
 }
