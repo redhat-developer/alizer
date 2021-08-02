@@ -18,9 +18,10 @@ public class Component {
     private List<Language> languages;
     private DevfileType devfileType;
 
-    public Component(String path, List<Language> languages) {
+    public Component(String path, List<Language> languages, DevfileType devfileType) {
         this.path = path;
         this.languages = languages;
+        this.devfileType = devfileType;
     }
 
     public String getPath() {

@@ -22,7 +22,6 @@ import static org.junit.Assert.assertTrue;
 public class LanguageRecognizerTest extends AbstractRecognizerTest {
     private LanguageRecognizer recognizer;
 
-
     @Before
     public void setup() {
         recognizer = new RecognizerBuilder().languageRecognizer();

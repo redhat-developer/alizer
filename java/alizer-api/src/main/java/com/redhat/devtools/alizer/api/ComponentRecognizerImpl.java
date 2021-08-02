@@ -24,7 +24,7 @@ public class ComponentRecognizerImpl extends Recognizer {
         super(builder);
     }
 
-    public List<Component> analyze(String path) throws IOException {
+    public <T extends DevfileType> List<Component> analyze(String path, List<T> devfileTypes) throws IOException {
         List<String> files = getFiles(Paths.get(path));
         Map<String, String> configurationPerLanguage = LanguageFileHandler.get().getConfigurationPerLanguageMapping();
         List<Component> results = new ArrayList<>();
@@ -32,17 +32,19 @@ public class ComponentRecognizerImpl extends Recognizer {
             Path filepath = Paths.get(file);
             if (configurationPerLanguage.containsKey(filepath.getFileName().toString())
                 && isValidPath(file, configurationPerLanguage.get(filepath.getFileName().toString()))) {
-                results.add(getComponent(filepath, configurationPerLanguage.get(filepath.getFileName().toString())));
+                results.add(getComponent(filepath, configurationPerLanguage.get(filepath.getFileName().toString()), devfileTypes));
             }
         }
         return results;
     }
 
-    private Component getComponent(Path configurationFile, String configurationLanguage) throws IOException {
+    private <T extends DevfileType> Component getComponent(Path configurationFile, String configurationLanguage, List<T> devfileTypes) throws IOException {
         Path directory = configurationFile.getParent();
-        LanguageRecognizer languageRecognizer = new RecognizerBuilder().languageRecognizer();
+        RecognizerBuilder recognizerBuilder = new RecognizerBuilder();
+        LanguageRecognizer languageRecognizer = recognizerBuilder.languageRecognizer();
         List<Language> languages = getLanguagesWeightedByConfigFile(languageRecognizer.analyze(directory.toString()), configurationLanguage);
-        return new Component(directory.toString(), languages);
+        DevfileType devfileType = languageRecognizer.selectDevFileFromTypes(languages, devfileTypes);
+        return new Component(directory.toString(), languages, devfileType);
     }
 
     private List<Language> getLanguagesWeightedByConfigFile(List<Language> languages, String configurationLanguage) {
