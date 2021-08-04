@@ -36,6 +36,6 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
     @Test
     public void testMultipleComponents() throws IOException {
         List<Component> components = recognizer.analyze(new File("../../resources/projects").getCanonicalPath(), devfileTypes);
-        assertEquals(3, components.size());
+        assertEquals(5, components.size());
     }
 }

@@ -24,4 +24,9 @@ public class Recognizer {
                 .collect(Collectors.toList());
 
     }
+
+    protected List<Path> getFilePaths(Path rootDirectory) throws IOException {
+        return Files.walk(rootDirectory, Integer.MAX_VALUE).filter(Files::isRegularFile).collect(Collectors.toList());
+
+    }
 }

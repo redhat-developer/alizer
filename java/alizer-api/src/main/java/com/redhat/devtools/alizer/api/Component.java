@@ -10,21 +10,22 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public class Component {
 
-    private String path;
+    private Path path;
     private List<Language> languages;
     private DevfileType devfileType;
 
-    public Component(String path, List<Language> languages, DevfileType devfileType) {
+    public Component(Path path, List<Language> languages, DevfileType devfileType) {
         this.path = path;
         this.languages = languages;
         this.devfileType = devfileType;
     }
 
-    public String getPath() {
+    public Path getPath() {
         return path;
     }
 
