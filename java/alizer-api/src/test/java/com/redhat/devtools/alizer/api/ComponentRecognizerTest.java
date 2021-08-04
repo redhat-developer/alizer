@@ -62,8 +62,33 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
+    public void testNoComponent() throws IOException {
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/simple").getCanonicalPath(), devfileTypes);
+        assertEquals(0, components.size());
+    }
+
+    @Test
+    public void testDoubleComponents() throws IOException {
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/double-components").getCanonicalPath(), devfileTypes);
+        assertEquals(2, components.size());
+        assertEquals(2, components.stream().filter(component -> component.getDevfileType().equals(NODEJS)).count());
+    }
+
+    @Test
+    public void testWrappedComponents() throws IOException {
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/component-wrapped-in-folder").getCanonicalPath(), devfileTypes);
+        assertEquals(1, components.size());
+        assertEquals(1, components.stream().filter(component -> component.getDevfileType().equals(JAVA_QUARKUS)).count());
+        assertEquals(new File("../../resources/projects/component-wrapped-in-folder/wrapper/quarkus").getCanonicalPath(), components.get(0).getPath().toString());
+    }
+
+    @Test
     public void testMultipleComponents() throws IOException {
         List<Component> components = recognizer.analyze(new File("../../resources/projects").getCanonicalPath(), devfileTypes);
-        assertEquals(4, components.size());
+        assertEquals(7, components.size());
+        assertEquals(1, components.stream().filter(component -> component.getDevfileType().equals(PYTHON_DJANGO)).count());
+        assertEquals(2, components.stream().filter(component -> component.getDevfileType().equals(JAVA_QUARKUS)).count());
+        assertEquals(3, components.stream().filter(component -> component.getDevfileType().equals(NODEJS)).count());
+        assertEquals(1, components.stream().filter(component -> component.getDevfileType().equals(JAVA_MAVEN)).count());
     }
 }

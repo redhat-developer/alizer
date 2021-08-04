@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 
 public class LanguageFileHandler {
@@ -95,7 +97,27 @@ public class LanguageFileHandler {
     }
 
     public LanguageFileItem getLanguageByName(String name) {
-        return languages.get(name);
+        Optional<LanguageFileItem> languageFileItem = languages.entrySet().stream()
+                .filter(item -> item.getKey().equalsIgnoreCase(name))
+                .map(Map.Entry::getValue)
+                .findFirst();
+        return languageFileItem.orElse(null);
+    }
+
+    public LanguageFileItem getLanguageByNameOrAlias(String name) {
+        LanguageFileItem languageFileItem = getLanguageByName(name);
+        if (languageFileItem == null) {
+            return getLanguageByAlias(name);
+        }
+        return languageFileItem;
+    }
+
+    public LanguageFileItem getLanguageByAlias(String alias) {
+        String finalAlias = alias.toLowerCase();
+        Optional<LanguageFileItem> languageFileItem = languages.values().stream()
+                .filter(item -> item.getAliases().contains(finalAlias))
+                .findFirst();
+        return languageFileItem.orElse(null);
     }
 
     public Map<String, String> getConfigurationPerLanguageMapping() {

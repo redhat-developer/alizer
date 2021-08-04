@@ -99,8 +99,7 @@ public class ComponentRecognizerImpl extends Recognizer {
      * @return true if it is a valid component, false otherwise
      */
     private boolean isValidNoConfigComponent(Component component) {
-        Language mainLanguage = component.getLanguages().get(0);
-        LanguageFileItem languageFileItem = LanguageFileHandler.get().getLanguageByName(mainLanguage.getName());
+        LanguageFileItem languageFileItem = LanguageFileHandler.get().getLanguageByNameOrAlias(component.getDevfileType().getLanguage());
         return languageFileItem.getConfigurationFiles().isEmpty();
     }
 
@@ -119,8 +118,10 @@ public class ComponentRecognizerImpl extends Recognizer {
     private <T extends DevfileType> Component getComponent(Path root, String configurationLanguage, List<T> devfileTypes) throws IOException {
         RecognizerBuilder recognizerBuilder = new RecognizerBuilder();
         LanguageRecognizer languageRecognizer = recognizerBuilder.languageRecognizer();
+
         List<Language> languages = getLanguagesWeightedByConfigFile(languageRecognizer.analyze(root.toString()), configurationLanguage);
         DevfileType devfileType = languageRecognizer.selectDevFileFromTypes(languages, devfileTypes);
+
         return new Component(root, languages, devfileType);
     }
 
