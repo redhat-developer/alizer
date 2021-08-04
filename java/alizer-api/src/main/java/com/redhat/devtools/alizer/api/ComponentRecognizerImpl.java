@@ -32,7 +32,7 @@ public class ComponentRecognizerImpl extends Recognizer {
         List<Path> files = getFilePaths(Paths.get(path));
         List<Component> components = getComponents(files, devfileTypes);
 
-        // it may happen that a language has no a specific configuration file (like JAVA -> pom.xml, Nodejs -> package.json)
+        // it may happen that a language has no a specific configuration file (e.g opposite to JAVA -> pom.xml and Nodejs -> package.json)
         // we then rely on the language recognizer and use the most used language to pick a devfile
         List<Path> directoriesPathsWithoutConfigFile = getDirectoriesPathsWithoutConfigFile(Paths.get(path), components);
         components.addAll(getComponentsWithoutConfigFile(directoriesPathsWithoutConfigFile, devfileTypes));
@@ -79,9 +79,29 @@ public class ComponentRecognizerImpl extends Recognizer {
     private <T extends DevfileType> List<Component> getComponentsWithoutConfigFile(List<Path> directories, List<T> devfileTypes) throws IOException {
         List<Component> components = new ArrayList<>();
         for (Path directory: directories) {
-            components.add(getComponent(directory, "", devfileTypes));
+            Component component = getComponent(directory, "", devfileTypes);
+            // only takes component with languages that have no config file
+            // E.g if the directory consists of javascript files but it doesn't contain a package.json, something is wrong
+            // and we do not consider it as an actual component
+            if (isValidNoConfigComponent(component)) {
+                components.add(component);
+            }
         }
         return components;
+    }
+
+    /**
+     * Return true if it is a component with a language that does not have any config file
+     * E.g if the directory (and the component itself) consists of javascript files without a package.json, something is wrong
+     * and we do not consider it as an actual no config component
+     *
+     * @param component component
+     * @return true if it is a valid component, false otherwise
+     */
+    private boolean isValidNoConfigComponent(Component component) {
+        Language mainLanguage = component.getLanguages().get(0);
+        LanguageFileItem languageFileItem = LanguageFileHandler.get().getLanguageByName(mainLanguage.getName());
+        return languageFileItem.getConfigurationFiles().isEmpty();
     }
 
     private <T extends DevfileType> List<Component> getComponents(List<Path> files, List<T> devfileTypes) throws IOException {

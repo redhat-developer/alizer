@@ -34,8 +34,36 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
+    public void testDjangoComponent() throws IOException {
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/django").getCanonicalPath(), devfileTypes);
+        assertEquals(1, components.size());
+        assertEquals(PYTHON_DJANGO, components.get(0).getDevfileType());
+    }
+
+    @Test
+    public void testMicronautComponent() throws IOException {
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/micronaut").getCanonicalPath(), devfileTypes);
+        assertEquals(1, components.size());
+        assertEquals(JAVA_MAVEN, components.get(0).getDevfileType());
+    }
+
+    @Test
+    public void testQuarkusComponent() throws IOException {
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/nodejs-ex").getCanonicalPath(), devfileTypes);
+        assertEquals(1, components.size());
+        assertEquals(NODEJS, components.get(0).getDevfileType());
+    }
+
+    @Test
+    public void testNodeComponent() throws IOException {
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/quarkus").getCanonicalPath(), devfileTypes);
+        assertEquals(1, components.size());
+        assertEquals(JAVA_QUARKUS, components.get(0).getDevfileType());
+    }
+
+    @Test
     public void testMultipleComponents() throws IOException {
         List<Component> components = recognizer.analyze(new File("../../resources/projects").getCanonicalPath(), devfileTypes);
-        assertEquals(5, components.size());
+        assertEquals(4, components.size());
     }
 }

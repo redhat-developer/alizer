@@ -83,6 +83,10 @@ public class JavaLanguageEnricherProviderImpl implements LanguageEnricherProvide
         if (hasMicronaut) {
             frameworks.add("Micronaut");
         }
+        boolean hasVertx = hasDependency(file, "io.vertx", isGradle, isMaven);
+        if (hasVertx) {
+            frameworks.add("Vertx");
+        }
         return frameworks;
     }
 
