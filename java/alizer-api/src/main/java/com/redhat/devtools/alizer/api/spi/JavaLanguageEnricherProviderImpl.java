@@ -71,10 +71,6 @@ public class JavaLanguageEnricherProviderImpl extends LanguageEnricherProvider {
                 }
             }
         }
-        boolean hasVertx = hasDependency(file, "io.vertx", isGradle, isMaven);
-        if (hasVertx) {
-            frameworks.add("Vertx");
-        }
         return frameworks;
     }
 
