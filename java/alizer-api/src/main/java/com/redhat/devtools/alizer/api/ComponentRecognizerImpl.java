@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -99,7 +100,9 @@ public class ComponentRecognizerImpl extends Recognizer {
      * @return true if it is a valid component, false otherwise
      */
     private boolean isValidNoConfigComponent(Component component) {
-        LanguageFileItem languageFileItem = LanguageFileHandler.get().getLanguageByNameOrAlias(component.getDevfileType().getLanguage());
+        DevfileType devfileType = component.getDevfileType();
+        String language = devfileType == null ? component.getLanguages().get(0).getName() : devfileType.getLanguage();
+        LanguageFileItem languageFileItem = LanguageFileHandler.get().getLanguageByNameOrAlias(language);
         return languageFileItem.getConfigurationFiles().isEmpty();
     }
 
@@ -120,8 +123,13 @@ public class ComponentRecognizerImpl extends Recognizer {
         LanguageRecognizer languageRecognizer = recognizerBuilder.languageRecognizer();
 
         List<Language> languages = getLanguagesWeightedByConfigFile(languageRecognizer.analyze(root.toString()), configurationLanguage);
-        DevfileType devfileType = languageRecognizer.selectDevFileFromTypes(languages, devfileTypes);
 
+        File devfile = root.resolve("devfile.yaml").toFile();
+        if (devfile.exists()) {
+            return new Component(root, languages, devfile.toPath());
+        }
+
+        DevfileType devfileType = languageRecognizer.selectDevFileFromTypes(languages, devfileTypes);
         return new Component(root, languages, devfileType);
     }
 

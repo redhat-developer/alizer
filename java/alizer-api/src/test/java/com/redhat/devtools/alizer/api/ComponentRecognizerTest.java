@@ -18,6 +18,7 @@ import org.junit.Test;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ComponentRecognizerTest extends AbstractRecognizerTest {
     private ComponentRecognizerImpl recognizer;
@@ -28,7 +29,7 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
-    public void testSingleComponent() throws IOException {
+    public void testSelfComponent() throws IOException {
         List<Component> components = recognizer.analyze(".", devfileTypes);
         assertEquals(1, components.size());
     }
@@ -38,6 +39,7 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
         List<Component> components = recognizer.analyze(new File("../../resources/projects/django").getCanonicalPath(), devfileTypes);
         assertEquals(1, components.size());
         assertEquals(PYTHON_DJANGO, components.get(0).getDevfileType());
+        assertNull(components.get(0).getDevfile());
     }
 
     @Test
@@ -45,6 +47,7 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
         List<Component> components = recognizer.analyze(new File("../../resources/projects/micronaut").getCanonicalPath(), devfileTypes);
         assertEquals(1, components.size());
         assertEquals(JAVA_MAVEN, components.get(0).getDevfileType());
+        assertNull(components.get(0).getDevfile());
     }
 
     @Test
@@ -52,6 +55,7 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
         List<Component> components = recognizer.analyze(new File("../../resources/projects/nodejs-ex").getCanonicalPath(), devfileTypes);
         assertEquals(1, components.size());
         assertEquals(NODEJS, components.get(0).getDevfileType());
+        assertNull(components.get(0).getDevfile());
     }
 
     @Test
@@ -59,6 +63,15 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
         List<Component> components = recognizer.analyze(new File("../../resources/projects/quarkus").getCanonicalPath(), devfileTypes);
         assertEquals(1, components.size());
         assertEquals(JAVA_QUARKUS, components.get(0).getDevfileType());
+        assertNull(components.get(0).getDevfile());
+    }
+
+    @Test
+    public void testSingleComponentWithExistingDevfile() throws IOException {
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/nodejs-ex-w-devfile").getCanonicalPath(), devfileTypes);
+        assertEquals(1, components.size());
+        assertNull(components.get(0).getDevfileType());
+        assertEquals(components.get(0).getPath().resolve("devfile.yaml"), components.get(0).getDevfile());
     }
 
     @Test
@@ -85,10 +98,11 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
     @Test
     public void testMultipleComponents() throws IOException {
         List<Component> components = recognizer.analyze(new File("../../resources/projects").getCanonicalPath(), devfileTypes);
-        assertEquals(7, components.size());
-        assertEquals(1, components.stream().filter(component -> component.getDevfileType().equals(PYTHON_DJANGO)).count());
-        assertEquals(2, components.stream().filter(component -> component.getDevfileType().equals(JAVA_QUARKUS)).count());
-        assertEquals(3, components.stream().filter(component -> component.getDevfileType().equals(NODEJS)).count());
-        assertEquals(1, components.stream().filter(component -> component.getDevfileType().equals(JAVA_MAVEN)).count());
+        assertEquals(8, components.size());
+        assertEquals(1, components.stream().filter(component -> PYTHON_DJANGO.equals(component.getDevfileType())).count());
+        assertEquals(2, components.stream().filter(component -> JAVA_QUARKUS.equals(component.getDevfileType())).count());
+        assertEquals(3, components.stream().filter(component -> NODEJS.equals(component.getDevfileType())).count());
+        assertEquals(1, components.stream().filter(component -> JAVA_MAVEN.equals(component.getDevfileType())).count());
+        assertEquals(1, components.stream().filter(component -> component.getDevfile() != null).count());
     }
 }
