@@ -14,7 +14,7 @@ import io.quarkus.picocli.runtime.annotations.TopCommand;
 import picocli.CommandLine;
 
 @TopCommand
-@CommandLine.Command(subcommands = {AnalyzeCommand.class, DevfileCommand.class})
+@CommandLine.Command(subcommands = {AnalyzeCommand.class, DevfileCommand.class, ComponentCommand.class})
 public class AlizerCli {
 
     @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true, description = "Help for alizer")

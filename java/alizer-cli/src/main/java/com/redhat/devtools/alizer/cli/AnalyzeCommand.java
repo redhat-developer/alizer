@@ -30,7 +30,7 @@ public class AnalyzeCommand extends BaseCommand implements Runnable{
 
     @Override
     public void run() {
-        LanguageRecognizer reco = new RecognizerBuilder().build();
+        LanguageRecognizer reco = new RecognizerBuilder().languageRecognizer();
 
             try {
                 List<Language> languages = reco.analyze(name);
