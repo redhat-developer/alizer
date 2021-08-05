@@ -71,8 +71,8 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
 
     @Test
     public void testNoComponent() throws IOException {
-        List<Component> component = recognizer.analyze(new File("../../resources/projects/simple").getCanonicalPath());
-        assertEquals(0, component.size());
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/simple").getCanonicalPath());
+        assertEquals(0, components.size());
     }
 
     @Test
