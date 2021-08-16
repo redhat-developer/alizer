@@ -1,0 +1,3 @@
+com.redhat.devtools.alizer.api.spi.service.JavaServiceDetectorProviderImpl
+com.redhat.devtools.alizer.api.spi.service.NodejsServiceDetectorProviderImpl
+com.redhat.devtools.alizer.api.spi.service.PythonServiceDetectorProviderImpl

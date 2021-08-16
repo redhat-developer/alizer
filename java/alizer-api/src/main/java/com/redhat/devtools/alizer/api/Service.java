@@ -6,17 +6,17 @@
  * and is available at http://www.eclipse.org/legal/epl-v20.html
  *
  * Contributors:
- * Red Hat, Inc. - initial API and implementation
+ * Red Hat, Inc.
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
-public class RecognizerFactory {
-    public LanguageRecognizer createLanguageRecognizer() {
-        return new LanguageRecognizerImpl(this);
-    }
+public class Service {
 
-    public ComponentRecognizer createComponentRecognizer() {
-        return new ComponentRecognizerImpl(this);
+    String name;
+    Component component;
+
+    public Service(String name, Component component) {
+        this.name = name;
+        this.component = component;
     }
-    public ServiceRecognizerImpl createServiceRecognizer() { return new ServiceRecognizerImpl(this); }
 }

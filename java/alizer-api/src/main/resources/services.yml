@@ -1,0 +1,225 @@
+java:
+  arangodb:
+    dependencies:
+      - name: "ArangoDB Java Driver"
+        groupId: "com.arangodb"
+        artifactId: "arangodb-java-driver"
+  cassandradb:
+    dependencies:
+      - name: "CassandraDB Connector"
+        groupId: "com.mulesoft.connectors"
+        artifactId: "mule-cassandradb-connector"
+      - name: "Apache Cassandra Connector"
+        groupId: "org.apache.cassandra"
+        artifactId: "cassandra"
+  clickhouse:
+    dependencies:
+      - name: "ClickHouse JDBC driver"
+        groupId: "ru.yandex.clickhouse"
+        artifactId: "clickhouse-jdbc"
+  druid:
+    dependencies:
+      - name: "Druid Java driver"
+        groupId: "in.zapr.druid"
+        artifactId: "druidry"
+  elasticsearch:
+    dependencies:
+      - name: "ElasticSearch"
+        groupId: "org.elasticsearch.client"
+        artifactId: "elasticsearch-rest-high-level-client"
+  etcd:
+    dependencies:
+      - name: "Etcd"
+        groupId: "io.etcd"
+        artifactId: "jetcd-core"
+  mariadb:
+    dependencies:
+      - name: "MariaDB Java Driver"
+        groupId: "org.mariadb.jdbc"
+        artifactId: "mariadb-java-client"
+  kafka:
+    dependencies:
+      - name: "Kafka Java Driver"
+        groupId: "org.apache.kafka"
+        artifactId: "kafka-clients"
+  mongodb:
+    dependencies:
+      - name: "MongoDB Java Driver"
+        groupId: "org.mongodb"
+        artifactId: "mongo-java"
+  mysql:
+    dependencies:
+      - name: "MySQL Java Driver"
+        groupId: "mysql"
+        artifactId: "mysql-connector-java"
+  postgresql:
+    dependencies:
+      - name: "PostgreSQL JDBC Driver"
+        groupId: "org.postgresql"
+        artifactId: "postgresql"
+  redis:
+    dependencies:
+      - name: "Jedis"
+        groupId: "redis.clients"
+        artifactId: "jedis"
+      - name: "Lettuce"
+        groupId: "io.lettuce"
+        artifactId: "lettuce-core"
+quarkus:
+  cassandradb:
+    dependencies:
+      - name: "Quarkus Cassandra"
+        configuration: "quarkus.cassandra"
+  elasticsearch:
+    dependencies:
+      - name: "Quarkus Elasticsearch"
+        groupId: "io.quarkus"
+        artifactId: "quarkus-elasticsearch-rest-client"
+  kafka:
+    dependencies:
+      - name: "Quarkus Kafka"
+        groupId: "io.quarkus"
+        artifactId: "quarkus-smallrye-reactive-messaging-kafka"
+        configuration: "kafka.bootstrap.servers"
+  mariadb:
+    dependencies:
+      - name: "Quarkus MariaDB"
+        configuration: "db-kind=mariadb"
+  mongodb:
+    dependencies:
+      - name: "Quarkus Mongodb"
+        groupId: "io.quarkus"
+        artifactId: "quarkus-mongodb"
+        configuration: "quarkus.mongodb"
+  mysql:
+    dependencies:
+      - name: "Quarkus MySQL"
+        groupId: "io.quarkus"
+        artifactId: "quarkus-reactive-mysql-client"
+        configuration: ".db-kind=mysql"
+  postgresql:
+    dependencies:
+      - name: "Reactive PG datasource"
+        groupId: "io.quarkus"
+        artifactId: "quarkus-reactive-pg-client"
+        configuration: ".db-kind=postgresql"
+  redis:
+    dependencies:
+      - name: "Quarkus Redis"
+        groupId: "io.quarkus"
+        artifactId: "quarkus-redis-client"
+vertx:
+  cassandradb:
+    dependencies:
+      - name: "Vertx Cassandra"
+        groupId: "io.vertx"
+        artifactId: "vertx-cassandra-client"
+  kafka:
+    dependencies:
+      - name: "Vertx Kafka"
+        groupId: "io.vertx"
+        artifactId: "vertx-kafka-client"
+  mongodb:
+    dependencies:
+      - name: "Vertx Mongodb"
+        groupId: "io.vertx"
+        artifactId: "vertx-mongo-client"
+  mysql:
+    dependencies:
+      - name: "Vertx Reactive MySQL Client"
+        groupId: "io.vertx"
+        artifactId: "vertx-mysql-client"
+  postgresql:
+    dependencies:
+      - name: "Vertx Reactive PostgreSQL Client"
+        groupId: "io.vertx"
+        artifactId: "vertx-pg-client"
+  redis:
+    dependencies:
+      - name: "Vertx Reactive Redis Client"
+        groupId: "io.vertx"
+        artifactId: "vertx-redis-client"
+nodejs:
+  arangodb:
+    dependencies:
+      - "arangojs"
+  cassandradb:
+    dependencies:
+      - "cassandra-driver"
+  clickhouse:
+    dependencies:
+      - "clickhouse"
+  druid:
+    dependencies:
+      - "plywood"
+      - "druid-query"
+  elasticsearch:
+    dependencies:
+      - "@elastic/elasticsearch"
+  etcd:
+    dependencies:
+      - "etcd3"
+  kafka:
+    dependencies:
+      - "kafkajs"
+      - "rdkafka"
+  mariadb:
+    dependencies:
+      - "mariadb"
+  mongodb:
+    dependencies:
+      - "mongodb"
+      - "mongoose"
+  mysql:
+    dependencies:
+      - "mysql"
+      - "mysql2"
+  postgresql:
+    dependencies:
+      - "pg"
+  redis:
+    dependencies:
+      - "tedis"
+      - "redis"
+      - "ioredis"
+      - "connect-redis"
+python:
+  arangodb:
+    dependencies:
+      - "pyArango"
+  cassandradb:
+    dependencies:
+      - "cassandra"
+  clickhouse:
+    dependencies:
+      - "clickhouse"
+  druid:
+    dependencies:
+      - "pydruid"
+  elasticsearch:
+    dependencies:
+      - "elasticsearch"
+  etcd:
+    dependencies:
+      - "etcd"
+  kafka:
+    dependencies:
+      - "kafka"
+  mariadb:
+    dependencies:
+      - "mariadb"
+  mongodb:
+    dependencies:
+      - "pymongo"
+  mysql:
+    dependencies:
+      - "mysql.connector"
+  postgresql:
+    dependencies:
+      - "psycopg2"
+      - "psycopg3"
+  redis:
+    dependencies:
+      - "redis"
+      - "walrus"
+

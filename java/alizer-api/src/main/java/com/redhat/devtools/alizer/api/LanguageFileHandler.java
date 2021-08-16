@@ -13,6 +13,7 @@ package com.redhat.devtools.alizer.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.redhat.devtools.alizer.api.utils.Utils;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -49,8 +50,7 @@ public class LanguageFileHandler {
 
     private void initLanguages() {
         try {
-            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_YAML_PATH), Charset.defaultCharset());
-            JsonNode node = YAML_MAPPER.readTree(yamlAsString);
+            JsonNode node = Utils.getResourceAsJsonNode("/" + LANGUAGES_YAML_PATH);
             for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
                 Map.Entry<String, JsonNode> entry = it.next();
                 String nameLanguage = entry.getKey();
