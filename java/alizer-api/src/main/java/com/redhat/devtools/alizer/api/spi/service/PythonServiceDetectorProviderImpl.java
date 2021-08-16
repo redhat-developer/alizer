@@ -10,10 +10,8 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.spi.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.redhat.devtools.alizer.api.Language;
-import com.redhat.devtools.alizer.api.utils.Utils;
+import com.redhat.devtools.alizer.api.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,13 +20,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class PythonServiceDetectorProviderImpl implements ServiceDetectorProvider {
+public class PythonServiceDetectorProviderImpl extends ServiceDetectorProvider {
     @Override
     public ServiceDetectorProvider create() {
         return new PythonServiceDetectorProviderImpl();
@@ -40,44 +36,47 @@ public class PythonServiceDetectorProviderImpl implements ServiceDetectorProvide
     }
 
     @Override
-    public List<String> getServices(Path root, Language language) {
-        Set<String> services = new HashSet<>();
+    public Set<Service> getServices(Path root, Language language) {
+        Set<Service> services = new HashSet<>();
         try {
-            JsonNode node = Utils.getResourceAsJsonNode("/services.yml");
-            Map<String, ArrayNode> dependencies = Utils.getDependenciesByLanguage(node, "python");
+            List<ServiceDescriptor> descriptors = getServicesDescriptor(Collections.singletonList("python"));
             List<Path> allPythonFiles = Files.walk(root, Integer.MAX_VALUE)
                     .filter(path -> Files.isRegularFile(path) && path.toString().toLowerCase().endsWith(".py"))
                     .collect(Collectors.toList());
             for (Path path: allPythonFiles) {
-                services.addAll(getTagsInFile(path, dependencies));
+                services.addAll(getServicesFromFile(path, descriptors));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ArrayList<>(services);
+        return services;
     }
 
-    private List<String> getTagsInFile(Path file, Map<String, ArrayNode> tags) throws IOException {
+    private List<Service> getServicesFromFile(Path file, List<ServiceDescriptor> descriptors) throws IOException {
         if (!file.toFile().exists()) {
             return Collections.emptyList();
         }
-        List<String> tagsFound = new ArrayList<>();
-        List<String> allLines = Files.readAllLines(file);
-        for(String line: allLines) {
-            Optional<String> service = getServiceByDependency(line, tags);
-            service.ifPresent(tagsFound::add);
+        List<Service> services = new ArrayList<>();
+        List<String> allImportsLines = Files.readAllLines(file).stream()
+                .filter(line -> Pattern.matches("^\\s*(import|from)\\s*.*", line))
+                .collect(Collectors.toList());
+        for(String line: allImportsLines) {
+            Service service = getServiceFromLine(line, descriptors);
+            if (service != null) {
+                services.add(service);
+            }
         }
-        return tagsFound;
+        return services;
     }
 
-    private Optional<String> getServiceByDependency(String line, Map<String, ArrayNode> dependencies) {
-        return dependencies.entrySet().stream().filter(entry -> {
-            for (JsonNode node: entry.getValue()) {
-                if (Pattern.matches("(import|from)\\s*" + node.asText(), line)) {
-                    return true;
+    private Service getServiceFromLine(String line, List<ServiceDescriptor> descriptors) {
+        for (ServiceDescriptor serviceDescriptor: descriptors) {
+            for (DependencyDescriptor dependencyDescriptor: serviceDescriptor.getAllDependenciesDescriptor()) {
+                if (line.toLowerCase().contains(dependencyDescriptor.getName())) {
+                    return serviceDescriptor.getService();
                 }
             }
-            return false;
-        }).map(Map.Entry::getKey).findFirst();
+        }
+        return null;
     }
 }

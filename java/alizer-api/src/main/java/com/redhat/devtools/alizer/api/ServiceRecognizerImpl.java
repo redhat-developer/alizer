@@ -15,32 +15,34 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 public class ServiceRecognizerImpl extends Recognizer {
     public ServiceRecognizerImpl(RecognizerFactory builder) {
         super(builder);
     }
 
-    public List<Component> analyze(String path) throws IOException {
+    public List<Service> analyze(String path) throws IOException {
         ComponentRecognizer componentRecognizer = new RecognizerFactory().createComponentRecognizer();
         List<Component> components = componentRecognizer.analyze(path);
 
-
-        List<String> services = new ArrayList<>();
+        Set<Service> services = new HashSet<>();
         for(Component component: components) {
-            services.addAll(getServices(component.getPath(), component.getLanguages().get(0)));
+            services.addAll(getServices(component));
         }
-        return components;
+        return new ArrayList<>(services);
     }
 
-    public List<String> getServices(Path root, Language language) {
+    private Set<Service> getServices(Component component) {
+        Language language = component.getLanguages().get(0);
         ServiceDetectorProvider detector = getServiceDetector(language.getName());
         if (detector != null) {
-            return detector.create().getServices(root, language);
+            return detector.create().getServices(component.getPath(), language);
         }
-        return Collections.emptyList();
+        return Collections.emptySet();
     }
 
     public static ServiceDetectorProvider getServiceDetector(String language) {

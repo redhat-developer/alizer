@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import org.junit.Before;
@@ -18,7 +17,6 @@ import org.junit.Test;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class ServiceRecognizerTest {
     private ServiceRecognizerImpl recognizer;
@@ -30,13 +28,13 @@ public class ServiceRecognizerTest {
 
     @Test
     public void testDjangoComponent() throws IOException {
-        List<Component> components = recognizer.analyze("/home/luca/Public/github.com/labelmatter/lm-api");
+        List<Service> components = recognizer.analyze("/home/luca/Public/github.com/labelmatter/lm-api");
         assertEquals(1, components.size());
     }
 
     @Test
     public void testNodejsComponent() throws IOException {
-        List<Component> components = recognizer.analyze("/home/luca/Public/github.com/other/test-services");
+        List<Service> components = recognizer.analyze("/home/luca/Public/github.com/other/test-services");
         assertEquals(1, components.size());
     }
 }

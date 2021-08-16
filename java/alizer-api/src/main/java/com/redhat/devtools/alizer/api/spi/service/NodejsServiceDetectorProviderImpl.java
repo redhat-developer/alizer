@@ -10,20 +10,19 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.spi.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.redhat.devtools.alizer.api.Language;
+import com.redhat.devtools.alizer.api.Service;
 import com.redhat.devtools.alizer.api.utils.Utils;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 
-public class NodejsServiceDetectorProviderImpl implements ServiceDetectorProvider {
+public class NodejsServiceDetectorProviderImpl extends ServiceDetectorProvider {
     @Override
     public ServiceDetectorProvider create() {
         return new NodejsServiceDetectorProviderImpl();
@@ -36,38 +35,39 @@ public class NodejsServiceDetectorProviderImpl implements ServiceDetectorProvide
 
 
     @Override
-    public List<String> getServices(Path root, Language language) {
+    public Set<Service> getServices(Path root, Language language) {
         try {
-            JsonNode node = Utils.getResourceAsJsonNode("/services.yml");
-            Map<String, ArrayNode> dependencies = Utils.getDependenciesByLanguage(node, "nodejs");
-            return getDependenciesUsed(root.resolve("package.json"), dependencies);
+            List<ServiceDescriptor> descriptors = getServicesDescriptor(Collections.singletonList("nodejs"));
+            return getServices(root.resolve("package.json"), descriptors);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return Collections.emptyList();
+        return Collections.emptySet();
     }
 
-    private List<String> getDependenciesUsed(Path packageJsonFile, Map<String, ArrayNode> dependencies) throws IOException {
-        List<String> dependenciesUsed = new ArrayList<>();
-        Map content = Utils.getJsonFileAsMap(packageJsonFile.toFile());
-        if (content.containsKey("dependencies")) {
-            ((Map)content.get("dependencies")).keySet().forEach(k -> {
-                Optional<String> service = getServiceByDependency(k.toString(), dependencies);
-                service.ifPresent(dependenciesUsed::add);
+    private Set<Service> getServices(Path packageJsonFile, List<ServiceDescriptor> descriptors) throws IOException {
+        Set<Service> services = new HashSet<>();
+        Map packageJsonContent = Utils.getJsonFileAsMap(packageJsonFile.toFile());
+        if (packageJsonContent.containsKey("dependencies")) {
+            ((Map)packageJsonContent.get("dependencies")).keySet().forEach(dependency -> {
+                Service service = getServiceByDependency(dependency.toString(), descriptors);
+                if (service != null) {
+                    services.add(service);
+                }
             });
         }
-        return dependenciesUsed;
+        return services;
     }
 
-    private Optional<String> getServiceByDependency(String dependency, Map<String, ArrayNode> dependencies) {
-        return dependencies.entrySet().stream().filter(entry -> {
-            for (JsonNode node: entry.getValue()) {
-                if (node.asText().equalsIgnoreCase(dependency)) {
-                    return true;
+    private Service getServiceByDependency(String dependency, List<ServiceDescriptor> descriptors) {
+        for (ServiceDescriptor serviceDescriptor: descriptors) {
+            for (DependencyDescriptor dependencyDescriptor: serviceDescriptor.getAllDependenciesDescriptor()) {
+                if (dependencyDescriptor.getName().equalsIgnoreCase(dependency)) {
+                    return serviceDescriptor.getService();
                 }
             }
-            return false;
-        }).map(Map.Entry::getKey).findFirst();
+        }
+        return null;
     }
 }

@@ -10,19 +10,19 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.spi.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.redhat.devtools.alizer.api.Language;
-import com.redhat.devtools.alizer.api.utils.Utils;
+import com.redhat.devtools.alizer.api.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class JavaServiceDetectorProviderImpl implements ServiceDetectorProvider {
+public class JavaServiceDetectorProviderImpl extends ServiceDetectorProvider {
     @Override
     public ServiceDetectorProvider create() {
         return new JavaServiceDetectorProviderImpl();
@@ -44,56 +44,48 @@ public class JavaServiceDetectorProviderImpl implements ServiceDetectorProvider 
     }
 
     @Override
-    public List<String> getServices(Path root, Language language) {
+    public Set<Service> getServices(Path root, Language language) {
 
         try {
-            JsonNode node = Utils.getResourceAsJsonNode("/services.yml");
-            String field = getFieldName(language);
-            Map<String, ArrayNode> dependencies = Utils.getDependenciesByLanguage(node, field);
-            List<String> services = getServices(root, language, dependencies);
-            if (field.equals("quarkus")) {
-               // dependencies = Utils.getJsonFieldAsStringMap(node, field + "-config");
-                // services.addAll(getServices(root, language, dependencies)); //TODO check quarkus config file
-            }
-            return services;
+            List<String> languagesAndFrameworks = getLanguagesAndFrameworks(language);
+            List<ServiceDescriptor> descriptors = getServicesDescriptor(languagesAndFrameworks);
+            return getServices(root, language, descriptors);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
         }
 
-        return Collections.emptyList();
+        return Collections.emptySet();
     }
 
-    private String getFieldName(Language language) {
-        String field = "";
+    private List<String> getLanguagesAndFrameworks(Language language) {
+        List<String> languagesAndFrameworks = new ArrayList<>();
         if (!language.getFrameworks().isEmpty()) {
             if (language.getFrameworks().contains("Quarkus")) {
-                field = "quarkus";
+                languagesAndFrameworks.add("quarkus");
             } else if (language.getFrameworks().contains("Vertx")) {
-                field = "vertx";
+                languagesAndFrameworks.add("vertx");
             }
         }
-        if (field.isEmpty()) {
-            field = "java";
-        }
-        return field;
+        languagesAndFrameworks.add("java");
+        return languagesAndFrameworks;
     }
 
-    private List<String> getServices(Path root, Language language, Map<String, ArrayNode> dependencies) throws IOException, ParserConfigurationException, SAXException {
+    private Set<Service> getServices(Path root, Language language, List<ServiceDescriptor> descriptors) throws IOException, ParserConfigurationException, SAXException {
         //TODO if vertx or quarkus also check for simple java dep
 
         if (language.getTools().contains("Gradle")) {
-            return getTagsInFile(root.resolve("build.gradle"), dependencies);
+            return getServiceByTagsInConfigFile(root.resolve("build.gradle"), descriptors);
         } else if (language.getTools().contains("Maven")) {
-            return getGroupIdsMaven(root.resolve("pom.xml"), dependencies);
+            return getServiceByXMLTagsInConfigFile(root.resolve("pom.xml"), descriptors);
         }
-        return Collections.emptyList();
+        return Collections.emptySet();
     }
 
-    private List<String> getGroupIdsMaven(Path file, Map<String, ArrayNode> tags) throws ParserConfigurationException, IOException, SAXException {
+    private Set<Service> getServiceByXMLTagsInConfigFile(Path file, List<ServiceDescriptor> serviceDescriptors) throws ParserConfigurationException, IOException, SAXException {
         if (!file.toFile().exists()) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
-        List<String> tagsFound = new ArrayList<>();
+        Set<Service> services = new HashSet<>();
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(file.toFile());
@@ -119,45 +111,47 @@ public class JavaServiceDetectorProviderImpl implements ServiceDetectorProvider 
 
             String finalDependencyGroupId = dependencyGroupId;
             String finalDependencyArtifactId = dependencyArtifactId;
-            Optional<String> tag = tags.entrySet().stream().filter(t -> {
-                for (JsonNode item : t.getValue()) {
-                    String groupId = item.has("groupId") ? item.get("groupId").asText() : "";
-                    String artifactId = item.has("artifactId") ? item.get("artifactId").asText() : "";
-                    if (!groupId.isEmpty() && !artifactId.isEmpty()
-                            && finalDependencyGroupId.contains(groupId) && finalDependencyArtifactId.contains(artifactId)) {
-                        return true;
-                    }
-                }
-                return false;
-            }).map(Map.Entry::getKey).findAny();
-            tag.ifPresent(s -> tagsFound.add(tag.get()));
+            Service service = getServiceByTag(serviceDescriptors, (groupId, artifactId) -> !groupId.isEmpty() && !artifactId.isEmpty()
+                    && finalDependencyGroupId.contains(groupId) && finalDependencyArtifactId.contains(artifactId));
+            if (service != null) {
+                services.add(service);
+            }
         }
-        return tagsFound;
+        return services;
     }
 
-    private List<String> getTagsInFile(Path file, Map<String, ArrayNode> tags) throws IOException {
+    private Set<Service> getServiceByTagsInConfigFile(Path file, List<ServiceDescriptor> serviceDescriptors) throws IOException {
         if (!file.toFile().exists()) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
-        List<String> tagsFound = new ArrayList<>();
+        Set<Service> services = new HashSet<>();
         List<String> allLines = Files.readAllLines(file);
         allLines.stream().filter(line -> Pattern.matches("\\s*(implementation|compile).*", line))
                 .forEach(line -> {
-                    Optional<String> tag = tags.entrySet().stream().filter(t -> {
-                        for (JsonNode item : t.getValue()) {
-                            String groupId = item.has("groupId") ? item.get("groupId").asText() : "";
-                            String artifactId = item.has("artifactId") ? item.get("artifactId").asText() : "";
-                            if (!groupId.isEmpty() && !artifactId.isEmpty()
+                    Service service = getServiceByTag(serviceDescriptors, (groupId, artifactId) ->
+                            !groupId.isEmpty() && !artifactId.isEmpty()
                                 && (line.contains(groupId + ":" + artifactId)
-                                    || Pattern.matches("group:\\s*'" + groupId + "'\\s*,\\s*name:\\s*'" + artifactId, line))) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }).map(Map.Entry::getKey).findAny();
-                    tag.ifPresent(s -> tagsFound.add(tag.get()));
+                                    || Pattern.matches("group:\\s*'" + groupId + "'\\s*,\\s*name:\\s*'" + artifactId, line)));
+                    if (service != null) {
+                        services.add(service);
+                    }
                 }
         );
-        return tagsFound;
+        return services;
+    }
+
+    private Service getServiceByTag(List<ServiceDescriptor> serviceDescriptors, BiFunction<String, String, Boolean> isService) {
+        for (ServiceDescriptor serviceDescriptor: serviceDescriptors) {
+            for (DependencyDescriptor dependencyDescriptor: serviceDescriptor.getAllDependenciesDescriptor()) {
+                Map<String, String> attributes = dependencyDescriptor.getAttributes();
+                String groupId = attributes.getOrDefault("groupId", "");
+                String artifactId = attributes.getOrDefault("artifactId", "");
+                if (isService.apply(groupId, artifactId)) {
+                    return serviceDescriptor.getService();
+                }
+                //TODO check quarkus configuration file if quarkus is used
+            }
+        }
+        return null;
     }
 }

@@ -10,13 +10,51 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
+import java.util.List;
+
 public class Service {
 
     String name;
-    Component component;
+    List<String> operators;
+    String component;
 
-    public Service(String name, Component component) {
+    public Service(String name, List<String> operators) {
+        this.name = name;
+        this.operators = operators;
+    }
+
+    public Service(String name, String component, List<String> operators) {
         this.name = name;
         this.component = component;
+        this.operators = operators;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getOperators() {
+        return operators;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode()
+                + (component == null ? 0 : component.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Service
+                && ((Service)obj).getName().equalsIgnoreCase(this.name)
+                && ((Service)obj).getComponent().equalsIgnoreCase(this.component);
     }
 }
