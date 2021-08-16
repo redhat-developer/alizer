@@ -18,7 +18,7 @@ import org.junit.Test;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class ComponentRecognizerTest extends AbstractRecognizerTest {
     private ComponentRecognizerImpl recognizer;
@@ -30,79 +30,74 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
 
     @Test
     public void testSelfComponent() throws IOException {
-        List<Component> components = recognizer.analyze(".", devfileTypes);
+        List<Component> components = recognizer.analyze(".");
         assertEquals(1, components.size());
     }
 
     @Test
     public void testDjangoComponent() throws IOException {
-        List<Component> components = recognizer.analyze(new File("../../resources/projects/django").getCanonicalPath(), devfileTypes);
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/django").getCanonicalPath());
         assertEquals(1, components.size());
-        assertEquals(PYTHON_DJANGO, components.get(0).getDevfileType());
-        assertNull(components.get(0).getDevfile());
+        assertEquals("Python", components.get(0).getLanguages().get(0).getName());
     }
 
     @Test
     public void testMicronautComponent() throws IOException {
-        List<Component> components = recognizer.analyze(new File("../../resources/projects/micronaut").getCanonicalPath(), devfileTypes);
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/micronaut").getCanonicalPath());
         assertEquals(1, components.size());
-        assertEquals(JAVA_MAVEN, components.get(0).getDevfileType());
-        assertNull(components.get(0).getDevfile());
+        assertEquals("Java", components.get(0).getLanguages().get(0).getName());
     }
 
     @Test
     public void testQuarkusComponent() throws IOException {
-        List<Component> components = recognizer.analyze(new File("../../resources/projects/nodejs-ex").getCanonicalPath(), devfileTypes);
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/quarkus").getCanonicalPath());
         assertEquals(1, components.size());
-        assertEquals(NODEJS, components.get(0).getDevfileType());
-        assertNull(components.get(0).getDevfile());
+        assertEquals("Java", components.get(0).getLanguages().get(0).getName());
+        assertTrue(components.get(0).getLanguages().get(0).getFrameworks().contains("Quarkus"));
     }
 
     @Test
     public void testNodeComponent() throws IOException {
-        List<Component> components = recognizer.analyze(new File("../../resources/projects/quarkus").getCanonicalPath(), devfileTypes);
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/nodejs-ex").getCanonicalPath());
         assertEquals(1, components.size());
-        assertEquals(JAVA_QUARKUS, components.get(0).getDevfileType());
-        assertNull(components.get(0).getDevfile());
+        assertEquals("JavaScript", components.get(0).getLanguages().get(0).getName());
     }
 
     @Test
     public void testSingleComponentWithExistingDevfile() throws IOException {
-        List<Component> components = recognizer.analyze(new File("../../resources/projects/nodejs-ex-w-devfile").getCanonicalPath(), devfileTypes);
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/nodejs-ex-w-devfile").getCanonicalPath());
         assertEquals(1, components.size());
-        assertNull(components.get(0).getDevfileType());
-        assertEquals(components.get(0).getPath().resolve("devfile.yaml"), components.get(0).getDevfile());
     }
 
     @Test
     public void testNoComponent() throws IOException {
-        List<Component> components = recognizer.analyze(new File("../../resources/projects/simple").getCanonicalPath(), devfileTypes);
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/simple").getCanonicalPath());
         assertEquals(0, components.size());
     }
 
     @Test
     public void testDoubleComponents() throws IOException {
-        List<Component> components = recognizer.analyze(new File("../../resources/projects/double-components").getCanonicalPath(), devfileTypes);
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/double-components").getCanonicalPath());
         assertEquals(2, components.size());
-        assertEquals(2, components.stream().filter(component -> component.getDevfileType().equals(NODEJS)).count());
+        assertEquals("JavaScript", components.get(0).getLanguages().get(0).getName());
+        assertEquals("JavaScript", components.get(1).getLanguages().get(0).getName());
     }
 
     @Test
     public void testWrappedComponents() throws IOException {
-        List<Component> components = recognizer.analyze(new File("../../resources/projects/component-wrapped-in-folder").getCanonicalPath(), devfileTypes);
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/component-wrapped-in-folder").getCanonicalPath());
         assertEquals(1, components.size());
-        assertEquals(1, components.stream().filter(component -> component.getDevfileType().equals(JAVA_QUARKUS)).count());
+        assertEquals("Java", components.get(0).getLanguages().get(0).getName());
         assertEquals(new File("../../resources/projects/component-wrapped-in-folder/wrapper/quarkus").getCanonicalPath(), components.get(0).getPath().toString());
     }
 
     @Test
     public void testMultipleComponents() throws IOException {
-        List<Component> components = recognizer.analyze(new File("../../resources/projects").getCanonicalPath(), devfileTypes);
+        List<Component> components = recognizer.analyze(new File("../../resources/projects").getCanonicalPath());
         assertEquals(8, components.size());
-        assertEquals(1, components.stream().filter(component -> PYTHON_DJANGO.equals(component.getDevfileType())).count());
-        assertEquals(2, components.stream().filter(component -> JAVA_QUARKUS.equals(component.getDevfileType())).count());
-        assertEquals(3, components.stream().filter(component -> NODEJS.equals(component.getDevfileType())).count());
-        assertEquals(1, components.stream().filter(component -> JAVA_MAVEN.equals(component.getDevfileType())).count());
-        assertEquals(1, components.stream().filter(component -> component.getDevfile() != null).count());
+        assertEquals(1, components.stream().filter(component -> "python".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
+        assertEquals(2, components.stream().filter(component -> component.getLanguages().get(0).getFrameworks().contains("Quarkus")).count());
+        assertEquals(4, components.stream().filter(component -> "javascript".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
+        assertEquals(3, components.stream().filter(component -> "java".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
     }
 }

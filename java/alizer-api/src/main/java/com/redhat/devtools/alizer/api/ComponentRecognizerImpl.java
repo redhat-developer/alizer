@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,14 +28,14 @@ public class ComponentRecognizerImpl extends Recognizer {
         super(builder);
     }
 
-    public <T extends DevfileType> List<Component> analyze(String path, List<T> devfileTypes) throws IOException {
+    public List<Component> analyze(String path) throws IOException {
         List<Path> files = getFilePaths(Paths.get(path));
-        List<Component> components = getComponents(files, devfileTypes);
+        List<Component> components = getComponents(files);
 
         // it may happen that a language has no a specific configuration file (e.g opposite to JAVA -> pom.xml and Nodejs -> package.json)
-        // we then rely on the language recognizer and use the most used language to pick a devfile
+        // we then rely on the language recognizer
         List<Path> directoriesPathsWithoutConfigFile = getDirectoriesPathsWithoutConfigFile(Paths.get(path), components);
-        components.addAll(getComponentsWithoutConfigFile(directoriesPathsWithoutConfigFile, devfileTypes));
+        components.addAll(getComponentsWithoutConfigFile(directoriesPathsWithoutConfigFile));
         return components;
     }
 
@@ -77,10 +76,10 @@ public class ComponentRecognizerImpl extends Recognizer {
         return false;
     }
 
-    private <T extends DevfileType> List<Component> getComponentsWithoutConfigFile(List<Path> directories, List<T> devfileTypes) throws IOException {
+    private List<Component> getComponentsWithoutConfigFile(List<Path> directories) throws IOException {
         List<Component> components = new ArrayList<>();
         for (Path directory: directories) {
-            Component component = getComponent(directory, "", devfileTypes);
+            Component component = getComponent(directory, "");
             // only takes component with languages that have no config file
             // E.g if the directory consists of javascript files but it doesn't contain a package.json, something is wrong
             // and we do not consider it as an actual component
@@ -100,37 +99,30 @@ public class ComponentRecognizerImpl extends Recognizer {
      * @return true if it is a valid component, false otherwise
      */
     private boolean isValidNoConfigComponent(Component component) {
-        DevfileType devfileType = component.getDevfileType();
-        String language = devfileType == null ? component.getLanguages().get(0).getName() : devfileType.getLanguage();
+        String language = component.getLanguages().get(0).getName();
         LanguageFileItem languageFileItem = LanguageFileHandler.get().getLanguageByNameOrAlias(language);
         return languageFileItem.getConfigurationFiles().isEmpty();
     }
 
-    private <T extends DevfileType> List<Component> getComponents(List<Path> files, List<T> devfileTypes) throws IOException {
+    private List<Component> getComponents(List<Path> files) throws IOException {
         Map<String, String> configurationPerLanguage = LanguageFileHandler.get().getConfigurationPerLanguageMapping();
         List<Component> components = new ArrayList<>();
         for (Path filepath: files) {
             if (configurationPerLanguage.containsKey(filepath.getFileName().toString())
                     && isValidPathPerLanguage(filepath, configurationPerLanguage.get(filepath.getFileName().toString()))) {
-                components.add(getComponent(filepath.getParent(), configurationPerLanguage.get(filepath.getFileName().toString()), devfileTypes));
+                components.add(getComponent(filepath.getParent(), configurationPerLanguage.get(filepath.getFileName().toString())));
             }
         }
         return components;
     }
 
-    private <T extends DevfileType> Component getComponent(Path root, String configurationLanguage, List<T> devfileTypes) throws IOException {
+    private Component getComponent(Path root, String configurationLanguage) throws IOException {
         RecognizerBuilder recognizerBuilder = new RecognizerBuilder();
         LanguageRecognizer languageRecognizer = recognizerBuilder.languageRecognizer();
 
         List<Language> languages = getLanguagesWeightedByConfigFile(languageRecognizer.analyze(root.toString()), configurationLanguage);
 
-        File devfile = root.resolve("devfile.yaml").toFile();
-        if (devfile.exists()) {
-            return new Component(root, languages, devfile.toPath());
-        }
-
-        DevfileType devfileType = languageRecognizer.selectDevFileFromTypes(languages, devfileTypes);
-        return new Component(root, languages, devfileType);
+        return new Component(root, languages);
     }
 
     /**

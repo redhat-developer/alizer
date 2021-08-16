@@ -13,20 +13,14 @@ package com.redhat.devtools.alizer.cli;
 import com.redhat.devtools.alizer.api.Component;
 import com.redhat.devtools.alizer.api.ComponentRecognizerImpl;
 import com.redhat.devtools.alizer.api.RecognizerBuilder;
-import com.redhat.devtools.alizer.registry.support.DevfileMetadata;
-import com.redhat.devtools.alizer.registry.support.DevfileRegistryMetadataProviderBuilder;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.qute.api.CheckedTemplate;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "component")
 public class ComponentCommand extends BaseCommand implements Runnable{
-
-    @CommandLine.Option(names = {"-r", "--registry"}, description = "Pass the registry")
-    List<String> registries;
 
     @CheckedTemplate
     public static class Templates {
@@ -36,13 +30,8 @@ public class ComponentCommand extends BaseCommand implements Runnable{
     @Override
     public void run() {
         ComponentRecognizerImpl reco = new RecognizerBuilder().componentRecognizer();
-        List<Component> components = null;
-
         try {
-            if (registries != null && !registries.isEmpty()) {
-                List<DevfileMetadata> devfiles = new DevfileRegistryMetadataProviderBuilder().withURLs(registries).build().getDevfileMetada();
-                components = reco.analyze(name, devfiles.stream().map(DevfileTypeAdapter::new).collect(Collectors.toList()));
-            }
+            List<Component> components = reco.analyze(name);
             System.out.println(getTemplateForFormat(Templates.result(components)).render());
         } catch (IOException e) {}
     }

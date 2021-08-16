@@ -8,15 +8,7 @@
         {#for language in comp.languages}
         "{language.name}"{#if hasNext},{/if}
         {/for}
-      ],
-      "devfile":
-        {#if comp.devfileType != null}
-          "{comp.devfileType.name}"
-        {#else if comp.devfile != null}
-          "{comp.devfile}"
-        {#else}
-          "No devfile found to match"
-        {/if}
+      ]
     }{#if hasNext},{/if}{/for}
   ]
 }

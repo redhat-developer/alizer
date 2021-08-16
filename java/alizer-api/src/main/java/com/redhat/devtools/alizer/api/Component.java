@@ -17,22 +17,10 @@ public class Component {
 
     private Path path;
     private List<Language> languages;
-    private DevfileType devfileType;
-    private Path devfile;
 
-    public Component(Path path, List<Language> languages, DevfileType devfileType) {
-        this(path, languages, null, devfileType);
-    }
-
-    public Component(Path path, List<Language> languages, Path devfile) {
-        this(path, languages, devfile, null);
-    }
-
-    public Component(Path path, List<Language> languages, Path devfile, DevfileType devfileType) {
+    public Component(Path path, List<Language> languages) {
         this.path = path;
         this.languages = languages;
-        this.devfile = devfile;
-        this.devfileType = devfileType;
     }
 
     public Path getPath() {
@@ -43,15 +31,4 @@ public class Component {
         return languages;
     }
 
-    public DevfileType getDevfileType() {
-        return devfileType;
-    }
-
-    public void setDevfileType(DevfileType devfileType) {
-        this.devfileType = devfileType;
-    }
-
-    public Path getDevfile() {
-        return devfile;
-    }
 }
