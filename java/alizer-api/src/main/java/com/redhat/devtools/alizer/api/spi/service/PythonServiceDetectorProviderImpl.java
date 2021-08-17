@@ -36,7 +36,7 @@ public class PythonServiceDetectorProviderImpl extends ServiceDetectorProvider {
     }
 
     @Override
-    public Set<Service> getServices(Path root, Language language) {
+    public List<Service> getServices(Path root, Language language) {
         Set<Service> services = new HashSet<>();
         try {
             List<ServiceDescriptor> descriptors = getServicesDescriptor(Collections.singletonList("python"));
@@ -49,7 +49,7 @@ public class PythonServiceDetectorProviderImpl extends ServiceDetectorProvider {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return services;
+        return new ArrayList<>(services);
     }
 
     private List<Service> getServicesFromFile(Path file, List<ServiceDescriptor> descriptors) throws IOException {

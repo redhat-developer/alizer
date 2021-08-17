@@ -15,6 +15,7 @@ import com.redhat.devtools.alizer.api.Service;
 import com.redhat.devtools.alizer.api.utils.Utils;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -35,15 +36,16 @@ public class NodejsServiceDetectorProviderImpl extends ServiceDetectorProvider {
 
 
     @Override
-    public Set<Service> getServices(Path root, Language language) {
+    public List<Service> getServices(Path root, Language language) {
         try {
             List<ServiceDescriptor> descriptors = getServicesDescriptor(Collections.singletonList("nodejs"));
-            return getServices(root.resolve("package.json"), descriptors);
+            Set<Service> services = getServices(root.resolve("package.json"), descriptors);
+            return new ArrayList<>(services);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return Collections.emptySet();
+        return Collections.emptyList();
     }
 
     private Set<Service> getServices(Path packageJsonFile, List<ServiceDescriptor> descriptors) throws IOException {

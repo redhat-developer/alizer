@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ServiceRecognizerTest {
+public class ServiceRecognizerTest extends AbstractRecognizerTest {
     private ServiceRecognizerImpl recognizer;
 
     @Before

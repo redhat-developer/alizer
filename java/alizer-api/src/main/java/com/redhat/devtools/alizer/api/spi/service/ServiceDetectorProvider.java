@@ -29,7 +29,7 @@ public abstract class ServiceDetectorProvider {
 
     public abstract List<String> getSupportedLanguages();
 
-    public abstract Set<Service> getServices(Path root, Language language);
+    public abstract List<Service> getServices(Path root, Language language);
 
     protected List<ServiceDescriptor> getServicesDescriptor(List<String> languagesAndFrameworks) throws IOException {
         JsonNode node = Utils.getResourceAsJsonNode("/services.yml");
