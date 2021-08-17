@@ -99,6 +99,9 @@ public class ComponentRecognizerImpl extends Recognizer {
      * @return true if it is a valid component, false otherwise
      */
     private boolean isValidNoConfigComponent(Component component) {
+        if (component.getLanguages().isEmpty()) {
+            return false;
+        }
         String language = component.getLanguages().get(0).getName();
         LanguageFileItem languageFileItem = LanguageFileHandler.get().getLanguageByNameOrAlias(language);
         return languageFileItem.getConfigurationFiles().isEmpty();

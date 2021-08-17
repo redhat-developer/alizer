@@ -39,13 +39,12 @@ public class DevfileCommand extends BaseCommand implements Runnable{
     public void run() {
         LanguageRecognizer reco = new RecognizerBuilder().languageRecognizer();
         DevfileType type = null;
-
-            try {
-                if (registries != null && !registries.isEmpty()) {
-                    List<DevfileMetadata> devfiles = new DevfileRegistryMetadataProviderBuilder().withURLs(registries).build().getDevfileMetada();
-                    type = reco.selectDevFileFromTypes(name,devfiles.stream().map(DevfileTypeAdapter::new).collect(Collectors.toList()));
-                }
-                System.out.println(getTemplateForFormat(Templates.result(type)).render());
-            } catch (IOException e) {}
-        }
+        try {
+            if (registries != null && !registries.isEmpty()) {
+                List<DevfileMetadata> devfiles = new DevfileRegistryMetadataProviderBuilder().withURLs(registries).build().getDevfileMetada();
+                type = reco.selectDevFileFromTypes(name, devfiles.stream().map(DevfileTypeAdapter::new).collect(Collectors.toList()));
+            }
+            System.out.println(getTemplateForFormat(Templates.result(type)).render());
+        } catch (IOException e) {}
+    }
 }
