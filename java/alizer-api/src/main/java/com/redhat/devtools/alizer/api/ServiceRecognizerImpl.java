@@ -12,9 +12,11 @@ package com.redhat.devtools.alizer.api;
 
 import com.redhat.devtools.alizer.api.spi.service.ServiceDetectorProvider;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Path;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 public class ServiceRecognizerImpl extends Recognizer {
@@ -22,15 +24,16 @@ public class ServiceRecognizerImpl extends Recognizer {
         super(builder);
     }
 
-    public List<Service> analyze(String path) throws IOException {
+    public Map<Path, List<Service>> analyze(String path) throws IOException {
         ComponentRecognizer componentRecognizer = new RecognizerFactory().createComponentRecognizer();
         List<Component> components = componentRecognizer.analyze(path);
 
-        List<Service> services = new ArrayList<>();
+        Map<Path, List<Service>> services = new HashMap<>();
         for(Component component: components) {
-            services.addAll(getServices(component));
+            List<Service> componentServices = getServices(component);
+            services.put(component.getPath(), componentServices);
         }
-        return new ArrayList<>(services);
+        return services;
     }
 
     private List<Service> getServices(Component component) {

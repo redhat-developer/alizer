@@ -1,0 +1,23 @@
+{ "success":  true,
+  "data":
+  [
+    {#for entry in result}
+    {
+      "component": "{entry.key}",
+      "services":
+      [
+        {#for service in entry.value}
+        {
+          "name": "{service.name}",
+          "operators": [
+            {#for operator in service.operators}
+            "{operator}"{#if hasNext},{/if}
+            {/for}
+          ]
+        }{#if hasNext},{/if}
+        {/for}
+      ]
+    }{#if hasNext},{/if}{/for}
+  ]
+
+}

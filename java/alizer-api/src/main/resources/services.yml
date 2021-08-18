@@ -167,9 +167,10 @@ postgresql:
         artifactId: "quarkus-reactive-pg-client"
         configuration: ".db-kind=postgresql"
     vertx:
-      - name: "Vertx Reactive PostgreSQL Client"
-        groupId: "io.vertx"
+      - groupId: "io.vertx"
         artifactId: "vertx-pg-client"
+      - groupId: "io.reactiverse"
+        artifactId: "reactive-pg-client"
     nodejs:
       - "pg"
     python:

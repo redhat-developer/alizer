@@ -14,18 +14,11 @@ import java.util.List;
 
 public class Service {
 
-    String name;
-    List<String> operators;
-    String component;
+    private String name;
+    private List<String> operators;
 
     public Service(String name, List<String> operators) {
         this.name = name;
-        this.operators = operators;
-    }
-
-    public Service(String name, String component, List<String> operators) {
-        this.name = name;
-        this.component = component;
         this.operators = operators;
     }
 
@@ -37,24 +30,14 @@ public class Service {
         return operators;
     }
 
-    public String getComponent() {
-        return component;
-    }
-
-    public void setComponent(String component) {
-        this.component = component;
-    }
-
     @Override
     public int hashCode() {
-        return name.hashCode()
-                + (component == null ? 0 : component.hashCode());
+        return name.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Service
-                && ((Service)obj).getName().equalsIgnoreCase(this.name)
-                && ((Service)obj).getComponent().equalsIgnoreCase(this.component);
+                && ((Service)obj).getName().equals(this.name);
     }
 }

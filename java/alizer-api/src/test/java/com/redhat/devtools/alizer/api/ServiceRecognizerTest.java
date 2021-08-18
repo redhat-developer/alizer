@@ -11,7 +11,9 @@
 package com.redhat.devtools.alizer.api;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,13 +30,19 @@ public class ServiceRecognizerTest extends AbstractRecognizerTest {
 
     @Test
     public void testDjangoComponent() throws IOException {
-        List<Service> components = recognizer.analyze("/home/luca/Public/github.com/labelmatter/lm-api");
-        assertEquals(1, components.size());
+        Map<Path, List<Service>> services = recognizer.analyze("/home/luca/Public/github.com/labelmatter/lm-api");
+        assertEquals(1, services.size());
     }
 
     @Test
     public void testNodejsComponent() throws IOException {
-        List<Service> components = recognizer.analyze("/home/luca/Public/github.com/other/test-services");
-        assertEquals(1, components.size());
+        Map<Path, List<Service>> services = recognizer.analyze("/home/luca/Public/github.com/other/test-services");
+        assertEquals(1, services.size());
+    }
+
+    @Test
+    public void testSelfComponent() throws IOException {
+        Map<Path, List<Service>> components = recognizer.analyze("/home/luca/Public/github.com/other/vertx-postgresql-starter");
+        assertEquals(1, 1);
     }
 }
