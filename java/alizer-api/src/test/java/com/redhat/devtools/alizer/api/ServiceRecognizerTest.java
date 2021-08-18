@@ -19,6 +19,7 @@ import org.junit.Test;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ServiceRecognizerTest extends AbstractRecognizerTest {
     private ServiceRecognizerImpl recognizer;
@@ -41,8 +42,40 @@ public class ServiceRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
-    public void testSelfComponent() throws IOException {
-        Map<Path, List<Service>> components = recognizer.analyze("/home/luca/Public/github.com/other/vertx-postgresql-starter");
-        assertEquals(1, 1);
+    public void testMultipleServicesNodeComponent() throws IOException {
+        Map<Path, List<Service>> services = recognizer.analyze(new File("../../resources/projects/nodejs-ex").getCanonicalPath());
+        assertEquals(1, services.size());
+        Map.Entry<Path, List<Service>> entry = services.entrySet().iterator().next();
+        assertEquals(2, entry.getValue().size());
+        assertTrue(entry.getValue().stream().anyMatch(service -> service.getName().equalsIgnoreCase("mongodb")));
+        assertTrue(entry.getValue().stream().anyMatch(service -> service.getName().equalsIgnoreCase("kafka")));
+    }
+
+    @Test
+    public void testServiceJavaComponent() throws IOException {
+        Map<Path, List<Service>> services = recognizer.analyze(new File("../../resources/projects/micronaut").getCanonicalPath());
+        assertEquals(1, services.size());
+        Map.Entry<Path, List<Service>> entry = services.entrySet().iterator().next();
+        assertEquals(1, entry.getValue().size());
+        assertTrue(entry.getValue().stream().anyMatch(service -> service.getName().equalsIgnoreCase("mysql")));
+    }
+
+    @Test
+    public void testServiceQuarkusComponent() throws IOException {
+        Map<Path, List<Service>> services = recognizer.analyze(new File("../../resources/projects/quarkus").getCanonicalPath());
+        assertEquals(1, services.size());
+        Map.Entry<Path, List<Service>> entry = services.entrySet().iterator().next();
+        assertEquals(1, entry.getValue().size());
+        assertTrue(entry.getValue().stream().anyMatch(service -> service.getName().equalsIgnoreCase("mariadb")));
+    }
+
+    @Test
+    public void testMultipleServicesPythonComponent() throws IOException {
+        Map<Path, List<Service>> services = recognizer.analyze(new File("../../resources/projects/django").getCanonicalPath());
+        assertEquals(1, services.size());
+        Map.Entry<Path, List<Service>> entry = services.entrySet().iterator().next();
+        assertEquals(2, entry.getValue().size());
+        assertTrue(entry.getValue().stream().anyMatch(service -> service.getName().equalsIgnoreCase("postgresql")));
+        assertTrue(entry.getValue().stream().anyMatch(service -> service.getName().equalsIgnoreCase("mysql")));
     }
 }

@@ -52,15 +52,26 @@ public class PythonServiceDetectorProviderImpl extends ServiceDetectorProvider {
         return new ArrayList<>(services);
     }
 
-    private List<Service> getServicesFromFile(Path file, List<ServiceDescriptor> descriptors) throws IOException {
+    private Set<Service> getServicesFromFile(Path file, List<ServiceDescriptor> descriptors) throws IOException {
         if (!file.toFile().exists()) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
-        List<Service> services = new ArrayList<>();
-        List<String> allImportsLines = Files.readAllLines(file).stream()
-                .filter(line -> Pattern.matches("^\\s*(import|from)\\s*.*", line))
-                .collect(Collectors.toList());
-        for(String line: allImportsLines) {
+        Set<Service> services = new HashSet<>();
+        List<String> allLines = Files.readAllLines(file);
+        if (isSettingFile(file)) {
+            services.addAll(getServicesFromLines(allLines, descriptors));
+        } else {
+            List<String> allImportsLines = allLines.stream()
+                    .filter(line -> Pattern.matches("^\\s*(import|from)\\s*.*", line))
+                    .collect(Collectors.toList());
+            services.addAll(getServicesFromLines(allImportsLines, descriptors));
+        }
+        return services;
+    }
+
+    private Set<Service> getServicesFromLines(List<String> lines, List<ServiceDescriptor> descriptors) {
+        Set<Service> services = new HashSet<>();
+        for(String line: lines) {
             Service service = getServiceFromLine(line, descriptors);
             if (service != null) {
                 services.add(service);
@@ -78,5 +89,9 @@ public class PythonServiceDetectorProviderImpl extends ServiceDetectorProvider {
             }
         }
         return null;
+    }
+
+    private boolean isSettingFile(Path file) {
+        return file.endsWith("database.py") || file.endsWith("settings.py");
     }
 }

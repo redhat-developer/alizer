@@ -152,6 +152,7 @@ mysql:
       - "mysql2"
     python:
       - "mysql.connector"
+      - "mysql"
 postgresql:
   operators:
     - "cloud-native-postgresql"
@@ -176,6 +177,7 @@ postgresql:
     python:
       - "psycopg2"
       - "psycopg3"
+      - "postgres"
 redis:
   operators:
     - "redis-enterprise"

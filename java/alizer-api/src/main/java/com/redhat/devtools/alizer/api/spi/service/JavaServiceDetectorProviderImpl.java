@@ -108,9 +108,9 @@ public class JavaServiceDetectorProviderImpl extends ServiceDetectorProvider {
                 Node dependencyNode = dependencyNodes.item(j);
                 String nodeName = dependencyNode.getNodeName();
                 if (nodeName.equalsIgnoreCase("groupid")) {
-                    dependencyGroupId = dependencyNode.getNodeValue();
+                    dependencyGroupId = dependencyNode.getFirstChild().getTextContent();
                 } else if (nodeName.equalsIgnoreCase("artifactid")) {
-                    dependencyArtifactId = dependencyNode.getNodeValue();
+                    dependencyArtifactId = dependencyNode.getFirstChild().getTextContent();
                 }
             }
 
