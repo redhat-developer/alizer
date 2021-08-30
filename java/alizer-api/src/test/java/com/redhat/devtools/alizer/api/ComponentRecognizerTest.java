@@ -31,7 +31,7 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
     @Test
     public void testSelfComponent() throws IOException {
         List<Component> components = recognizer.analyze(".");
-        assertEquals(1, components.size());
+        assertEquals(0, components.size());
     }
 
     @Test

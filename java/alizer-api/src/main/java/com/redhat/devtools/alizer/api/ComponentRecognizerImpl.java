@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
+import com.redhat.devtools.alizer.api.utils.DocumentParser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,6 +22,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class ComponentRecognizerImpl extends Recognizer {
 
@@ -30,7 +34,7 @@ public class ComponentRecognizerImpl extends Recognizer {
 
     public List<Component> analyze(String path) throws IOException {
         List<Path> files = getFilePaths(Paths.get(path));
-        List<Component> components = getComponents(files);
+        List<Component> components = detectComponents(files);
 
         // it may happen that a language has no a specific configuration file (e.g opposite to JAVA -> pom.xml and Nodejs -> package.json)
         // we then rely on the language recognizer
@@ -79,11 +83,12 @@ public class ComponentRecognizerImpl extends Recognizer {
     private List<Component> getComponentsWithoutConfigFile(List<Path> directories) throws IOException {
         List<Component> components = new ArrayList<>();
         for (Path directory: directories) {
-            Component component = getComponent(directory, "");
+            Component component = detectComponent(directory, "");
             // only takes component with languages that have no config file
             // E.g if the directory consists of javascript files but it doesn't contain a package.json, something is wrong
             // and we do not consider it as an actual component
-            if (isValidNoConfigComponent(component)) {
+            if (component != null
+                && isValidNoConfigComponent(component)) {
                 components.add(component);
             }
         }
@@ -107,25 +112,66 @@ public class ComponentRecognizerImpl extends Recognizer {
         return languageFileItem.getConfigurationFiles().isEmpty();
     }
 
-    private List<Component> getComponents(List<Path> files) throws IOException {
+    private List<Component> detectComponents(List<Path> files) throws IOException {
         Map<String, String> configurationPerLanguage = LanguageFileHandler.get().getConfigurationPerLanguageMapping();
         List<Component> components = new ArrayList<>();
         for (Path filepath: files) {
             if (configurationPerLanguage.containsKey(filepath.getFileName().toString())
-                    && isValidPathPerLanguage(filepath, configurationPerLanguage.get(filepath.getFileName().toString()))) {
-                components.add(getComponent(filepath.getParent(), configurationPerLanguage.get(filepath.getFileName().toString())));
+                    && isConfigurationValid(filepath, configurationPerLanguage.get(filepath.getFileName().toString()))) {
+                Component component = detectComponent(filepath.getParent(), configurationPerLanguage.get(filepath.getFileName().toString()));
+                if (component != null) {
+                    components.add(component);
+                }
             }
         }
         return components;
     }
 
-    private Component getComponent(Path root, String configurationLanguage) throws IOException {
+    private boolean isConfigurationValid(Path file, String language) {
+        if (!isValidPathPerLanguage(file, language)) {
+            return false;
+        }
+        return !isParentModuleMaven(file);
+    }
+
+    private boolean isParentModuleMaven(Path file) {
+        if (!file.endsWith("pom.xml")) {
+            return false;
+        }
+        try {
+            NodeList modules = DocumentParser.getElementsByTag(file.toFile(), "modules");
+            return modules != null && modules.getLength() > 0;
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Create a new component from root folder
+     *
+     * @param root folder where the component is stored
+     * @param configurationLanguage language of the config file (e.g pom.xml -> java)
+     * @return new component or null if folder doesn't contain anything valid
+     * @throws IOException if errored while detecting languages/framework used
+     */
+    private Component detectComponent(Path root, String configurationLanguage) throws IOException {
         RecognizerBuilder recognizerBuilder = new RecognizerBuilder();
         LanguageRecognizer languageRecognizer = recognizerBuilder.languageRecognizer();
 
         List<Language> languages = getLanguagesWeightedByConfigFile(languageRecognizer.analyze(root.toString()), configurationLanguage);
+        if (isLanguageSupported(languages)) {
+            return new Component(root, languages);
+        }
+        return null;
+    }
 
-        return new Component(root, languages);
+    private boolean isLanguageSupported(List<Language> languages) {
+        if (languages.isEmpty()) {
+            return false;
+        }
+        Language mainLanguage = languages.get(0);
+        return !mainLanguage.getName().equalsIgnoreCase("java")
+                || !mainLanguage.getFrameworks().isEmpty();
     }
 
     /**

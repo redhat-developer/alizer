@@ -11,6 +11,7 @@
 package com.redhat.devtools.alizer.api.spi;
 
 import com.redhat.devtools.alizer.api.Language;
+import com.redhat.devtools.alizer.api.utils.DocumentParser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,11 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.io.FilenameUtils;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -56,9 +54,7 @@ public class JavaLanguageEnricherProviderImpl implements LanguageEnricherProvide
             } else if (ant.isPresent()) {
                 language.setTools(Arrays.asList("Ant"));
             }
-        } catch (ParserConfigurationException e) {
-        } catch (SAXException e) {
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
         }
 
         return language;
@@ -100,11 +96,7 @@ public class JavaLanguageEnricherProviderImpl implements LanguageEnricherProvide
     }
 
     private boolean hasGroupIdMaven(Path file, String groupId) throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(file.toFile());
-        doc.getDocumentElement().normalize();
-        NodeList nodeList = doc.getElementsByTagName("groupId");
+        NodeList nodeList = DocumentParser.getElementsByTag(file.toFile(), "groupId");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getTextContent().startsWith(groupId)) {
