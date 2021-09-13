@@ -11,6 +11,7 @@
 package com.redhat.devtools.alizer.api;
 
 import com.redhat.devtools.alizer.api.utils.DocumentParser;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,7 +34,7 @@ public class ComponentRecognizerImpl extends Recognizer {
     }
 
     public List<Component> analyze(String path) throws IOException {
-        List<Path> files = getFilePaths(Paths.get(path));
+        List<File> files = getFiles(Paths.get(path));
         List<Component> components = detectComponents(files);
 
         // it may happen that a language has no a specific configuration file (e.g opposite to JAVA -> pom.xml and Nodejs -> package.json)
@@ -112,13 +113,13 @@ public class ComponentRecognizerImpl extends Recognizer {
         return languageFileItem.getConfigurationFiles().isEmpty();
     }
 
-    private List<Component> detectComponents(List<Path> files) throws IOException {
+    private List<Component> detectComponents(List<File> files) throws IOException {
         Map<String, String> configurationPerLanguage = LanguageFileHandler.get().getConfigurationPerLanguageMapping();
         List<Component> components = new ArrayList<>();
-        for (Path filepath: files) {
-            if (configurationPerLanguage.containsKey(filepath.getFileName().toString())
-                    && isConfigurationValid(filepath, configurationPerLanguage.get(filepath.getFileName().toString()))) {
-                Component component = detectComponent(filepath.getParent(), configurationPerLanguage.get(filepath.getFileName().toString()));
+        for (File file: files) {
+            if (configurationPerLanguage.containsKey(file.getName())
+                    && isConfigurationValid(file.toPath(), configurationPerLanguage.get(file.getName()))) {
+                Component component = detectComponent(file.getParentFile().toPath(), configurationPerLanguage.get(file.getName()));
                 if (component != null) {
                     components.add(component);
                 }

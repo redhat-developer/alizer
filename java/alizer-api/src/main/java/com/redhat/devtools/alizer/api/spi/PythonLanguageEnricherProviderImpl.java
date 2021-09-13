@@ -29,6 +29,9 @@ import java.util.List;
 import java.util.Optional;
 import org.xml.sax.SAXException;
 
+
+import static com.redhat.devtools.alizer.api.Constants.PYTHON;
+
 public class PythonLanguageEnricherProviderImpl implements LanguageEnricherProvider {
     @Override
     public LanguageEnricherProvider create() {
@@ -37,7 +40,7 @@ public class PythonLanguageEnricherProviderImpl implements LanguageEnricherProvi
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList("PYTHON");
+        return Arrays.asList(PYTHON);
     }
 
     @Override
@@ -51,7 +54,7 @@ public class PythonLanguageEnricherProviderImpl implements LanguageEnricherProvi
         ServiceLoader<FrameworkDetectorWithoutConfigFileProvider> loader = ServiceLoader.load(FrameworkDetectorWithoutConfigFileProvider.class, LanguageRecognizerImpl.class.getClassLoader());
         for (FrameworkDetectorWithoutConfigFileProvider provider : loader) {
             provider = provider.create();
-            if (provider.hasFramework(files)) {
+            if (provider.getSupportedLanguages().contains(PYTHON) && provider.hasFramework(files)) {
                 frameworks.addAll(provider.getFrameworks());
             }
         }
