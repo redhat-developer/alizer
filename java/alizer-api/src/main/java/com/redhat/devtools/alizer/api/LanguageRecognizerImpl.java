@@ -11,6 +11,7 @@
 package com.redhat.devtools.alizer.api;
 
 import com.redhat.devtools.alizer.api.spi.LanguageEnricherProvider;
+import java.io.File;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
@@ -22,11 +23,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 public class LanguageRecognizerImpl extends Recognizer implements LanguageRecognizer {
+
+    private static final Logger logger = LoggerFactory.getLogger(LanguageRecognizerImpl.class);
 
     LanguageRecognizerImpl(RecognizerBuilder builder) {
         super(builder);
@@ -52,10 +58,10 @@ public class LanguageRecognizerImpl extends Recognizer implements LanguageRecogn
         // init dictionary with languages file
         LanguageFileHandler handler = LanguageFileHandler.get();
 
-        List<String> files = getFiles(Paths.get(path));
+        List<File> files = getFiles(Paths.get(path));
 
         // save all extensions extracted from files + their occurrences
-        Map<String, Long> extensions = files.stream().collect(groupingBy(file -> "." + FilenameUtils.getExtension(file), counting()));
+        Map<String, Long> extensions = files.stream().collect(groupingBy(file -> "." + FilenameUtils.getExtension(file.getName()), counting()));
 
         // get languages belonging to extensions found
         extensions.keySet().forEach(extension -> {
@@ -74,7 +80,6 @@ public class LanguageRecognizerImpl extends Recognizer implements LanguageRecogn
                 mapToLong(languagesDetected::get).sum();
 
         // only keep programming language which consists of atleast the 2% of the project
-
         return languagesDetected.keySet().stream().
                 filter(lang -> lang.getType().equalsIgnoreCase("programming")).
                 filter(lang -> (double)languagesDetected.get(lang) / totalProgrammingOccurences > 0.02).
@@ -84,10 +89,14 @@ public class LanguageRecognizerImpl extends Recognizer implements LanguageRecogn
                 collect(Collectors.toList());
     }
 
-    private static Language getDetailedLanguage(Language language, List<String> files) {
+    private static Language getDetailedLanguage(Language language, List<File> files) {
         LanguageEnricherProvider enricher = getEnricherByLanguage(language.getName());
         if (enricher != null) {
-            return enricher.create().getEnrichedLanguage(language, files);
+            try {
+                return enricher.create().getEnrichedLanguage(language, files);
+            } catch (IOException e) {
+                logger.warn(e.getLocalizedMessage(), e);
+            }
         }
         return language;
     }

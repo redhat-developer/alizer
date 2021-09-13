@@ -11,20 +11,19 @@
 package com.redhat.devtools.alizer.api.spi;
 
 import com.redhat.devtools.alizer.api.Language;
-import com.redhat.devtools.alizer.api.utils.DocumentParser;
+import com.redhat.devtools.alizer.api.LanguageRecognizerImpl;
+import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
+import com.redhat.devtools.alizer.api.spi.framework.java.JavaFrameworkDetectorProvider;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import javax.xml.parsers.ParserConfigurationException;
-import org.apache.commons.io.FilenameUtils;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import java.util.ServiceLoader;
+
+
+import static com.redhat.devtools.alizer.api.Constants.JAVA;
 
 public class JavaLanguageEnricherProviderImpl implements LanguageEnricherProvider {
     @Override
@@ -34,80 +33,38 @@ public class JavaLanguageEnricherProviderImpl implements LanguageEnricherProvide
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList("JAVA");
+        return Arrays.asList(JAVA);
     }
 
     @Override
-    public Language getEnrichedLanguage(Language language, List<String> files) {
+    public Language getEnrichedLanguage(Language language, List<File> files) throws IOException {
         // find builder
-        Optional<String> gradle = files.stream().filter(file -> FilenameUtils.getName(file).equalsIgnoreCase("build.gradle")).findFirst();
-        Optional<String> maven = files.stream().filter(file -> FilenameUtils.getName(file).equalsIgnoreCase("pom.xml")).findFirst();
-        Optional<String> ant = files.stream().filter(file -> FilenameUtils.getName(file).equalsIgnoreCase("build.xml")).findFirst();
+        Optional<File> gradle = files.stream().filter(file -> file.getName().equalsIgnoreCase("build.gradle")).findFirst();
+        Optional<File> maven = files.stream().filter(file -> file.getName().equalsIgnoreCase("pom.xml")).findFirst();
+        Optional<File> ant = files.stream().filter(file -> file.getName().equalsIgnoreCase("build.xml")).findFirst();
 
-        try {
-            if (gradle.isPresent()) {
-                language.setTools(Arrays.asList("Gradle"));
-                language.setFrameworks(getJavaFramework(gradle.get(), true));
-            } else if (maven.isPresent()) {
-                language.setTools(Arrays.asList("Maven"));
-                language.setFrameworks(getJavaFramework(maven.get(), false));
-            } else if (ant.isPresent()) {
-                language.setTools(Arrays.asList("Ant"));
-            }
-        } catch (ParserConfigurationException | SAXException | IOException e) {
+        if (gradle.isPresent()) {
+            language.setTools(Arrays.asList("Gradle"));
+            language.setFrameworks(getFrameworks(gradle.get()));
+        } else if (maven.isPresent()) {
+            language.setTools(Arrays.asList("Maven"));
+            language.setFrameworks(getFrameworks(maven.get()));
+        } else if (ant.isPresent()) {
+            language.setTools(Arrays.asList("Ant"));
         }
 
         return language;
     }
 
-    private List<String> getJavaFramework(String file, boolean isGradle) throws ParserConfigurationException, SAXException, IOException {
+    private List<String> getFrameworks(File file) throws IOException {
         List<String> frameworks = new ArrayList<>();
-        boolean isMaven = !isGradle;
-        boolean hasQuarkus = hasDependency(file, "io.quarkus", isGradle, isMaven);
-        if (hasQuarkus) {
-            frameworks.add("Quarkus");
-        }
-        boolean hasSpring = hasDependency(file, "org.springframework", isGradle, isMaven);
-        if (hasSpring) {
-            frameworks.add("Spring");
-        }
-        boolean hasOpenLiberty = hasDependency(file, "io.openliberty", isGradle, isMaven);
-        if (hasOpenLiberty) {
-            frameworks.add("OpenLiberty");
-        }
-        boolean hasMicronaut = hasDependency(file, "io.micronaut", isGradle, isMaven);
-        if (hasMicronaut) {
-            frameworks.add("Micronaut");
-        }
-        boolean hasVertx = hasDependency(file, "io.vertx", isGradle, isMaven);
-        if (hasVertx) {
-            frameworks.add("Vertx");
+        ServiceLoader<JavaFrameworkDetectorProvider> loader = ServiceLoader.load(JavaFrameworkDetectorProvider.class, LanguageRecognizerImpl.class.getClassLoader());
+        for (FrameworkDetectorWithConfigFileProvider provider : loader) {
+            provider = provider.create();
+            if (provider.hasFramework(file)) {
+                frameworks.addAll(provider.getFrameworks());
+            }
         }
         return frameworks;
     }
-
-    private boolean hasDependency(String file, String tag, boolean isGradle, boolean isMaven) throws IOException, ParserConfigurationException, SAXException {
-        if (isGradle) {
-            return IsTagInFile(file, tag);
-        } else if (isMaven) {
-            return hasGroupIdMaven(Paths.get(file), tag);
-        }
-        return false;
-    }
-
-    private boolean hasGroupIdMaven(Path file, String groupId) throws ParserConfigurationException, IOException, SAXException {
-        NodeList nodeList = DocumentParser.getElementsByTag(file.toFile(), "groupId");
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node node = nodeList.item(i);
-            if (node.getTextContent().startsWith(groupId)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean IsTagInFile(String file, String tag) throws IOException {
-        return Files.readAllLines(Paths.get(file)).stream().anyMatch(line -> line.contains(tag));
-    }
-
 }

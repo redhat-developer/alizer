@@ -11,6 +11,14 @@
 package com.redhat.devtools.alizer.api.spi;
 
 import com.redhat.devtools.alizer.api.Language;
+import com.redhat.devtools.alizer.api.LanguageRecognizerImpl;
+import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorProvider;
+import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithoutConfigFileProvider;
+import com.redhat.devtools.alizer.api.spi.framework.java.JavaFrameworkDetectorProvider;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.ServiceLoader;
+import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
@@ -19,6 +27,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.xml.sax.SAXException;
 
 public class PythonLanguageEnricherProviderImpl implements LanguageEnricherProvider {
     @Override
@@ -32,30 +41,21 @@ public class PythonLanguageEnricherProviderImpl implements LanguageEnricherProvi
     }
 
     @Override
-    public Language getEnrichedLanguage(Language language, List<String> files) {
-        // check django
-        Optional<String> manage = files.stream().filter(file -> FilenameUtils.getName(file).equalsIgnoreCase("manage.py")).findFirst();
-        Optional<String> urls = files.stream().filter(file -> FilenameUtils.getName(file).equalsIgnoreCase("urls.py")).findFirst();
-        Optional<String> wsgi = files.stream().filter(file -> FilenameUtils.getName(file).equalsIgnoreCase("wsgi.py")).findFirst();
-        Optional<String> asgi = files.stream().filter(file -> FilenameUtils.getName(file).equalsIgnoreCase("asgi.py")).findFirst();
-
-        String DJANGO_TAG = "from django.";
-        try {
-            boolean manageIsDjango = manage.isPresent() && IsTagInFile(manage.get(), DJANGO_TAG);
-            boolean urlsIsDjango = urls.isPresent() && IsTagInFile(urls.get(), DJANGO_TAG);
-            boolean wsgiIsDjango = wsgi.isPresent() && IsTagInFile(wsgi.get(), DJANGO_TAG);
-            boolean asgiIsDjango = asgi.isPresent() && IsTagInFile(asgi.get(), DJANGO_TAG);
-
-            if (manageIsDjango || urlsIsDjango || wsgiIsDjango || asgiIsDjango) {
-                language.setFrameworks(Arrays.asList("Django"));
-            }
-
-        } catch (IOException e) {}
-
+    public Language getEnrichedLanguage(Language language, List<File> files) throws IOException {
+        language.setFrameworks(getFrameworks(files));
         return language;
     }
 
-    public boolean IsTagInFile(String file, String tag) throws IOException {
-        return Files.readAllLines(Paths.get(file)).stream().anyMatch(line -> line.contains(tag));
+    private List<String> getFrameworks(List<File> files) throws IOException {
+        List<String> frameworks = new ArrayList<>();
+        ServiceLoader<FrameworkDetectorWithoutConfigFileProvider> loader = ServiceLoader.load(FrameworkDetectorWithoutConfigFileProvider.class, LanguageRecognizerImpl.class.getClassLoader());
+        for (FrameworkDetectorWithoutConfigFileProvider provider : loader) {
+            provider = provider.create();
+            if (provider.hasFramework(files)) {
+                frameworks.addAll(provider.getFrameworks());
+            }
+        }
+        return frameworks;
     }
+
 }

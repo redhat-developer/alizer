@@ -8,17 +8,14 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.alizer.api.spi;
+package com.redhat.devtools.alizer.api.spi.framework;
 
-import com.redhat.devtools.alizer.api.Language;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
-public interface LanguageEnricherProvider {
-    LanguageEnricherProvider create();
+public interface FrameworkDetectorWithConfigFileProvider extends FrameworkDetectorProvider {
 
-    List<String> getSupportedLanguages();
+    FrameworkDetectorWithConfigFileProvider create();
 
-    Language getEnrichedLanguage(Language language, List<File> files) throws IOException;
+    boolean hasFramework(File file) throws IOException;
 }

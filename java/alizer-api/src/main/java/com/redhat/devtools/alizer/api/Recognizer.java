@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,14 +20,17 @@ import java.util.stream.Collectors;
 public class Recognizer {
     public Recognizer(RecognizerBuilder builder) {}
 
-    protected List<String> getFiles(Path rootDirectory) throws IOException {
+    /*protected List<String> getFiles(Path rootDirectory) throws IOException {
         return Files.walk(rootDirectory, Integer.MAX_VALUE).filter(Files::isRegularFile).map(String::valueOf)
                 .collect(Collectors.toList());
 
-    }
+    }*/
 
     protected List<Path> getFilePaths(Path rootDirectory) throws IOException {
         return Files.walk(rootDirectory, Integer.MAX_VALUE).filter(Files::isRegularFile).collect(Collectors.toList());
+    }
 
+    protected List<File> getFiles(Path rootDirectory) throws IOException {
+        return Files.walk(rootDirectory, Integer.MAX_VALUE).filter(Files::isRegularFile).map(path -> path.toFile()).collect(Collectors.toList());
     }
 }
