@@ -171,8 +171,9 @@ public class ComponentRecognizerImpl extends Recognizer {
             return false;
         }
         Language mainLanguage = languages.get(0);
-        return !mainLanguage.getName().equalsIgnoreCase("java")
-                || !mainLanguage.getFrameworks().isEmpty();
+        return mainLanguage.canBeComponent() &&
+                (!mainLanguage.getName().equalsIgnoreCase("java")
+                || !mainLanguage.getFrameworks().isEmpty());
     }
 
     /**

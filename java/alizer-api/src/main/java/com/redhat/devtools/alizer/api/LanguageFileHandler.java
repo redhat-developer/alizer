@@ -55,7 +55,8 @@ public class LanguageFileHandler {
                 List<String> aliases = getValueAsList(languageAttributes, "aliases");
                 List<String> configurationFiles = getValueAsList(languageAttributes, "configuration_files");
                 List<String> excludeFolders = getValueAsList(languageAttributes, "exclude_folders");
-                LanguageFileItem languageFileItem = new LanguageFileItem(nameLanguage, aliases, type, group, configurationFiles, excludeFolders);
+                boolean canBeComponent = languageAttributes.has("component") && languageAttributes.get("component").asBoolean();
+                LanguageFileItem languageFileItem = new LanguageFileItem(nameLanguage, aliases, type, group, configurationFiles, excludeFolders, canBeComponent);
                 languages.put(nameLanguage, languageFileItem);
                 populateLanguageList(extensionXLanguage, languageAttributes, "extensions", languageFileItem);
             }

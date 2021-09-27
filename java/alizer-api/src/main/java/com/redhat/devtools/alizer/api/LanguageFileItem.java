@@ -18,14 +18,18 @@ public class LanguageFileItem {
     private String type;
     private String group;
     private List<String> configurationFiles, excludeFolders;
+    private boolean canBeComponent;
 
-    public LanguageFileItem(String name, List<String> aliases, String type, String group, List<String> configurationFiles, List<String> excludeFolders) {
+    public LanguageFileItem(String name, List<String> aliases, String type, String group,
+                            List<String> configurationFiles, List<String> excludeFolders,
+                            boolean canBeComponent) {
         this.name = name;
         this.aliases = aliases;
         this.type = type;
         this.group = group;
         this.configurationFiles = configurationFiles;
         this.excludeFolders = excludeFolders;
+        this.canBeComponent = canBeComponent;
     }
 
     public String getName() {
@@ -50,7 +54,13 @@ public class LanguageFileItem {
         return configurationFiles;
     }
 
+    public boolean canBeComponent() {
+        return canBeComponent;
+    }
+
     public List<String> getExcludeFolders() {
         return excludeFolders;
     }
+
+
 }

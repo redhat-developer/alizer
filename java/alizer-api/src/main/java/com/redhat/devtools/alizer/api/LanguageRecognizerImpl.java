@@ -83,7 +83,7 @@ public class LanguageRecognizerImpl extends Recognizer implements LanguageRecogn
         return languagesDetected.keySet().stream().
                 filter(lang -> lang.getType().equalsIgnoreCase("programming")).
                 filter(lang -> (double)languagesDetected.get(lang) / totalProgrammingOccurences > 0.02).
-                map(lang -> new Language(lang.getName(), lang.getAliases(), (double)languagesDetected.get(lang) / totalProgrammingOccurences * 100)).
+                map(lang -> new Language(lang.getName(), lang.getAliases(), (double)languagesDetected.get(lang) / totalProgrammingOccurences * 100, lang.canBeComponent())).
                 map(lang -> getDetailedLanguage(lang, files)).
                 sorted(Comparator.comparingDouble(Language::getUsageInPercentage).reversed()).
                 collect(Collectors.toList());
