@@ -14,6 +14,8 @@ public class Constants {
 
     public static final String JAVA = "JAVA";
     public static final String PYTHON = "PYTHON";
+    public static final String JAVASCRIPT = "JAVASCRIPT";
+    public static final String TYPESCRIPT = "TYPESCRIPT";
 
 
     public static final String QUARKUS = "Quarkus";

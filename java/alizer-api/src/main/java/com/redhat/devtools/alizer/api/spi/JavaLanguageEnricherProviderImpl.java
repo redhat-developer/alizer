@@ -14,18 +14,23 @@ import com.redhat.devtools.alizer.api.Language;
 import com.redhat.devtools.alizer.api.LanguageRecognizerImpl;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
 import com.redhat.devtools.alizer.api.spi.framework.java.JavaFrameworkDetectorProvider;
+import com.redhat.devtools.alizer.api.utils.DocumentParser;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 
 import static com.redhat.devtools.alizer.api.Constants.JAVA;
 
-public class JavaLanguageEnricherProviderImpl implements LanguageEnricherProvider {
+public class JavaLanguageEnricherProviderImpl extends LanguageEnricherProvider {
     @Override
     public LanguageEnricherProvider create() {
         return new JavaLanguageEnricherProviderImpl();
@@ -66,5 +71,23 @@ public class JavaLanguageEnricherProviderImpl implements LanguageEnricherProvide
             }
         }
         return frameworks;
+    }
+
+
+    @Override
+    public boolean isConfigurationValidForComponent(String language, File file) {
+        return super.isConfigurationValidForComponent(language, file) && !isParentModuleMaven(file);
+    }
+
+    private boolean isParentModuleMaven(File file) {
+        if (!file.toPath().endsWith("pom.xml")) {
+            return false;
+        }
+        try {
+            NodeList modules = DocumentParser.getElementsByTag(file, "modules");
+            return modules != null && modules.getLength() > 0;
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            return false;
+        }
     }
 }

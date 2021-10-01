@@ -1,2 +1,3 @@
 com.redhat.devtools.alizer.api.spi.JavaLanguageEnricherProviderImpl
 com.redhat.devtools.alizer.api.spi.PythonLanguageEnricherProviderImpl
+com.redhat.devtools.alizer.api.spi.JavaScriptLanguageEnricherProviderImpl

@@ -1904,10 +1904,6 @@ Go:
   codemirror_mode: go
   codemirror_mime_type: text/x-go
   language_id: 132
-  configuration_files:
-    - "go.mod"
-    - "go.sum"
-  component: true
 Golo:
   type: programming
   color: "#88562A"
@@ -2561,10 +2557,6 @@ Java:
   extensions:
     - ".java"
   language_id: 181
-  configuration_files:
-    - "pom.xml"
-    - "build.gradle"
-  component: true
 Java Properties:
   type: data
   extensions:
@@ -2633,11 +2625,6 @@ JavaScript:
     - v8
     - v8-shell
   language_id: 183
-  exclude_folders:
-    - "node_modules"
-  configuration_files:
-    - "package.json"
-  component: true
 JavaScript+ERB:
   type: programming
   tm_scope: source.js
@@ -4393,7 +4380,6 @@ Python:
     - python3
     - rusthon
   language_id: 303
-  component: true
 Python console:
   type: programming
   group: Python
@@ -4920,9 +4906,6 @@ Rust:
   codemirror_mode: rust
   codemirror_mime_type: text/x-rustsrc
   language_id: 327
-  configuration_files:
-    - "Cargo.toml"
-  component: true
 SAS:
   type: programming
   color: "#B34936"

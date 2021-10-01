@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,11 +22,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LanguageFileHandler {
-    private static final String YAML_PATH = "languages.yml";
+    private static final Logger logger = LoggerFactory.getLogger(LanguageFileHandler.class);
+
+    private static final String LANGUAGES_YAML_PATH = "languages.yml";
+    private static final String LANGUAGES_CUSTOMIZATION_YAML_PATH = "languages-customization.yml";
     private static final ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory());
     private static LanguageFileHandler INSTANCE;
     private Map<String, LanguageFileItem> languages = new HashMap<>();
@@ -44,7 +49,7 @@ public class LanguageFileHandler {
 
     private void initLanguages() {
         try {
-            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + YAML_PATH));
+            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_YAML_PATH), Charset.defaultCharset());
             JsonNode node = YAML_MAPPER.readTree(yamlAsString);
             for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
                 Map.Entry<String, JsonNode> entry = it.next();
@@ -53,18 +58,39 @@ public class LanguageFileHandler {
                 String type = languageAttributes.get("type").asText();
                 String group = languageAttributes.has("group") ? languageAttributes.get("group").asText() : "";
                 List<String> aliases = getValueAsList(languageAttributes, "aliases");
-                List<String> configurationFiles = getValueAsList(languageAttributes, "configuration_files");
-                List<String> excludeFolders = getValueAsList(languageAttributes, "exclude_folders");
-                boolean canBeComponent = languageAttributes.has("component") && languageAttributes.get("component").asBoolean();
-                LanguageFileItem languageFileItem = new LanguageFileItem(nameLanguage, aliases, type, group, configurationFiles, excludeFolders, canBeComponent);
+                LanguageFileItem languageFileItem = new LanguageFileItem(nameLanguage, aliases, type, group);
                 languages.put(nameLanguage, languageFileItem);
                 populateLanguageList(extensionXLanguage, languageAttributes, "extensions", languageFileItem);
             }
+            customizeLanguages();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e.getLocalizedMessage(), e);
         }
+    }
 
+    private void customizeLanguages() {
+        try {
+            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_CUSTOMIZATION_YAML_PATH), Charset.defaultCharset());
+            JsonNode node = YAML_MAPPER.readTree(yamlAsString);
+            for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
+                Map.Entry<String, JsonNode> entry = it.next();
+                String nameLanguage = entry.getKey();
+                LanguageFileItem languageFileItem = languages.get(nameLanguage);
+                if (languageFileItem != null) {
+                    JsonNode languageAttributes = entry.getValue();
+                    List<String> configurationFiles = getValueAsList(languageAttributes, "configuration_files");
+                    List<String> excludeFolders = getValueAsList(languageAttributes, "exclude_folders");
+                    boolean canBeComponent = languageAttributes.has("component") && languageAttributes.get("component").asBoolean();
 
+                    languageFileItem.setConfigurationFiles(configurationFiles);
+                    languageFileItem.setExcludeFolders(excludeFolders);
+                    languageFileItem.setCanBeComponent(canBeComponent);
+                    languages.put(nameLanguage, languageFileItem);
+                }
+            }
+        } catch (IOException e) {
+            logger.warn(e.getLocalizedMessage(), e);
+        }
     }
 
     private List<String> getValueAsList(JsonNode languageAttributes, String field) {

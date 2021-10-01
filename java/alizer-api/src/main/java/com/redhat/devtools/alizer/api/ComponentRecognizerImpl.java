@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
-import com.redhat.devtools.alizer.api.utils.DocumentParser;
+import com.redhat.devtools.alizer.api.spi.LanguageEnricherProvider;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,11 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ServiceLoader;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 public class ComponentRecognizerImpl extends Recognizer {
 
@@ -49,14 +47,14 @@ public class ComponentRecognizerImpl extends Recognizer {
             return Collections.singletonList(root);
         }
 
-        List<Path> directoriesWithoutConfigFile = new ArrayList<>();
-        List<Path> allDirectoriesFromRoot = Files.walk(root, Integer.MAX_VALUE).filter(Files::isDirectory).skip(1).collect(Collectors.toList());
-        for (Path directory: allDirectoriesFromRoot) {
-            if (!hasDirectoryAnyComponent(directory, components)){
-                directoriesWithoutConfigFile = getParentFolders(directory, directoriesWithoutConfigFile);
-            }
-        }
-        return directoriesWithoutConfigFile;
+        AtomicReference<List<Path>> directoriesWithoutConfigFile = new AtomicReference<>(new ArrayList<>());
+        Files.walk(root, Integer.MAX_VALUE).filter(Files::isDirectory).skip(1)
+                .forEach(directory -> {
+                    if (!hasDirectoryAnyComponent(directory, components)){
+                        directoriesWithoutConfigFile.set(getParentFolders(directory, directoriesWithoutConfigFile.get()));
+                    }
+                });
+        return directoriesWithoutConfigFile.get();
     }
 
     /**
@@ -68,17 +66,9 @@ public class ComponentRecognizerImpl extends Recognizer {
      * @return true if directory contains a component or it is a subfolder of a folder containing a component, false otherwise
      */
     private boolean hasDirectoryAnyComponent(Path directory, List<Component> components) {
-        List<Path> directoriesWithComponents = components.stream().map(Component::getPath).collect(Collectors.toList());
-        if (directoriesWithComponents.isEmpty()) {
-            return false;
-        }
-        for(Path directoryWithComponent: directoriesWithComponents) {
-            if (directoriesWithComponents.equals(directory) ||
-                    isFirstPathParentOfSecond(directoryWithComponent, directory)) {
-                return true;
-            }
-        }
-        return false;
+        return components.stream().map(Component::getPath)
+                .anyMatch(directoryWithComponent -> directoryWithComponent.equals(directory) ||
+                        isFirstPathParentOfSecond(directoryWithComponent, directory));
     }
 
     private List<Component> getComponentsWithoutConfigFile(List<Path> directories) throws IOException {
@@ -118,7 +108,7 @@ public class ComponentRecognizerImpl extends Recognizer {
         List<Component> components = new ArrayList<>();
         for (File file: files) {
             if (configurationPerLanguage.containsKey(file.getName())
-                    && isConfigurationValid(file.toPath(), configurationPerLanguage.get(file.getName()))) {
+                    && isConfigurationValid(configurationPerLanguage.get(file.getName()), file)) {
                 Component component = detectComponent(file.getParentFile().toPath(), configurationPerLanguage.get(file.getName()));
                 if (component != null) {
                     components.add(component);
@@ -128,23 +118,22 @@ public class ComponentRecognizerImpl extends Recognizer {
         return components;
     }
 
-    private boolean isConfigurationValid(Path file, String language) {
-        if (!isValidPathPerLanguage(file, language)) {
-            return false;
+    private boolean isConfigurationValid(String language, File file) {
+        LanguageEnricherProvider enricher = getEnricherByLanguage(language);
+        if (enricher != null) {
+            return enricher.create().isConfigurationValidForComponent(language, file);
         }
-        return !isParentModuleMaven(file);
+        return false;
     }
 
-    private boolean isParentModuleMaven(Path file) {
-        if (!file.endsWith("pom.xml")) {
-            return false;
+    public static LanguageEnricherProvider getEnricherByLanguage(String language) {
+        ServiceLoader<LanguageEnricherProvider> loader = ServiceLoader.load(LanguageEnricherProvider.class, LanguageRecognizerImpl.class.getClassLoader());
+        for (LanguageEnricherProvider provider : loader) {
+            if (provider.create().getSupportedLanguages().stream().anyMatch(supported -> supported.equalsIgnoreCase(language))) {
+                return provider;
+            }
         }
-        try {
-            NodeList modules = DocumentParser.getElementsByTag(file.toFile(), "modules");
-            return modules != null && modules.getLength() > 0;
-        } catch (IOException | SAXException | ParserConfigurationException e) {
-            return false;
-        }
+        return null;
     }
 
     /**
@@ -197,41 +186,6 @@ public class ComponentRecognizerImpl extends Recognizer {
             languages.add(0, language.get());
         }
         return languages;
-    }
-
-    /**
-     * Check if path does not contain any folder that is excluded by the language
-     * E.g Nodejs -> node_modules
-     *
-     * @param path path to be verified
-     * @param language language to find the folders to not being considered to find components
-     * @return true if the path doesn't contain any excluded folder, false otherwise
-     */
-    private boolean isValidPathPerLanguage(Path path, String language) {
-        LanguageFileItem languageFileItem = LanguageFileHandler.get().getLanguageByName(language);
-        List<String> excludeFolders = languageFileItem.getExcludeFolders();
-        if (excludeFolders.isEmpty()) {
-            return true;
-        }
-        for (String excludeFolder: excludeFolders) {
-            if (isFolderNameIncludedInPath(path, excludeFolder)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Return true if first path contains a folder named potentialSubFolderName
-     *
-     * @param fullPath path that should be parent
-     * @param potentialSubFolderName folder name that should be a sub-folder
-     * @return true if fullPath contain potentialSubFolderName, false otherwise
-     */
-    private boolean isFolderNameIncludedInPath(Path fullPath, String potentialSubFolderName) {
-        return isIncludedInPath(fullPath, (p) -> p.toFile().isDirectory()
-                && p.getFileName() != null
-                && p.getFileName().toString().equalsIgnoreCase(potentialSubFolderName));
     }
 
     /**

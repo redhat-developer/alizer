@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
 
 import static com.redhat.devtools.alizer.api.Constants.PYTHON;
 
-public class PythonLanguageEnricherProviderImpl implements LanguageEnricherProvider {
+public class PythonLanguageEnricherProviderImpl extends LanguageEnricherProvider {
     @Override
     public LanguageEnricherProvider create() {
         return new PythonLanguageEnricherProviderImpl();

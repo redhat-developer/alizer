@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LanguageFileItem {
@@ -20,16 +21,14 @@ public class LanguageFileItem {
     private List<String> configurationFiles, excludeFolders;
     private boolean canBeComponent;
 
-    public LanguageFileItem(String name, List<String> aliases, String type, String group,
-                            List<String> configurationFiles, List<String> excludeFolders,
-                            boolean canBeComponent) {
+    public LanguageFileItem(String name, List<String> aliases, String type, String group) {
         this.name = name;
         this.aliases = aliases;
         this.type = type;
         this.group = group;
-        this.configurationFiles = configurationFiles;
-        this.excludeFolders = excludeFolders;
-        this.canBeComponent = canBeComponent;
+        this.configurationFiles = new ArrayList<>();
+        this.excludeFolders = new ArrayList<>();
+        this.canBeComponent = false;
     }
 
     public String getName() {
@@ -54,13 +53,23 @@ public class LanguageFileItem {
         return configurationFiles;
     }
 
-    public boolean canBeComponent() {
-        return canBeComponent;
+    public void setConfigurationFiles(List<String> configurationFiles) {
+        this.configurationFiles = configurationFiles;
     }
 
     public List<String> getExcludeFolders() {
         return excludeFolders;
     }
 
+    public void setExcludeFolders(List<String> excludeFolders) {
+        this.excludeFolders = excludeFolders;
+    }
 
+    public boolean canBeComponent() {
+        return canBeComponent;
+    }
+
+    public void setCanBeComponent(boolean canBeComponent) {
+        this.canBeComponent = canBeComponent;
+    }
 }
