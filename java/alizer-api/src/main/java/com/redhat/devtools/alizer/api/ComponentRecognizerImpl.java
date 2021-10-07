@@ -11,6 +11,7 @@
 package com.redhat.devtools.alizer.api;
 
 import com.redhat.devtools.alizer.api.spi.LanguageEnricherProvider;
+import com.redhat.devtools.alizer.api.utils.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,13 +22,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-public class ComponentRecognizerImpl extends Recognizer {
+public class ComponentRecognizerImpl extends Recognizer implements ComponentRecognizer {
 
-    public ComponentRecognizerImpl(RecognizerBuilder builder) {
+    public ComponentRecognizerImpl(RecognizerFactory builder) {
         super(builder);
     }
 
@@ -119,21 +119,11 @@ public class ComponentRecognizerImpl extends Recognizer {
     }
 
     private boolean isConfigurationValid(String language, File file) {
-        LanguageEnricherProvider enricher = getEnricherByLanguage(language);
+        LanguageEnricherProvider enricher = Utils.getEnricherByLanguage(language);
         if (enricher != null) {
             return enricher.create().isConfigurationValidForComponent(language, file);
         }
         return false;
-    }
-
-    public static LanguageEnricherProvider getEnricherByLanguage(String language) {
-        ServiceLoader<LanguageEnricherProvider> loader = ServiceLoader.load(LanguageEnricherProvider.class, LanguageRecognizerImpl.class.getClassLoader());
-        for (LanguageEnricherProvider provider : loader) {
-            if (provider.create().getSupportedLanguages().stream().anyMatch(supported -> supported.equalsIgnoreCase(language))) {
-                return provider;
-            }
-        }
-        return null;
     }
 
     /**
@@ -145,8 +135,8 @@ public class ComponentRecognizerImpl extends Recognizer {
      * @throws IOException if errored while detecting languages/framework used
      */
     private Component detectComponent(Path root, String configurationLanguage) throws IOException {
-        RecognizerBuilder recognizerBuilder = new RecognizerBuilder();
-        LanguageRecognizer languageRecognizer = recognizerBuilder.languageRecognizer();
+        RecognizerFactory recognizerFactory = new RecognizerFactory();
+        LanguageRecognizer languageRecognizer = recognizerFactory.createLanguageRecognizer();
 
         List<Language> languages = getLanguagesWeightedByConfigFile(languageRecognizer.analyze(root.toString()), configurationLanguage);
         if (isLanguageSupported(languages)) {

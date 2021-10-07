@@ -24,7 +24,7 @@ public class LanguageRecognizerTest extends AbstractRecognizerTest {
 
     @Before
     public void setup() {
-        recognizer = new RecognizerBuilder().languageRecognizer();
+        recognizer = new RecognizerFactory().createLanguageRecognizer();
     }
 
     @Test

@@ -11,8 +11,9 @@
 package com.redhat.devtools.alizer.cli;
 
 import com.redhat.devtools.alizer.api.Component;
+import com.redhat.devtools.alizer.api.ComponentRecognizer;
 import com.redhat.devtools.alizer.api.ComponentRecognizerImpl;
-import com.redhat.devtools.alizer.api.RecognizerBuilder;
+import com.redhat.devtools.alizer.api.RecognizerFactory;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.qute.api.CheckedTemplate;
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class ComponentCommand extends BaseCommand implements Runnable{
 
     @Override
     public void run() {
-        ComponentRecognizerImpl reco = new RecognizerBuilder().componentRecognizer();
+        ComponentRecognizer reco = new RecognizerFactory().createComponentRecognizer();
         try {
             List<Component> components = reco.analyze(name);
             System.out.println(getTemplateForFormat(Templates.result(components)).render());

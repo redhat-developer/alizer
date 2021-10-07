@@ -11,9 +11,8 @@
 package com.redhat.devtools.alizer.api;
 
 import com.redhat.devtools.alizer.api.spi.LanguageEnricherProvider;
+import com.redhat.devtools.alizer.api.utils.Utils;
 import java.io.File;
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Comparator;
@@ -21,8 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ServiceLoader;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,7 @@ public class LanguageRecognizerImpl extends Recognizer implements LanguageRecogn
 
     private static final Logger logger = LoggerFactory.getLogger(LanguageRecognizerImpl.class);
 
-    LanguageRecognizerImpl(RecognizerBuilder builder) {
+    LanguageRecognizerImpl(RecognizerFactory builder) {
         super(builder);
     }
 
@@ -89,8 +88,8 @@ public class LanguageRecognizerImpl extends Recognizer implements LanguageRecogn
                 collect(Collectors.toList());
     }
 
-    private static Language getDetailedLanguage(Language language, List<File> files) {
-        LanguageEnricherProvider enricher = getEnricherByLanguage(language.getName());
+    private Language getDetailedLanguage(Language language, List<File> files) {
+        LanguageEnricherProvider enricher = Utils.getEnricherByLanguage(language.getName());
         if (enricher != null) {
             try {
                 return enricher.create().getEnrichedLanguage(language, files);
@@ -99,15 +98,5 @@ public class LanguageRecognizerImpl extends Recognizer implements LanguageRecogn
             }
         }
         return language;
-    }
-
-    public static LanguageEnricherProvider getEnricherByLanguage(String language) {
-        ServiceLoader<LanguageEnricherProvider> loader = ServiceLoader.load(LanguageEnricherProvider.class, LanguageRecognizerImpl.class.getClassLoader());
-        for (LanguageEnricherProvider provider : loader) {
-            if (provider.create().getSupportedLanguages().stream().anyMatch(supported -> supported.equalsIgnoreCase(language))) {
-                return provider;
-            }
-        }
-        return null;
     }
 }

@@ -21,11 +21,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ComponentRecognizerTest extends AbstractRecognizerTest {
-    private ComponentRecognizerImpl recognizer;
+    private ComponentRecognizer recognizer;
 
     @Before
     public void setup() {
-        recognizer = new RecognizerBuilder().componentRecognizer();
+        recognizer = new RecognizerFactory().createComponentRecognizer();
     }
 
     @Test
