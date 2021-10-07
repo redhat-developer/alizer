@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
-import com.redhat.devtools.alizer.api.DevfileType;
-
 import java.io.IOException;
 import java.util.List;
 
