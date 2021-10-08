@@ -1,0 +1,5 @@
+com.redhat.devtools.alizer.api.spi.framework.java.MicronautFrameworkDetectorProviderImpl
+com.redhat.devtools.alizer.api.spi.framework.java.OpenLibertyFrameworkDetectorProviderImpl
+com.redhat.devtools.alizer.api.spi.framework.java.QuarkusFrameworkDetectorProviderImpl
+com.redhat.devtools.alizer.api.spi.framework.java.SpringFrameworkDetectorProviderImpl
+com.redhat.devtools.alizer.api.spi.framework.java.VertxFrameworkDetectorProviderImpl

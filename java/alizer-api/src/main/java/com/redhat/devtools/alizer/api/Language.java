@@ -18,19 +18,22 @@ public class Language {
     private String name;
     private List<String> aliases;
     private double usageInPercentage;
-    private List<String> frameworks = Collections.emptyList();
-    private List<String> tools = Collections.emptyList();
+    private List<String> frameworks;
+    private List<String> tools;
+    private boolean canBeComponent;
 
-    public Language(String name, List<String> aliases, double usageInPercentage) {
-        this(name, aliases, usageInPercentage, Collections.emptyList(), Collections.emptyList());
+    public Language(String name, List<String> aliases, double usageInPercentage, boolean canBeComponent) {
+        this(name, aliases, usageInPercentage, Collections.emptyList(), Collections.emptyList(), canBeComponent);
     }
 
-    public Language(String name, List<String> aliases, double usageInPercentage, List<String> frameworks, List<String> tools) {
+    public Language(String name, List<String> aliases, double usageInPercentage, List<String> frameworks,
+                    List<String> tools, boolean canBeComponent) {
         this.name = name;
         this.aliases = aliases;
         this.usageInPercentage = usageInPercentage;
         this.frameworks = frameworks;
         this.tools = tools;
+        this.canBeComponent = canBeComponent;
     }
 
     public String getName() {
@@ -57,5 +60,9 @@ public class Language {
 
     public void setTools(List<String> tools) {
         this.tools = tools;
+    }
+
+    public boolean canBeComponent() {
+        return canBeComponent;
     }
 }

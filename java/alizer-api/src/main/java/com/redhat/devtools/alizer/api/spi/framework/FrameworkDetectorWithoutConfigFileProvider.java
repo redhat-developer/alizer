@@ -6,12 +6,17 @@
  * and is available at http://www.eclipse.org/legal/epl-v20.html
  *
  * Contributors:
- * Red Hat, Inc. - initial API and implementation
+ * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.alizer.api;
+package com.redhat.devtools.alizer.api.spi.framework;
 
-public class LanguageRecognizerBuilder {
-    public LanguageRecognizer build() {
-        return new LanguageRecognizerImpl(this);
-    }
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+public interface FrameworkDetectorWithoutConfigFileProvider extends FrameworkDetectorProvider {
+
+    FrameworkDetectorWithoutConfigFileProvider create();
+
+    boolean hasFramework(List<File> files) throws IOException;
 }

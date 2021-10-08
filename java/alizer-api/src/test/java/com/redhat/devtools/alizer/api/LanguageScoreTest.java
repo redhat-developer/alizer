@@ -20,14 +20,14 @@ import static org.junit.Assert.assertTrue;
 public class LanguageScoreTest extends AbstractRecognizerTest {
     @Test
     public void checkUnknownLanguageHasZero() {
-        Language lang = new Language("Unknown", Collections.emptyList(), 1.0);
+        Language lang = new Language("Unknown", Collections.emptyList(), 1.0, false);
         LanguageScore score = new LanguageScore(lang, JAVA);
         Assert.assertEquals(0, score.getScore());
     }
 
     @Test
     public void checkFinestDevfilehAsHighestScore() {
-        Language lang = new Language("java", Collections.emptyList(), 1.0);
+        Language lang = new Language("java", Collections.emptyList(), 1.0, false);
         lang.setFrameworks(Collections.singletonList("quarkus"));
         lang.setTools(Collections.singletonList("maven"));
         LanguageScore javaScore = new LanguageScore(lang, JAVA);

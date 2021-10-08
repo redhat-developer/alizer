@@ -12,7 +12,7 @@ package com.redhat.devtools.alizer.cli;
 
 import com.redhat.devtools.alizer.api.Language;
 import com.redhat.devtools.alizer.api.LanguageRecognizer;
-import com.redhat.devtools.alizer.api.LanguageRecognizerBuilder;
+import com.redhat.devtools.alizer.api.RecognizerFactory;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.qute.api.CheckedTemplate;
 import picocli.CommandLine;
@@ -30,7 +30,7 @@ public class AnalyzeCommand extends BaseCommand implements Runnable{
 
     @Override
     public void run() {
-        LanguageRecognizer reco = new LanguageRecognizerBuilder().build();
+        LanguageRecognizer reco = new RecognizerFactory().createLanguageRecognizer();
 
             try {
                 List<Language> languages = reco.analyze(name);

@@ -11,30 +11,38 @@
 package com.redhat.devtools.alizer.api;
 
 import com.redhat.devtools.alizer.api.spi.LanguageEnricherProvider;
-import org.apache.commons.io.FilenameUtils;
-
+import com.redhat.devtools.alizer.api.utils.Utils;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ServiceLoader;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
-public class LanguageRecognizerImpl implements LanguageRecognizer {
+public class LanguageRecognizerImpl extends Recognizer implements LanguageRecognizer {
 
-    LanguageRecognizerImpl(LanguageRecognizerBuilder builder) {}
+    private static final Logger logger = LoggerFactory.getLogger(LanguageRecognizerImpl.class);
+
+    LanguageRecognizerImpl(RecognizerFactory builder) {
+        super(builder);
+    }
 
     public <T extends DevfileType> T selectDevFileFromTypes(String srcPath, List<T> devfileTypes) throws IOException {
         List<Language> languages = analyze(srcPath);
+        return selectDevFileFromTypes(languages, devfileTypes);
+    }
+
+    public <T extends DevfileType> T selectDevFileFromTypes(List<Language> languages, List<T> devfileTypes) {
         for (Language language: languages) {
             Optional<LanguageScore> score = devfileTypes.stream().map(devfileType -> new LanguageScore(language, devfileType)).sorted().findFirst();
             if (score.isPresent() && score.get().getScore() > 0) {
@@ -49,16 +57,16 @@ public class LanguageRecognizerImpl implements LanguageRecognizer {
         // init dictionary with languages file
         LanguageFileHandler handler = LanguageFileHandler.get();
 
-        List<String> files = getFiles(Paths.get(path));
+        List<File> files = getFiles(Paths.get(path));
 
         // save all extensions extracted from files + their occurrences
-        Map<String, Long> extensions = files.stream().collect(groupingBy(file -> "." + FilenameUtils.getExtension(file), counting()));
+        Map<String, Long> extensions = files.stream().collect(groupingBy(file -> "." + FilenameUtils.getExtension(file.getName()), counting()));
 
         // get languages belonging to extensions found
-        extensions.keySet().stream().forEach(extension -> {
+        extensions.keySet().forEach(extension -> {
             List<LanguageFileItem> languages = handler.getLanguagesByExtension(extension);
             if (languages.isEmpty()) return;
-            languages.stream().forEach(language -> {
+            languages.forEach(language -> {
                 LanguageFileItem tmpLanguage = language.getGroup().isEmpty() ? language : handler.getLanguageByName(language.getGroup());
                 long percentage = languagesDetected.getOrDefault(tmpLanguage, 0) + extensions.get(extension);
                 languagesDetected.put(tmpLanguage, (int) percentage);
@@ -68,44 +76,27 @@ public class LanguageRecognizerImpl implements LanguageRecognizer {
         // get only programming language and calculate percentage
         int totalProgrammingOccurences = (int) languagesDetected.keySet().stream().
                 filter(lang -> lang.getType().equalsIgnoreCase("programming")).
-                mapToLong(lang -> languagesDetected.get(lang)).sum();
+                mapToLong(languagesDetected::get).sum();
 
         // only keep programming language which consists of atleast the 2% of the project
-        List<String> finalFiles = files;
-        List<Language> programmingLanguagesDetected = languagesDetected.keySet().stream().
+        return languagesDetected.keySet().stream().
                 filter(lang -> lang.getType().equalsIgnoreCase("programming")).
                 filter(lang -> (double)languagesDetected.get(lang) / totalProgrammingOccurences > 0.02).
-                map(lang -> new Language(lang.getName(), lang.getAliases(), (double)languagesDetected.get(lang) / totalProgrammingOccurences * 100)).
-                map(lang -> getDetailedLanguage(lang, finalFiles)).
+                map(lang -> new Language(lang.getName(), lang.getAliases(), (double)languagesDetected.get(lang) / totalProgrammingOccurences * 100, lang.canBeComponent())).
+                map(lang -> getDetailedLanguage(lang, files)).
                 sorted(Comparator.comparingDouble(Language::getUsageInPercentage).reversed()).
                 collect(Collectors.toList());
-
-        return programmingLanguagesDetected;
     }
 
-    private static Language getDetailedLanguage(Language language, List<String> files) {
-        LanguageEnricherProvider enricher = getEnricherByLanguage(language.getName());
+    private Language getDetailedLanguage(Language language, List<File> files) {
+        LanguageEnricherProvider enricher = Utils.getEnricherByLanguage(language.getName());
         if (enricher != null) {
-            return enricher.create().getEnrichedLanguage(language, files);
-        }
-        return language;
-    }
-
-    private static List<String> getFiles(Path rootDirectory) throws IOException {
-        return Files.walk(rootDirectory, Integer.MAX_VALUE).filter(Files::isRegularFile).map(String::valueOf)
-                .collect(Collectors.toList());
-
-    }
-
-    public static LanguageEnricherProvider getEnricherByLanguage(String language) {
-        ServiceLoader<LanguageEnricherProvider> loader = ServiceLoader.load(LanguageEnricherProvider.class, LanguageRecognizerImpl.class.getClassLoader());
-        Iterator<LanguageEnricherProvider> it = loader.iterator();
-        while (it.hasNext()) {
-            LanguageEnricherProvider provider = it.next();
-            if (provider.create().getSupportedLanguages().stream().anyMatch(supported -> supported.equalsIgnoreCase(language))) {
-                return provider;
+            try {
+                return enricher.create().getEnrichedLanguage(language, files);
+            } catch (IOException e) {
+                logger.warn(e.getLocalizedMessage(), e);
             }
         }
-        return null;
+        return language;
     }
 }

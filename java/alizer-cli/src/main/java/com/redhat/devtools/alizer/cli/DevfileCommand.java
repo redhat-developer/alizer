@@ -12,7 +12,7 @@ package com.redhat.devtools.alizer.cli;
 
 import com.redhat.devtools.alizer.api.DevfileType;
 import com.redhat.devtools.alizer.api.LanguageRecognizer;
-import com.redhat.devtools.alizer.api.LanguageRecognizerBuilder;
+import com.redhat.devtools.alizer.api.RecognizerFactory;
 import com.redhat.devtools.alizer.registry.support.DevfileMetadata;
 import com.redhat.devtools.alizer.registry.support.DevfileRegistryMetadataProviderBuilder;
 import io.quarkus.qute.TemplateInstance;
@@ -37,15 +37,14 @@ public class DevfileCommand extends BaseCommand implements Runnable{
 
     @Override
     public void run() {
-        LanguageRecognizer reco = new LanguageRecognizerBuilder().build();
+        LanguageRecognizer reco = new RecognizerFactory().createLanguageRecognizer();
         DevfileType type = null;
-
-            try {
-                if (registries != null && !registries.isEmpty()) {
-                    List<DevfileMetadata> devfiles = new DevfileRegistryMetadataProviderBuilder().withURLs(registries).build().getDevfileMetada();
-                    type = reco.selectDevFileFromTypes(name,devfiles.stream().map(it -> new DevfileTypeAdapter(it)).collect(Collectors.toList()));
-                }
-                System.out.println(getTemplateForFormat(Templates.result(type)).render());
-            } catch (IOException e) {}
-        }
+        try {
+            if (registries != null && !registries.isEmpty()) {
+                List<DevfileMetadata> devfiles = new DevfileRegistryMetadataProviderBuilder().withURLs(registries).build().getDevfileMetada();
+                type = reco.selectDevFileFromTypes(name, devfiles.stream().map(DevfileTypeAdapter::new).collect(Collectors.toList()));
+            }
+            System.out.println(getTemplateForFormat(Templates.result(type)).render());
+        } catch (IOException e) {}
+    }
 }

@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
-import com.redhat.devtools.alizer.api.DevfileType;
-
 import java.util.List;
 
 public class LanguageScore implements Comparable<LanguageScore> {

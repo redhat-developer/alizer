@@ -14,16 +14,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LanguageFileHandler {
-    private static final String YAML_PATH = "languages.yml";
+    private static final Logger logger = LoggerFactory.getLogger(LanguageFileHandler.class);
+
+    private static final String LANGUAGES_YAML_PATH = "languages.yml";
+    private static final String LANGUAGES_CUSTOMIZATION_YAML_PATH = "languages-customization.yml";
     private static final ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory());
     private static LanguageFileHandler INSTANCE;
     private Map<String, LanguageFileItem> languages = new HashMap<>();
@@ -42,7 +49,7 @@ public class LanguageFileHandler {
 
     private void initLanguages() {
         try {
-            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + YAML_PATH));
+            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_YAML_PATH), Charset.defaultCharset());
             JsonNode node = YAML_MAPPER.readTree(yamlAsString);
             for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
                 Map.Entry<String, JsonNode> entry = it.next();
@@ -55,11 +62,35 @@ public class LanguageFileHandler {
                 languages.put(nameLanguage, languageFileItem);
                 populateLanguageList(extensionXLanguage, languageAttributes, "extensions", languageFileItem);
             }
+            customizeLanguages();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e.getLocalizedMessage(), e);
         }
+    }
 
+    private void customizeLanguages() {
+        try {
+            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_CUSTOMIZATION_YAML_PATH), Charset.defaultCharset());
+            JsonNode node = YAML_MAPPER.readTree(yamlAsString);
+            for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
+                Map.Entry<String, JsonNode> entry = it.next();
+                String nameLanguage = entry.getKey();
+                LanguageFileItem languageFileItem = languages.get(nameLanguage);
+                if (languageFileItem != null) {
+                    JsonNode languageAttributes = entry.getValue();
+                    List<String> configurationFiles = getValueAsList(languageAttributes, "configuration_files");
+                    List<String> excludeFolders = getValueAsList(languageAttributes, "exclude_folders");
+                    boolean canBeComponent = languageAttributes.has("component") && languageAttributes.get("component").asBoolean();
 
+                    languageFileItem.setConfigurationFiles(configurationFiles);
+                    languageFileItem.setExcludeFolders(excludeFolders);
+                    languageFileItem.setCanBeComponent(canBeComponent);
+                    languages.put(nameLanguage, languageFileItem);
+                }
+            }
+        } catch (IOException e) {
+            logger.warn(e.getLocalizedMessage(), e);
+        }
     }
 
     private List<String> getValueAsList(JsonNode languageAttributes, String field) {
@@ -93,6 +124,39 @@ public class LanguageFileHandler {
     }
 
     public LanguageFileItem getLanguageByName(String name) {
-        return languages.get(name);
+        Optional<LanguageFileItem> languageFileItem = languages.entrySet().stream()
+                .filter(item -> item.getKey().equalsIgnoreCase(name))
+                .map(Map.Entry::getValue)
+                .findFirst();
+        return languageFileItem.orElse(null);
+    }
+
+    public LanguageFileItem getLanguageByNameOrAlias(String name) {
+        LanguageFileItem languageFileItem = getLanguageByName(name);
+        if (languageFileItem == null) {
+            return getLanguageByAlias(name);
+        }
+        return languageFileItem;
+    }
+
+    public LanguageFileItem getLanguageByAlias(String alias) {
+        String finalAlias = alias.toLowerCase();
+        Optional<LanguageFileItem> languageFileItem = languages.values().stream()
+                .filter(item -> item.getAliases().contains(finalAlias))
+                .findFirst();
+        return languageFileItem.orElse(null);
+    }
+
+    public Map<String, String> getConfigurationPerLanguageMapping() {
+        Map<String, String> configurationPerLanguage = new HashMap<>();
+        for (LanguageFileItem fileItem: languages.values()) {
+            List<String> configurationFiles = fileItem.getConfigurationFiles();
+            if (!configurationFiles.isEmpty()) {
+                for (String configFile: configurationFiles) {
+                    configurationPerLanguage.put(configFile, fileItem.getName());
+                }
+            }
+        }
+        return configurationPerLanguage;
     }
 }
