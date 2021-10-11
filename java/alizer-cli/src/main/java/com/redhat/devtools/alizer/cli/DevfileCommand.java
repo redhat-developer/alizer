@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @CommandLine.Command(name = "devfile")
 public class DevfileCommand extends BaseCommand implements Runnable{
 
-    @CommandLine.Option(names = {"-r", "--registry"}, description = "Pas the registry")
+    @CommandLine.Option(names = {"-r", "--registry"}, description = "Pass the registry")
     List<String> registries;
 
     @CheckedTemplate

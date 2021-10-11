@@ -21,7 +21,7 @@ public class LanguageFileItem {
     private List<String> configurationFiles, excludeFolders;
     private boolean canBeComponent;
 
-    public LanguageFileItem(String name, List<String> aliases, String type, String group, List<String> configurationFiles, List<String> excludeFolders) {
+    public LanguageFileItem(String name, List<String> aliases, String type, String group) {
         this.name = name;
         this.aliases = aliases;
         this.type = type;

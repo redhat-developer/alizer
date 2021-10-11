@@ -1904,9 +1904,6 @@ Go:
   codemirror_mode: go
   codemirror_mime_type: text/x-go
   language_id: 132
-  configuration_files:
-    - "go.mod"
-    - "go.sum"
 Golo:
   type: programming
   color: "#88562A"
@@ -2560,9 +2557,6 @@ Java:
   extensions:
     - ".java"
   language_id: 181
-  configuration_files:
-    - "pom.xml"
-    - "build.gradle"
 Java Properties:
   type: data
   extensions:
@@ -2631,10 +2625,6 @@ JavaScript:
     - v8
     - v8-shell
   language_id: 183
-  exclude_folders:
-    - "node_modules"
-  configuration_files:
-    - "package.json"
 JavaScript+ERB:
   type: programming
   tm_scope: source.js
