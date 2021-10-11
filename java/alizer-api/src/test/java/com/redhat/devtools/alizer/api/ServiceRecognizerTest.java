@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -27,18 +28,6 @@ public class ServiceRecognizerTest extends AbstractRecognizerTest {
     @Before
     public void setup() {
         recognizer = new RecognizerFactory().createServiceRecognizer();
-    }
-
-    @Test
-    public void testDjangoComponent() throws IOException {
-        Map<Path, List<Service>> services = recognizer.analyze("/home/luca/Public/github.com/labelmatter/lm-api");
-        assertEquals(1, services.size());
-    }
-
-    @Test
-    public void testNodejsComponent() throws IOException {
-        Map<Path, List<Service>> services = recognizer.analyze("/home/luca/Public/github.com/other/test-services");
-        assertEquals(1, services.size());
     }
 
     @Test
