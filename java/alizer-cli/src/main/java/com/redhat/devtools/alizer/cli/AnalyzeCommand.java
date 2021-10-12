@@ -34,15 +34,6 @@ public class AnalyzeCommand extends BaseCommand implements Runnable{
 
             try {
                 List<Language> languages = reco.analyze(name);
-                /*.forEach(
-                        lang -> {
-                            System.out.printf("%-10s %-10s %-10s %-10s\n",
-                                    lang.getName(),
-                                    String.join(", ", lang.getFrameworks()),
-                                    String.join(", ", lang.getTools()),
-                                    String.format(" % .2f", lang.getUsageInPercentage()) + "%");
-                        }
-                );*/
                 System.out.println(getTemplateForFormat(Templates.result(languages)).render());
             } catch (IOException e) {}
         }
