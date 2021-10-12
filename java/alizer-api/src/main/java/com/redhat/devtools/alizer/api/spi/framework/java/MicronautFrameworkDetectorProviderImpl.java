@@ -10,7 +10,12 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.spi.framework.java;
 
+import com.redhat.devtools.alizer.api.Language;
+import com.redhat.devtools.alizer.api.Service;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,5 +38,10 @@ public class MicronautFrameworkDetectorProviderImpl extends JavaFrameworkDetecto
     @Override
     protected String getFrameworkTag() {
         return MICRONAUT_TAG;
+    }
+
+    @Override
+    public List<Service> getServices(Path root, File config) throws IOException {
+        return getServices(config, getFrameworks());
     }
 }

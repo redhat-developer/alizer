@@ -10,10 +10,16 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.spi.framework;
 
+import com.redhat.devtools.alizer.api.Service;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
 
-public interface FrameworkDetectorWithConfigFileProvider extends FrameworkDetectorProvider {
+public abstract class FrameworkDetectorWithConfigFileProvider extends FrameworkDetectorProvider {
 
-    boolean hasFramework(File file) throws IOException;
+
+    public abstract boolean hasFramework(File file) throws IOException;
+
+    public abstract List<Service> getServices(Path root, File config) throws IOException;
 }

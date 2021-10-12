@@ -33,4 +33,5 @@ public class DocumentParser {
     public static boolean isTagInFile(File file, String tag) throws IOException {
         return Files.readAllLines(file.toPath()).stream().anyMatch(line -> line.contains(tag));
     }
+
 }

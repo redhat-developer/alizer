@@ -10,9 +10,15 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.spi.framework.java;
 
+import com.redhat.devtools.alizer.api.Service;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 import static com.redhat.devtools.alizer.api.Constants.SPRING;
@@ -33,5 +39,10 @@ public class SpringFrameworkDetectorProviderImpl extends JavaFrameworkDetectorPr
     @Override
     protected String getFrameworkTag() {
         return SPRING_TAG;
+    }
+
+    @Override
+    public List<Service> getServices(Path root, File config) throws IOException {
+        return getServices(config, getFrameworks());
     }
 }

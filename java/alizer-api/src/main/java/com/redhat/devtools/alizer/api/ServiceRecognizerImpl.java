@@ -10,7 +10,10 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
-import com.redhat.devtools.alizer.api.spi.service.ServiceDetectorProvider;
+import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorProvider;
+import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
+import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithoutConfigFileProvider;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -36,19 +39,24 @@ public class ServiceRecognizerImpl extends Recognizer {
         return services;
     }
 
-    private List<Service> getServices(Component component) {
+    private List<Service> getServices(Component component) throws IOException {
         Language language = component.getLanguages().get(0);
-        ServiceDetectorProvider detector = getServiceDetector(language.getName());
+
+        FrameworkDetectorProvider detector = getServiceDetector(language);
         if (detector != null) {
-            return detector.create().getServices(component.getPath(), language);
+            if (detector instanceof FrameworkDetectorWithConfigFileProvider) {
+                return ((FrameworkDetectorWithConfigFileProvider)detector.create()).getServices(component.getPath(), component.getConfig());
+            } else {
+                return ((FrameworkDetectorWithoutConfigFileProvider)detector.create()).getServices(component.getPath());
+            }
         }
         return Collections.emptyList();
     }
 
-    public static ServiceDetectorProvider getServiceDetector(String language) {
-        ServiceLoader<ServiceDetectorProvider> loader = ServiceLoader.load(ServiceDetectorProvider.class, ServiceRecognizerImpl.class.getClassLoader());
-        for (ServiceDetectorProvider provider : loader) {
-            if (provider.create().getSupportedLanguages().stream().anyMatch(supported -> supported.equalsIgnoreCase(language))) {
+    public static FrameworkDetectorProvider getServiceDetector(Language language) throws IOException {
+        ServiceLoader<FrameworkDetectorProvider> loader = ServiceLoader.load(FrameworkDetectorProvider.class, ServiceRecognizerImpl.class.getClassLoader());
+        for (FrameworkDetectorProvider provider : loader) {
+            if (provider.create().hasFramework(language)) {
                 return provider;
             }
         }

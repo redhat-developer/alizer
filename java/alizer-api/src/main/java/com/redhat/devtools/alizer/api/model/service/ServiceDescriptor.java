@@ -8,7 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.alizer.api.spi.service;
+package com.redhat.devtools.alizer.api.model.service;
 
 import com.redhat.devtools.alizer.api.Service;
 import java.util.ArrayList;

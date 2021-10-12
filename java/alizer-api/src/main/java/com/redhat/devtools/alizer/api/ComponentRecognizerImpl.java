@@ -74,7 +74,7 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
     private List<Component> getComponentsWithoutConfigFile(List<Path> directories) throws IOException {
         List<Component> components = new ArrayList<>();
         for (Path directory: directories) {
-            Component component = detectComponent(directory, "");
+            Component component = detectComponent(directory, null, "");
             // only takes component with languages that have no config file
             // E.g if the directory consists of javascript files but it doesn't contain a package.json, something is wrong
             // and we do not consider it as an actual component
@@ -109,7 +109,7 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
         for (File file: files) {
             if (configurationPerLanguage.containsKey(file.getName())
                     && isConfigurationValid(configurationPerLanguage.get(file.getName()), file)) {
-                Component component = detectComponent(file.getParentFile().toPath(), configurationPerLanguage.get(file.getName()));
+                Component component = detectComponent(file.getParentFile().toPath(), file, configurationPerLanguage.get(file.getName()));
                 if (component != null) {
                     components.add(component);
                 }
@@ -130,17 +130,18 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
      * Create a new component from root folder
      *
      * @param root folder where the component is stored
+     * @param config configuration file used to detect component
      * @param configurationLanguage language of the config file (e.g pom.xml -> java)
      * @return new component or null if folder doesn't contain anything valid
      * @throws IOException if errored while detecting languages/framework used
      */
-    private Component detectComponent(Path root, String configurationLanguage) throws IOException {
+    private Component detectComponent(Path root, File config, String configurationLanguage) throws IOException {
         RecognizerFactory recognizerFactory = new RecognizerFactory();
         LanguageRecognizer languageRecognizer = recognizerFactory.createLanguageRecognizer();
 
         List<Language> languages = getLanguagesWeightedByConfigFile(languageRecognizer.analyze(root.toString()), configurationLanguage);
         if (isLanguageSupported(languages)) {
-            return new Component(root, languages);
+            return new Component(root, config, languages);
         }
         return null;
     }

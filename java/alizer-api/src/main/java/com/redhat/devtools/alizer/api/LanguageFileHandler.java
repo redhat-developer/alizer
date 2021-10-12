@@ -11,11 +11,8 @@
 package com.redhat.devtools.alizer.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.redhat.devtools.alizer.api.utils.Utils;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +28,6 @@ public class LanguageFileHandler {
 
     private static final String LANGUAGES_YAML_PATH = "languages.yml";
     private static final String LANGUAGES_CUSTOMIZATION_YAML_PATH = "languages-customization.yml";
-    private static final ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory());
     private static LanguageFileHandler INSTANCE;
     private Map<String, LanguageFileItem> languages = new HashMap<>();
     private Map<String, List<LanguageFileItem>> extensionXLanguage = new HashMap<>();
@@ -70,8 +65,7 @@ public class LanguageFileHandler {
 
     private void customizeLanguages() {
         try {
-            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_CUSTOMIZATION_YAML_PATH), Charset.defaultCharset());
-            JsonNode node = YAML_MAPPER.readTree(yamlAsString);
+            JsonNode node = Utils.getResourceAsJsonNode("/" + LANGUAGES_CUSTOMIZATION_YAML_PATH);
             for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
                 Map.Entry<String, JsonNode> entry = it.next();
                 String nameLanguage = entry.getKey();

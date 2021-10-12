@@ -8,7 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.alizer.api.spi.service;
+package com.redhat.devtools.alizer.api.model.service;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -10,9 +10,17 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.spi.framework.java;
 
+import com.redhat.devtools.alizer.api.Service;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
+import com.redhat.devtools.alizer.api.model.service.ServiceDescriptor;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
 
 
 import static com.redhat.devtools.alizer.api.Constants.QUARKUS;
@@ -33,5 +41,27 @@ public class QuarkusFrameworkDetectorProviderImpl extends JavaFrameworkDetectorP
     @Override
     protected String getFrameworkTag() {
         return QUARKUS_TAG;
+    }
+
+    @Override
+    public List<Service> getServices(Path root, File config) throws IOException {
+        List<ServiceDescriptor> descriptors = getServicesDescriptor(getFrameworks());
+        Set<Service> services = getServiceFromQuarkusConfigFile(
+                root.resolve(Paths.get("src", "main", "resources", "application.properties")).toFile(),
+                descriptors);
+
+        return getServices(config, getFrameworks(), services);
+    }
+
+    private Set<Service> getServiceFromQuarkusConfigFile(File file, List<ServiceDescriptor> descriptors) throws IOException {
+        return getServiceFromConfigFileInner(file, (line) -> getServiceByTag(descriptors, (configuration) ->
+                !configuration.isEmpty() && (line.contains(configuration))));
+    }
+
+    private Service getServiceByTag(List<ServiceDescriptor> serviceDescriptors, Function<String, Boolean> isService) {
+        return getServiceByTagInner(serviceDescriptors, (attributes) -> {
+            String configuration = attributes.getOrDefault("configuration", "");
+            return isService.apply(configuration);
+        });
     }
 }

@@ -10,7 +10,11 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.spi.framework.java;
 
+import com.redhat.devtools.alizer.api.Service;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,5 +37,10 @@ public class VertxFrameworkDetectorProviderImpl extends JavaFrameworkDetectorPro
     @Override
     protected String getFrameworkTag() {
         return VERTX_TAG;
+    }
+
+    @Override
+    public List<Service> getServices(Path root, File config) throws IOException {
+        return getServices(config, getFrameworks());
     }
 }

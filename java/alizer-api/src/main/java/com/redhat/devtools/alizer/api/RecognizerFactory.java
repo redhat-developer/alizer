@@ -18,5 +18,8 @@ public class RecognizerFactory {
     public ComponentRecognizer createComponentRecognizer() {
         return new ComponentRecognizerImpl(this);
     }
-    public ServiceRecognizerImpl createServiceRecognizer() { return new ServiceRecognizerImpl(this); }
+
+    public ServiceRecognizerImpl createServiceRecognizer() {
+        return new ServiceRecognizerImpl(this);
+    }
 }

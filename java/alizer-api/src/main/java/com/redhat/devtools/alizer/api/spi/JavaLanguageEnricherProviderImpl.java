@@ -13,6 +13,7 @@ package com.redhat.devtools.alizer.api.spi;
 import com.redhat.devtools.alizer.api.Language;
 import com.redhat.devtools.alizer.api.LanguageRecognizerImpl;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorProvider;
+import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
 import com.redhat.devtools.alizer.api.spi.framework.java.JavaFrameworkDetectorProvider;
 import com.redhat.devtools.alizer.api.utils.DocumentParser;
 import java.io.File;
