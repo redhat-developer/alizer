@@ -19,11 +19,11 @@ public class DependencyDescriptor {
     private Map<String, String> attributes;
 
     public DependencyDescriptor() {
-        this.attributes = new HashMap<>();
+        this("");
     }
 
     public DependencyDescriptor(String name) {
-        this();
+        this.attributes = new HashMap<>();
         this.name = name;
     }
 
