@@ -10,10 +10,16 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.devtools.alizer.api.spi.LanguageEnricherProvider;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 public class Utils {
+    private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
+
     public static LanguageEnricherProvider getEnricherByLanguage(String language) {
         ServiceLoader<LanguageEnricherProvider> loader = ServiceLoader.load(LanguageEnricherProvider.class, Utils.class.getClassLoader());
         for (LanguageEnricherProvider provider : loader) {
@@ -22,5 +28,9 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    public static Map getJsonFileAsMap(File file) throws IOException {
+        return JSON_MAPPER.readValue(file, Map.class);
     }
 }

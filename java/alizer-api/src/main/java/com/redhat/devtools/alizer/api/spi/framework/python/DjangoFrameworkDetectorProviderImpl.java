@@ -8,15 +8,15 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package com.redhat.devtools.alizer.api.spi.framework;
+package com.redhat.devtools.alizer.api.spi.framework.python;
 
+import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithoutConfigFileProvider;
 import com.redhat.devtools.alizer.api.utils.DocumentParser;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.io.FilenameUtils;
 
 
 import static com.redhat.devtools.alizer.api.Constants.DJANGO;

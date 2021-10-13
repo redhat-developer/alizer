@@ -12,12 +12,11 @@ package com.redhat.devtools.alizer.api.spi;
 
 import com.redhat.devtools.alizer.api.Language;
 import com.redhat.devtools.alizer.api.LanguageRecognizerImpl;
-import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
+import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorProvider;
 import com.redhat.devtools.alizer.api.spi.framework.java.JavaFrameworkDetectorProvider;
 import com.redhat.devtools.alizer.api.utils.DocumentParser;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -63,11 +62,13 @@ public class JavaLanguageEnricherProviderImpl extends LanguageEnricherProvider {
 
     private List<String> getFrameworks(File file) throws IOException {
         List<String> frameworks = new ArrayList<>();
-        ServiceLoader<JavaFrameworkDetectorProvider> loader = ServiceLoader.load(JavaFrameworkDetectorProvider.class, LanguageRecognizerImpl.class.getClassLoader());
-        for (FrameworkDetectorWithConfigFileProvider provider : loader) {
-            provider = provider.create();
-            if (provider.hasFramework(file)) {
-                frameworks.addAll(provider.getFrameworks());
+        ServiceLoader<FrameworkDetectorProvider> loader = ServiceLoader.load(FrameworkDetectorProvider.class, LanguageRecognizerImpl.class.getClassLoader());
+        for (FrameworkDetectorProvider provider : loader) {
+            if (provider instanceof JavaFrameworkDetectorProvider) {
+                JavaFrameworkDetectorProvider configProvider = (JavaFrameworkDetectorProvider) ((JavaFrameworkDetectorProvider) provider).create();
+                if (configProvider.hasFramework(file)) {
+                    frameworks.addAll(configProvider.getFrameworks());
+                }
             }
         }
         return frameworks;
