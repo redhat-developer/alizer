@@ -62,10 +62,10 @@ public class JavaLanguageEnricherProviderImpl extends LanguageEnricherProvider {
 
     private List<String> getFrameworks(File file) throws IOException {
         List<String> frameworks = new ArrayList<>();
-        ServiceLoader<FrameworkDetectorProvider> loader = ServiceLoader.load(FrameworkDetectorProvider.class, LanguageRecognizerImpl.class.getClassLoader());
+        ServiceLoader<FrameworkDetectorProvider> loader = ServiceLoader.load(FrameworkDetectorProvider.class, JavaLanguageEnricherProviderImpl.class.getClassLoader());
         for (FrameworkDetectorProvider provider : loader) {
             if (provider instanceof JavaFrameworkDetectorProvider) {
-                JavaFrameworkDetectorProvider configProvider = (JavaFrameworkDetectorProvider) ((JavaFrameworkDetectorProvider) provider).create();
+                JavaFrameworkDetectorProvider configProvider = (JavaFrameworkDetectorProvider) provider.create();
                 if (configProvider.hasFramework(file)) {
                     frameworks.addAll(configProvider.getFrameworks());
                 }

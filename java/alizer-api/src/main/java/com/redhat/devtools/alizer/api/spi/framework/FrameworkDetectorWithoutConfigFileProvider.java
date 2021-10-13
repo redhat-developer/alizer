@@ -16,7 +16,5 @@ import java.util.List;
 
 public interface FrameworkDetectorWithoutConfigFileProvider extends FrameworkDetectorProvider {
 
-    FrameworkDetectorWithoutConfigFileProvider create();
-
     boolean hasFramework(List<File> files) throws IOException;
 }

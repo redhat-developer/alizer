@@ -14,6 +14,8 @@ import java.util.List;
 
 public interface FrameworkDetectorProvider {
 
+    FrameworkDetectorProvider create();
+
     List<String> getSupportedLanguages();
 
     List<String> getFrameworks();

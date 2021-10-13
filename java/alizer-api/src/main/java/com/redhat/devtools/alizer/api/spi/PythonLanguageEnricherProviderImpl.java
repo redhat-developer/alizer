@@ -43,10 +43,10 @@ public class PythonLanguageEnricherProviderImpl extends LanguageEnricherProvider
 
     private List<String> getFrameworks(List<File> files) throws IOException {
         List<String> frameworks = new ArrayList<>();
-        ServiceLoader<FrameworkDetectorProvider> loader = ServiceLoader.load(FrameworkDetectorProvider.class, LanguageRecognizerImpl.class.getClassLoader());
+        ServiceLoader<FrameworkDetectorProvider> loader = ServiceLoader.load(FrameworkDetectorProvider.class, PythonLanguageEnricherProviderImpl.class.getClassLoader());
         for (FrameworkDetectorProvider provider : loader) {
             if (provider instanceof FrameworkDetectorWithoutConfigFileProvider) {
-                FrameworkDetectorWithoutConfigFileProvider noConfigProvider = ((FrameworkDetectorWithoutConfigFileProvider) provider).create();
+                FrameworkDetectorWithoutConfigFileProvider noConfigProvider = (FrameworkDetectorWithoutConfigFileProvider) provider.create();
                 if (noConfigProvider.getSupportedLanguages().contains(PYTHON) && noConfigProvider.hasFramework(files)) {
                     frameworks.addAll(noConfigProvider.getFrameworks());
                 }

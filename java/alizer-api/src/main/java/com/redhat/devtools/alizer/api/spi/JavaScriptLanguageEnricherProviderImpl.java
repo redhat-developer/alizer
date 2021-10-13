@@ -53,7 +53,7 @@ public class JavaScriptLanguageEnricherProviderImpl extends LanguageEnricherProv
         ServiceLoader<FrameworkDetectorProvider> loader = ServiceLoader.load(FrameworkDetectorProvider.class, JavaScriptLanguageEnricherProviderImpl.class.getClassLoader());
         for (FrameworkDetectorProvider provider : loader) {
             if (provider instanceof NodeJsFrameworkDetectorProvider) {
-                NodeJsFrameworkDetectorProvider configProvider = (NodeJsFrameworkDetectorProvider) ((NodeJsFrameworkDetectorProvider) provider).create();
+                NodeJsFrameworkDetectorProvider configProvider = (NodeJsFrameworkDetectorProvider) provider.create();
                 if (configProvider.hasFramework(file)) {
                     frameworks.addAll(configProvider.getFrameworks());
                 }
