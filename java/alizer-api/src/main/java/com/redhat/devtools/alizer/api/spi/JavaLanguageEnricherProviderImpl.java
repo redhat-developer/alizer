@@ -66,7 +66,7 @@ public class JavaLanguageEnricherProviderImpl extends LanguageEnricherProvider {
         ServiceLoader<FrameworkDetectorProvider> loader = ServiceLoader.load(FrameworkDetectorProvider.class, JavaLanguageEnricherProviderImpl.class.getClassLoader());
         for (FrameworkDetectorProvider provider : loader) {
             if (provider instanceof JavaFrameworkDetectorProvider) {
-                JavaFrameworkDetectorProvider configProvider = (JavaFrameworkDetectorProvider) provider.create();
+                JavaFrameworkDetectorProvider configProvider = (JavaFrameworkDetectorProvider)provider.create();
                 if (configProvider.hasFramework(file)) {
                     frameworks.addAll(configProvider.getFrameworks());
                 }

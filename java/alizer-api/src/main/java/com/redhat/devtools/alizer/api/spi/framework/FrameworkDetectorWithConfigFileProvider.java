@@ -18,7 +18,6 @@ import java.util.List;
 
 public abstract class FrameworkDetectorWithConfigFileProvider extends FrameworkDetectorProvider {
 
-
     public abstract boolean hasFramework(File file) throws IOException;
 
     public abstract List<Service> getServices(Path root, File config) throws IOException;
