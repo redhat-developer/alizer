@@ -3,3 +3,6 @@ com.redhat.devtools.alizer.api.spi.framework.java.OpenLibertyFrameworkDetectorPr
 com.redhat.devtools.alizer.api.spi.framework.java.QuarkusFrameworkDetectorProviderImpl
 com.redhat.devtools.alizer.api.spi.framework.java.SpringFrameworkDetectorProviderImpl
 com.redhat.devtools.alizer.api.spi.framework.java.VertxFrameworkDetectorProviderImpl
+com.redhat.devtools.alizer.api.spi.framework.nodejs.ExpressFrameworkDetectorProviderImpl
+com.redhat.devtools.alizer.api.spi.framework.nodejs.ReactFrameworkDetectorProviderImpl
+com.redhat.devtools.alizer.api.spi.framework.python.DjangoFrameworkDetectorProviderImpl

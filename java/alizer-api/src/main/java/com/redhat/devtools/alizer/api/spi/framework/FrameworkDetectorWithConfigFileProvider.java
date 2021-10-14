@@ -15,7 +15,5 @@ import java.io.IOException;
 
 public interface FrameworkDetectorWithConfigFileProvider extends FrameworkDetectorProvider {
 
-    FrameworkDetectorWithConfigFileProvider create();
-
     boolean hasFramework(File file) throws IOException;
 }

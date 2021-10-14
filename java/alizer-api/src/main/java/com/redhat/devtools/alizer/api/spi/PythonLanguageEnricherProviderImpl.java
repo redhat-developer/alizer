@@ -14,20 +14,12 @@ import com.redhat.devtools.alizer.api.Language;
 import com.redhat.devtools.alizer.api.LanguageRecognizerImpl;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorProvider;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithoutConfigFileProvider;
-import com.redhat.devtools.alizer.api.spi.framework.java.JavaFrameworkDetectorProvider;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.ServiceLoader;
-import javax.xml.parsers.ParserConfigurationException;
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import org.xml.sax.SAXException;
+import java.util.ServiceLoader;
 
 
 import static com.redhat.devtools.alizer.api.Constants.PYTHON;
@@ -51,11 +43,13 @@ public class PythonLanguageEnricherProviderImpl extends LanguageEnricherProvider
 
     private List<String> getFrameworks(List<File> files) throws IOException {
         List<String> frameworks = new ArrayList<>();
-        ServiceLoader<FrameworkDetectorWithoutConfigFileProvider> loader = ServiceLoader.load(FrameworkDetectorWithoutConfigFileProvider.class, LanguageRecognizerImpl.class.getClassLoader());
-        for (FrameworkDetectorWithoutConfigFileProvider provider : loader) {
-            provider = provider.create();
-            if (provider.getSupportedLanguages().contains(PYTHON) && provider.hasFramework(files)) {
-                frameworks.addAll(provider.getFrameworks());
+        ServiceLoader<FrameworkDetectorProvider> loader = ServiceLoader.load(FrameworkDetectorProvider.class, PythonLanguageEnricherProviderImpl.class.getClassLoader());
+        for (FrameworkDetectorProvider provider : loader) {
+            if (provider instanceof FrameworkDetectorWithoutConfigFileProvider) {
+                FrameworkDetectorWithoutConfigFileProvider noConfigProvider = (FrameworkDetectorWithoutConfigFileProvider) provider.create();
+                if (noConfigProvider.getSupportedLanguages().contains(PYTHON) && noConfigProvider.hasFramework(files)) {
+                    frameworks.addAll(noConfigProvider.getFrameworks());
+                }
             }
         }
         return frameworks;

@@ -24,4 +24,6 @@ public class Constants {
     public static final String VERTX = "Vertx";
     public static final String MICRONAUT = "Micronaut";
     public static final String DJANGO = "Django";
+    public static final String EXPRESS = "Express";
+    public static final String REACT = "React";
 }
