@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.spi.framework.nodejs;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.redhat.devtools.alizer.api.Service;
 import com.redhat.devtools.alizer.api.model.service.DependencyDescriptor;
 import com.redhat.devtools.alizer.api.model.service.ServiceDescriptor;
@@ -36,6 +37,11 @@ public abstract class NodeJsFrameworkDetectorProvider extends FrameworkDetectorW
     }
 
     protected abstract String getFrameworkTag();
+
+    @Override
+    public List<DependencyDescriptor> extractDependenciesDescriptor(String language, ArrayNode dependenciesNode) {
+        return extractDependenciesWithName(dependenciesNode);
+    }
 
     @Override
     public boolean hasFramework(Path file) throws IOException {

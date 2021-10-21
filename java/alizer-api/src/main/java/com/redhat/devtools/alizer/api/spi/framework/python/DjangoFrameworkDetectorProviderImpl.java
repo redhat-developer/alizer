@@ -10,19 +10,13 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.spi.framework.python;
 
-import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithoutConfigFileProvider;
-import com.redhat.devtools.alizer.api.utils.DocumentParser;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.redhat.devtools.alizer.api.Service;
-import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithoutConfigFileProvider;
 import com.redhat.devtools.alizer.api.model.service.DependencyDescriptor;
 import com.redhat.devtools.alizer.api.model.service.ServiceDescriptor;
+import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithoutConfigFileProvider;
 import com.redhat.devtools.alizer.api.utils.DocumentParser;
-import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,7 +29,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 
 import static com.redhat.devtools.alizer.api.Constants.DJANGO;
 import static com.redhat.devtools.alizer.api.Constants.PYTHON;
@@ -51,6 +44,11 @@ public class DjangoFrameworkDetectorProviderImpl extends FrameworkDetectorWithou
     @Override
     public List<String> getSupportedLanguages() {
         return Arrays.asList(PYTHON);
+    }
+
+    @Override
+    public List<DependencyDescriptor> extractDependenciesDescriptor(String language, ArrayNode dependenciesNode) {
+        return extractDependenciesWithName(dependenciesNode);
     }
 
     @Override

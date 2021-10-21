@@ -12,14 +12,11 @@ package com.redhat.devtools.alizer.api.spi.framework.java;
 
 import com.redhat.devtools.alizer.api.Service;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
-import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 
 import static com.redhat.devtools.alizer.api.Constants.SPRING;
 

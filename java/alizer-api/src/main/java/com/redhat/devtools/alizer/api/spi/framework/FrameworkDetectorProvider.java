@@ -31,6 +31,8 @@ public abstract class FrameworkDetectorProvider {
 
     public abstract List<String> getFrameworks();
 
+    public abstract List<DependencyDescriptor> extractDependenciesDescriptor(String language, ArrayNode dependenciesNode);
+
     public boolean hasFramework(Language language) {
         return getSupportedLanguages().stream().anyMatch(supported -> supported.equalsIgnoreCase(language.getName()))
                 && getFrameworks().stream().anyMatch(supported ->
@@ -72,20 +74,7 @@ public abstract class FrameworkDetectorProvider {
         return descriptors;
     }
 
-    private List<DependencyDescriptor> extractDependenciesDescriptor(String language, ArrayNode dependenciesNode) {
-        switch(language) {
-            case "java":
-            case "quarkus":
-            case "vertx": {
-                return extractDependenciesWithAttributes(dependenciesNode);
-            }
-            default: {
-                return extractDependenciesWithName(dependenciesNode);
-            }
-        }
-    }
-
-    private List<DependencyDescriptor> extractDependenciesWithAttributes(ArrayNode dependenciesNode) {
+    protected List<DependencyDescriptor> extractDependenciesWithAttributes(ArrayNode dependenciesNode) {
         List<DependencyDescriptor> dependencyDescriptors = new ArrayList<>();
         for (JsonNode dependencyNode: dependenciesNode) {
             DependencyDescriptor dependencyDescriptor = new DependencyDescriptor();
@@ -98,7 +87,7 @@ public abstract class FrameworkDetectorProvider {
         return dependencyDescriptors;
     }
 
-    private List<DependencyDescriptor> extractDependenciesWithName(ArrayNode dependenciesNode) {
+    protected List<DependencyDescriptor> extractDependenciesWithName(ArrayNode dependenciesNode) {
         List<DependencyDescriptor> dependencyDescriptors = new ArrayList<>();
         for (JsonNode dependencyNode: dependenciesNode) {
             dependencyDescriptors.add(new DependencyDescriptor(dependencyNode.asText()));

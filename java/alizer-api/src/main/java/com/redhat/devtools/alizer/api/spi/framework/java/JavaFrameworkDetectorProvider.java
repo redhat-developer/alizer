@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.spi.framework.java;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.redhat.devtools.alizer.api.Service;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
 import com.redhat.devtools.alizer.api.model.service.DependencyDescriptor;
@@ -43,6 +44,11 @@ public abstract class JavaFrameworkDetectorProvider extends FrameworkDetectorWit
     @Override
     public List<String> getSupportedLanguages() {
         return Arrays.asList(JAVA);
+    }
+
+    @Override
+    public List<DependencyDescriptor> extractDependenciesDescriptor(String language, ArrayNode dependenciesNode) {
+        return extractDependenciesWithAttributes(dependenciesNode);
     }
 
     @Override

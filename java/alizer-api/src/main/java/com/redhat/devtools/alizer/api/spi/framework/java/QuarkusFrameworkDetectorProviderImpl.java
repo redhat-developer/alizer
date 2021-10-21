@@ -13,7 +13,6 @@ package com.redhat.devtools.alizer.api.spi.framework.java;
 import com.redhat.devtools.alizer.api.Service;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
 import com.redhat.devtools.alizer.api.model.service.ServiceDescriptor;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
