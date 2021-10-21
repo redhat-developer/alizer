@@ -10,28 +10,29 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class DocumentParser {
 
-    public static NodeList getElementsByTag(File file, String tag) throws IOException, SAXException, ParserConfigurationException {
+    public static NodeList getElementsByTag(Path file, String tag) throws IOException, SAXException, ParserConfigurationException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(file);
+        Document doc = dBuilder.parse(file.toFile());
         doc.getDocumentElement().normalize();
         return doc.getElementsByTagName(tag);
     }
 
-    public static boolean isTagInFile(File file, String tag) throws IOException {
-        return Files.readAllLines(file.toPath()).stream().anyMatch(line -> line.contains(tag));
+    public static boolean isTagInFile(Path file, String tag) throws IOException {
+        return Files.readAllLines(file).stream().anyMatch(line -> line.contains(tag));
     }
 
 }

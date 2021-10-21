@@ -18,6 +18,7 @@ import com.redhat.devtools.alizer.api.spi.framework.java.JavaFrameworkDetectorPr
 import com.redhat.devtools.alizer.api.utils.DocumentParser;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,11 +43,11 @@ public class JavaLanguageEnricherProviderImpl extends LanguageEnricherProvider {
     }
 
     @Override
-    public Language getEnrichedLanguage(Language language, List<File> files) throws IOException {
+    public Language getEnrichedLanguage(Language language, List<Path> files) throws IOException {
         // find builder
-        Optional<File> gradle = files.stream().filter(file -> file.getName().equalsIgnoreCase("build.gradle")).findFirst();
-        Optional<File> maven = files.stream().filter(file -> file.getName().equalsIgnoreCase("pom.xml")).findFirst();
-        Optional<File> ant = files.stream().filter(file -> file.getName().equalsIgnoreCase("build.xml")).findFirst();
+        Optional<Path> gradle = files.stream().filter(file -> file.toFile().getName().equalsIgnoreCase("build.gradle")).findFirst();
+        Optional<Path> maven = files.stream().filter(file -> file.toFile().getName().equalsIgnoreCase("pom.xml")).findFirst();
+        Optional<Path> ant = files.stream().filter(file -> file.toFile().getName().equalsIgnoreCase("build.xml")).findFirst();
 
         if (gradle.isPresent()) {
             language.setTools(Arrays.asList("Gradle"));
@@ -61,7 +62,7 @@ public class JavaLanguageEnricherProviderImpl extends LanguageEnricherProvider {
         return language;
     }
 
-    private List<String> getFrameworks(File file) throws IOException {
+    private List<String> getFrameworks(Path file) throws IOException {
         List<String> frameworks = new ArrayList<>();
         ServiceLoader<FrameworkDetectorProvider> loader = ServiceLoader.load(FrameworkDetectorProvider.class, JavaLanguageEnricherProviderImpl.class.getClassLoader());
         for (FrameworkDetectorProvider provider : loader) {
@@ -77,12 +78,12 @@ public class JavaLanguageEnricherProviderImpl extends LanguageEnricherProvider {
 
 
     @Override
-    public boolean isConfigurationValidForComponent(String language, File file) {
+    public boolean isConfigurationValidForComponent(String language, Path file) {
         return super.isConfigurationValidForComponent(language, file) && !isParentModuleMaven(file);
     }
 
-    private boolean isParentModuleMaven(File file) {
-        if (!file.toPath().endsWith("pom.xml")) {
+    private boolean isParentModuleMaven(Path file) {
+        if (!file.endsWith("pom.xml")) {
             return false;
         }
         try {

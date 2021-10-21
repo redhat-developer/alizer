@@ -88,7 +88,7 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
         List<Component> components = recognizer.analyze(new File("../../resources/projects/component-wrapped-in-folder").getCanonicalPath());
         assertEquals(1, components.size());
         assertEquals("Java", components.get(0).getLanguages().get(0).getName());
-        assertEquals(new File("../../resources/projects/component-wrapped-in-folder/wrapper/quarkus").getCanonicalPath(), components.get(0).getPath().toString());
+        assertEquals(new File("../../resources/projects/component-wrapped-in-folder/wrapper/quarkus").getCanonicalPath(), components.get(0).getRoot().toString());
     }
 
     @Test

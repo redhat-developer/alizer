@@ -38,11 +38,11 @@ public abstract class NodeJsFrameworkDetectorProvider extends FrameworkDetectorW
     protected abstract String getFrameworkTag();
 
     @Override
-    public boolean hasFramework(File file) throws IOException {
+    public boolean hasFramework(Path file) throws IOException {
         return getDependenciesFromPackageJson(file).keySet().stream().anyMatch(dependency -> dependency.equals(getFrameworkTag()));
     }
 
-    private Map<?, ?> getDependenciesFromPackageJson(File file) throws IOException {
+    private Map<?, ?> getDependenciesFromPackageJson(Path file) throws IOException {
         Map<?, ?> packageJsonContent = Utils.getJsonFileAsMap(file);
         if (!packageJsonContent.containsKey("dependencies")) {
             throw new IOException("No package.json found");
@@ -51,10 +51,10 @@ public abstract class NodeJsFrameworkDetectorProvider extends FrameworkDetectorW
     }
 
     @Override
-    public List<Service> getServices(Path root, File config) throws IOException {
+    public List<Service> getServices(Path root, Path configFile) throws IOException {
         List<Service> services = new ArrayList<>();
         List<ServiceDescriptor> descriptors = getServicesDescriptor(Collections.singletonList(NODEJS));
-        Map<?, ?> dependenciesMap = getDependenciesFromPackageJson(config);
+        Map<?, ?> dependenciesMap = getDependenciesFromPackageJson(configFile);
         dependenciesMap.keySet().forEach(dependency -> {
             Service service = getServiceByDependency(dependency.toString(), descriptors);
             if (service != null) {

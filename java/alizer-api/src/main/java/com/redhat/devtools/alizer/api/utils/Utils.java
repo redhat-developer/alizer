@@ -18,6 +18,7 @@ import com.redhat.devtools.alizer.api.spi.LanguageEnricherProvider;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,8 +45,8 @@ public class Utils {
         return YAML_MAPPER.readTree(yamlAsString);
     }
 
-    public static Map getJsonFileAsMap(File file) throws IOException {
-        return JSON_MAPPER.readValue(file, Map.class);
+    public static Map getJsonFileAsMap(Path file) throws IOException {
+        return JSON_MAPPER.readValue(file.toFile(), Map.class);
     }
 
     public static Map<String, ArrayNode> getDependenciesByLanguage(JsonNode node, String field) {

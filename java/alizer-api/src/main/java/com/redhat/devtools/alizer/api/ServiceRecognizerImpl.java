@@ -13,7 +13,7 @@ package com.redhat.devtools.alizer.api;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorProvider;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigFileProvider;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithoutConfigFileProvider;
-import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -34,7 +34,7 @@ public class ServiceRecognizerImpl extends Recognizer {
         Map<Path, List<Service>> services = new HashMap<>();
         for(Component component: components) {
             List<Service> componentServices = getServices(component);
-            services.put(component.getPath(), componentServices);
+            services.put(component.getRoot(), componentServices);
         }
         return services;
     }
@@ -45,9 +45,9 @@ public class ServiceRecognizerImpl extends Recognizer {
         FrameworkDetectorProvider detector = getServiceDetector(language);
         if (detector != null) {
             if (detector instanceof FrameworkDetectorWithConfigFileProvider) {
-                return ((FrameworkDetectorWithConfigFileProvider)detector.create()).getServices(component.getPath(), component.getConfig());
+                return ((FrameworkDetectorWithConfigFileProvider)detector.create()).getServices(component.getRoot(), component.getConfigFile());
             } else {
-                return ((FrameworkDetectorWithoutConfigFileProvider)detector.create()).getServices(component.getPath());
+                return ((FrameworkDetectorWithoutConfigFileProvider)detector.create()).getServices(component.getRoot());
             }
         }
         return Collections.emptyList();

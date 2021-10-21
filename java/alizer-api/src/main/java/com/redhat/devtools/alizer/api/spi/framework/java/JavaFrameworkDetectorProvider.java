@@ -15,9 +15,9 @@ import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithConfigF
 import com.redhat.devtools.alizer.api.model.service.DependencyDescriptor;
 import com.redhat.devtools.alizer.api.model.service.ServiceDescriptor;
 import com.redhat.devtools.alizer.api.utils.DocumentParser;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,8 +46,8 @@ public abstract class JavaFrameworkDetectorProvider extends FrameworkDetectorWit
     }
 
     @Override
-    public boolean hasFramework(File file) throws IOException {
-        if (file.getName().equalsIgnoreCase("build.gradle")) {
+    public boolean hasFramework(Path file) throws IOException {
+        if (file.toFile().getName().equalsIgnoreCase("build.gradle")) {
             return DocumentParser.isTagInFile(file, getFrameworkTag());
         } else {
             try {
@@ -58,7 +58,7 @@ public abstract class JavaFrameworkDetectorProvider extends FrameworkDetectorWit
         }
     }
 
-    protected boolean hasGroupIdMaven(File file, String groupId) throws ParserConfigurationException, IOException, SAXException {
+    protected boolean hasGroupIdMaven(Path file, String groupId) throws ParserConfigurationException, IOException, SAXException {
         NodeList nodeList = DocumentParser.getElementsByTag(file, "groupId");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
@@ -69,11 +69,11 @@ public abstract class JavaFrameworkDetectorProvider extends FrameworkDetectorWit
         return false;
     }
 
-    protected List<Service> getServices(File file, List<String> frameworks) throws IOException {
+    protected List<Service> getServices(Path file, List<String> frameworks) throws IOException {
         return getServices(file, frameworks, Collections.emptySet());
     }
 
-    protected List<Service> getServices(File file, List<String> frameworks, Set<Service> services) throws IOException {
+    protected List<Service> getServices(Path file, List<String> frameworks, Set<Service> services) throws IOException {
         List<String> frameworksList = new ArrayList<>();
         frameworksList.addAll(frameworks);
         frameworksList.addAll(getSupportedLanguages());
@@ -84,9 +84,9 @@ public abstract class JavaFrameworkDetectorProvider extends FrameworkDetectorWit
         return new ArrayList<>(servicesSet);
     }
 
-    private Set<Service> getServicesInner(File file, List<ServiceDescriptor> descriptors) throws IOException {
+    private Set<Service> getServicesInner(Path file, List<ServiceDescriptor> descriptors) throws IOException {
         Set<Service> services = new HashSet<>();
-        if (file.getName().equalsIgnoreCase("build.gradle")) {
+        if (file.toFile().getName().equalsIgnoreCase("build.gradle")) {
             services.addAll(getServiceByTagsInConfigFile(file, descriptors));
         } else {
             try {
@@ -98,8 +98,8 @@ public abstract class JavaFrameworkDetectorProvider extends FrameworkDetectorWit
         return services;
     }
 
-    private Set<Service> getServiceByXMLTagsInConfigFile(File file, List<ServiceDescriptor> serviceDescriptors) throws ParserConfigurationException, IOException, SAXException {
-        if (!file.exists()) {
+    private Set<Service> getServiceByXMLTagsInConfigFile(Path file, List<ServiceDescriptor> serviceDescriptors) throws ParserConfigurationException, IOException, SAXException {
+        if (!file.toFile().exists()) {
             return Collections.emptySet();
         }
         Set<Service> services = new HashSet<>();
@@ -133,19 +133,19 @@ public abstract class JavaFrameworkDetectorProvider extends FrameworkDetectorWit
         return services;
     }
 
-    private Set<Service> getServiceByTagsInConfigFile(File file, List<ServiceDescriptor> serviceDescriptors) throws IOException {
+    private Set<Service> getServiceByTagsInConfigFile(Path file, List<ServiceDescriptor> serviceDescriptors) throws IOException {
         return getServiceFromConfigFileInner(file, (line) -> getServiceByTag(serviceDescriptors, (groupId, artifactId) ->
                 !groupId.isEmpty() && !artifactId.isEmpty()
                         && (line.contains(groupId + ":" + artifactId)
                         || Pattern.matches("group:\\s*'" + groupId + "'\\s*,\\s*name:\\s*'" + artifactId, line))));
     }
 
-    protected Set<Service> getServiceFromConfigFileInner(File file, Function<String, Service> getService) throws IOException {
-        if (!file.exists()) {
+    protected Set<Service> getServiceFromConfigFileInner(Path file, Function<String, Service> getService) throws IOException {
+        if (!file.toFile().exists()) {
             return Collections.emptySet();
         }
         Set<Service> services = new HashSet<>();
-        List<String> allLines = Files.readAllLines(file.toPath());
+        List<String> allLines = Files.readAllLines(file);
         allLines.forEach(line -> {
                     Service service = getService.apply(line);
                     if (service != null) {

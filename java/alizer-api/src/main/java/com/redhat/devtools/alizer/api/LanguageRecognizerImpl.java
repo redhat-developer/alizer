@@ -14,6 +14,7 @@ import com.redhat.devtools.alizer.api.spi.LanguageEnricherProvider;
 import com.redhat.devtools.alizer.api.utils.Utils;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -57,10 +58,10 @@ public class LanguageRecognizerImpl extends Recognizer implements LanguageRecogn
         // init dictionary with languages file
         LanguageFileHandler handler = LanguageFileHandler.get();
 
-        List<File> files = getFiles(Paths.get(path));
+        List<Path> files = getFilePaths(Paths.get(path));
 
         // save all extensions extracted from files + their occurrences
-        Map<String, Long> extensions = files.stream().collect(groupingBy(file -> "." + FilenameUtils.getExtension(file.getName()), counting()));
+        Map<String, Long> extensions = files.stream().collect(groupingBy(file -> "." + FilenameUtils.getExtension(file.toFile().getName()), counting()));
 
         // get languages belonging to extensions found
         extensions.keySet().forEach(extension -> {
@@ -88,7 +89,7 @@ public class LanguageRecognizerImpl extends Recognizer implements LanguageRecogn
                 collect(Collectors.toList());
     }
 
-    private Language getDetailedLanguage(Language language, List<File> files) {
+    private Language getDetailedLanguage(Language language, List<Path> files) {
         LanguageEnricherProvider enricher = Utils.getEnricherByLanguage(language.getName());
         if (enricher != null) {
             try {

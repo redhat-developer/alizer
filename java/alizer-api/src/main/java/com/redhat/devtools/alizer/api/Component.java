@@ -16,26 +16,25 @@ import java.util.List;
 
 public class Component {
 
-    private Path path;
-    private File config;
+    private Path root, configFile;
     private List<Language> languages;
 
-    public Component(Path path, List<Language> languages) {
-        this(path, null, languages);
+    public Component(Path root, List<Language> languages) {
+        this(root, null, languages);
     }
 
-    public Component(Path path, File config, List<Language> languages) {
-        this.path = path;
-        this.config = config;
+    public Component(Path root, Path configFile, List<Language> languages) {
+        this.root = root;
+        this.configFile = configFile;
         this.languages = languages;
     }
 
-    public Path getPath() {
-        return path;
+    public Path getRoot() {
+        return root;
     }
 
-    public File getConfig() {
-        return config;
+    public Path getConfigFile() {
+        return configFile;
     }
 
     public List<Language> getLanguages() {

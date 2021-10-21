@@ -16,6 +16,7 @@ import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorProvider;
 import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorWithoutConfigFileProvider;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,12 +37,12 @@ public class PythonLanguageEnricherProviderImpl extends LanguageEnricherProvider
     }
 
     @Override
-    public Language getEnrichedLanguage(Language language, List<File> files) throws IOException {
+    public Language getEnrichedLanguage(Language language, List<Path> files) throws IOException {
         language.setFrameworks(getFrameworks(files));
         return language;
     }
 
-    private List<String> getFrameworks(List<File> files) throws IOException {
+    private List<String> getFrameworks(List<Path> files) throws IOException {
         List<String> frameworks = new ArrayList<>();
         ServiceLoader<FrameworkDetectorProvider> loader = ServiceLoader.load(FrameworkDetectorProvider.class, PythonLanguageEnricherProviderImpl.class.getClassLoader());
         for (FrameworkDetectorProvider provider : loader) {

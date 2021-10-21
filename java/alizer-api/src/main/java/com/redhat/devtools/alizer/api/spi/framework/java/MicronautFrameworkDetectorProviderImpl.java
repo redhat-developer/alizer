@@ -40,7 +40,7 @@ public class MicronautFrameworkDetectorProviderImpl extends JavaFrameworkDetecto
     }
 
     @Override
-    public List<Service> getServices(Path root, File config) throws IOException {
-        return getServices(config, getFrameworks());
+    public List<Service> getServices(Path root, Path configFile) throws IOException {
+        return getServices(configFile, getFrameworks());
     }
 }

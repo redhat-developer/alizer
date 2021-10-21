@@ -32,8 +32,8 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
     }
 
     public List<Component> analyze(String path) throws IOException {
-        List<File> files = getFiles(Paths.get(path));
-        List<Component> components = detectComponents(files);
+        List<Path> filePaths = getFilePaths(Paths.get(path));
+        List<Component> components = detectComponents(filePaths);
 
         // it may happen that a language has no a specific configuration file (e.g opposite to JAVA -> pom.xml and Nodejs -> package.json)
         // we then rely on the language recognizer
@@ -66,7 +66,7 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
      * @return true if directory contains a component or it is a subfolder of a folder containing a component, false otherwise
      */
     private boolean hasDirectoryAnyComponent(Path directory, List<Component> components) {
-        return components.stream().map(Component::getPath)
+        return components.stream().map(Component::getRoot)
                 .anyMatch(directoryWithComponent -> directoryWithComponent.equals(directory) ||
                         isFirstPathParentOfSecond(directoryWithComponent, directory));
     }
@@ -103,13 +103,13 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
         return languageFileItem.getConfigurationFiles().isEmpty();
     }
 
-    private List<Component> detectComponents(List<File> files) throws IOException {
+    private List<Component> detectComponents(List<Path> files) throws IOException {
         Map<String, String> configurationPerLanguage = LanguageFileHandler.get().getConfigurationPerLanguageMapping();
         List<Component> components = new ArrayList<>();
-        for (File file: files) {
-            if (configurationPerLanguage.containsKey(file.getName())
-                    && isConfigurationValid(configurationPerLanguage.get(file.getName()), file)) {
-                Component component = detectComponent(file.getParentFile().toPath(), file, configurationPerLanguage.get(file.getName()));
+        for (Path file: files) {
+            if (configurationPerLanguage.containsKey(file.toFile().getName())
+                    && isConfigurationValid(configurationPerLanguage.get(file.toFile().getName()), file)) {
+                Component component = detectComponent(file.getParent().toFile().toPath(), file, configurationPerLanguage.get(file.toFile().getName()));
                 if (component != null) {
                     components.add(component);
                 }
@@ -118,7 +118,7 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
         return components;
     }
 
-    private boolean isConfigurationValid(String language, File file) {
+    private boolean isConfigurationValid(String language, Path file) {
         LanguageEnricherProvider enricher = Utils.getEnricherByLanguage(language);
         if (enricher != null) {
             return enricher.create().isConfigurationValidForComponent(language, file);
@@ -130,18 +130,18 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
      * Create a new component from root folder
      *
      * @param root folder where the component is stored
-     * @param config configuration file used to detect component
+     * @param configFile configuration file used to detect component
      * @param configurationLanguage language of the config file (e.g pom.xml -> java)
      * @return new component or null if folder doesn't contain anything valid
      * @throws IOException if errored while detecting languages/framework used
      */
-    private Component detectComponent(Path root, File config, String configurationLanguage) throws IOException {
+    private Component detectComponent(Path root, Path configFile, String configurationLanguage) throws IOException {
         RecognizerFactory recognizerFactory = new RecognizerFactory();
         LanguageRecognizer languageRecognizer = recognizerFactory.createLanguageRecognizer();
 
         List<Language> languages = getLanguagesWeightedByConfigFile(languageRecognizer.analyze(root.toString()), configurationLanguage);
         if (isLanguageSupported(languages)) {
-            return new Component(root, config, languages);
+            return new Component(root, configFile, languages);
         }
         return null;
     }

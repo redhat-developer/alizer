@@ -25,10 +25,10 @@ public abstract class LanguageEnricherProvider {
 
     public abstract List<String> getSupportedLanguages();
 
-    public abstract Language getEnrichedLanguage(Language language, List<File> files) throws IOException;
+    public abstract Language getEnrichedLanguage(Language language, List<Path> files) throws IOException;
 
-    public boolean isConfigurationValidForComponent(String language, File file) {
-        return isValidPathPerLanguage(file.toPath(), language);
+    public boolean isConfigurationValidForComponent(String language, Path file) {
+        return isValidPathPerLanguage(file, language);
     }
 
     /**

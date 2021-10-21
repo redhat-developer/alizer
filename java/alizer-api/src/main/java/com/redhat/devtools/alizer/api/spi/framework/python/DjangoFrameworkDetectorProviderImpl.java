@@ -59,11 +59,11 @@ public class DjangoFrameworkDetectorProviderImpl extends FrameworkDetectorWithou
     }
 
     @Override
-    public boolean hasFramework(List<File> files) throws IOException {
-        Optional<File> manage = files.stream().filter(file -> file.getName().equalsIgnoreCase("manage.py")).findFirst();
-        Optional<File> urls = files.stream().filter(file -> file.getName().equalsIgnoreCase("urls.py")).findFirst();
-        Optional<File> wsgi = files.stream().filter(file -> file.getName().equalsIgnoreCase("wsgi.py")).findFirst();
-        Optional<File> asgi = files.stream().filter(file -> file.getName().equalsIgnoreCase("asgi.py")).findFirst();
+    public boolean hasFramework(List<Path> files) throws IOException {
+        Optional<Path> manage = files.stream().filter(file -> file.toFile().getName().equalsIgnoreCase("manage.py")).findFirst();
+        Optional<Path> urls = files.stream().filter(file -> file.toFile().getName().equalsIgnoreCase("urls.py")).findFirst();
+        Optional<Path> wsgi = files.stream().filter(file -> file.toFile().getName().equalsIgnoreCase("wsgi.py")).findFirst();
+        Optional<Path> asgi = files.stream().filter(file -> file.toFile().getName().equalsIgnoreCase("asgi.py")).findFirst();
 
         boolean manageIsDjango = manage.isPresent() && DocumentParser.isTagInFile(manage.get(), DJANGO_TAG);
         boolean urlsIsDjango = urls.isPresent() && DocumentParser.isTagInFile(urls.get(), DJANGO_TAG);

@@ -44,16 +44,16 @@ public class QuarkusFrameworkDetectorProviderImpl extends JavaFrameworkDetectorP
     }
 
     @Override
-    public List<Service> getServices(Path root, File config) throws IOException {
+    public List<Service> getServices(Path root, Path configFile) throws IOException {
         List<ServiceDescriptor> descriptors = getServicesDescriptor(getFrameworks());
         Set<Service> services = getServiceFromQuarkusConfigFile(
-                root.resolve(Paths.get("src", "main", "resources", "application.properties")).toFile(),
+                root.resolve(Paths.get("src", "main", "resources", "application.properties")),
                 descriptors);
 
-        return getServices(config, getFrameworks(), services);
+        return getServices(configFile, getFrameworks(), services);
     }
 
-    private Set<Service> getServiceFromQuarkusConfigFile(File file, List<ServiceDescriptor> descriptors) throws IOException {
+    private Set<Service> getServiceFromQuarkusConfigFile(Path file, List<ServiceDescriptor> descriptors) throws IOException {
         return getServiceFromConfigFileInner(file, (line) -> getServiceByTag(descriptors, (configuration) ->
                 !configuration.isEmpty() && (line.contains(configuration))));
     }
