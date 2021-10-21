@@ -3,7 +3,7 @@
   [
     {#for comp in result}
     {
-      "path": "{comp.path}",
+      "path": "{comp.root}",
       "languages": [
         {#for language in comp.languages}
         "{language.name}"{#if hasNext},{/if}

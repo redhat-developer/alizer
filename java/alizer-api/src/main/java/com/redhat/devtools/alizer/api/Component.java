@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.api;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
