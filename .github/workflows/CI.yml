@@ -72,12 +72,12 @@ jobs:
   build-go:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions:/checkout@v2
+      - uses: actions/checkout@v2
       - name: Setup Go environment
         uses: actions/setup-go@v2.1.4
         with:
           go-version: 1.13
       - name: Build
-        run: go build -o ./...
+        run: go build ./...
       - name: Run tests
         run: go test ./...
