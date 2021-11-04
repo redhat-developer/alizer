@@ -1,9 +1,12 @@
-package apis
+package recognizer
 
 import (
 	"os"
 	"path/filepath"
+	"sort"
 
+	enricher "github.com/redhat-developer/alizer/pkg/apis/enricher"
+	"github.com/redhat-developer/alizer/pkg/apis/language"
 	"github.com/redhat-developer/alizer/pkg/utils"
 )
 
@@ -12,22 +15,13 @@ type languageItem struct {
 	percentage int
 }
 
-type Language struct {
-	Name              string
-	aliases           []string
-	usageInPercentage float64
-	frameworks        []string
-	tools             []string
-	canBeComponent    bool
-}
-
-func Analyze(path string) ([]Language, error) {
+func Analyze(path string) ([]language.Language, error) {
 	languagesFile := utils.Get()
 	languagesDetected := make(map[string]languageItem)
 
 	paths, err := getFilePaths(path)
 	if err != nil {
-		return []Language{}, err
+		return []language.Language{}, err
 	}
 	extensionsGrouped := extractExtensions(paths)
 	for extension := range extensionsGrouped {
@@ -55,10 +49,19 @@ func Analyze(path string) ([]Language, error) {
 		}
 	}
 
-	var languagesFound []Language
+	var languagesFound []language.Language
 	for name, item := range languagesDetected {
-		languagesFound = append(languagesFound, Language{name, item.item.Aliases, float64(item.percentage), []string{}, []string{}, false})
+		tmpLanguage := language.Language{name, item.item.Aliases, float64(item.percentage), []string{}, []string{}, false}
+		langEnricher := enricher.GetEnricherByLanguage(&tmpLanguage)
+		if langEnricher != nil {
+			langEnricher.DoEnrichLanguage(&tmpLanguage, &paths)
+		}
+		languagesFound = append(languagesFound, tmpLanguage)
 	}
+
+	sort.SliceStable(languagesFound, func(i, j int) bool {
+		return languagesFound[i].UsageInPercentage > languagesFound[j].UsageInPercentage
+	})
 
 	return languagesFound, nil
 }

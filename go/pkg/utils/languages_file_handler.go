@@ -4,7 +4,6 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
-	"reflect"
 	"runtime"
 
 	"github.com/redhat-developer/alizer/pkg/schema"
@@ -36,20 +35,17 @@ func create() *LanguageFile {
 	languages := make(map[string]LanguageFileItem)
 	extensionsXLanguage := make(map[string][]LanguageFileItem)
 
-	allLanguages := getLanguagesFileContent()
-	fields := reflect.VisibleFields(reflect.TypeOf(struct{ schema.Languages }{}))
-	values := reflect.ValueOf(&allLanguages).Elem()
+	languagesProperties := getLanguagesProperties()
 
-	for _, field := range fields[1:] {
-		languageAttributes := values.FieldByName(field.Name)
+	for name, properties := range languagesProperties {
 		languageItem := LanguageFileItem{
-			Name:    field.Name,
-			Aliases: reflectValueToStringSlice(languageAttributes.FieldByName("Aliases")),
-			Kind:    reflectValueToString(languageAttributes.FieldByName("Type")),
-			Group:   reflectValueToString(languageAttributes.FieldByName("Group")),
+			Name:    name,
+			Aliases: properties.Aliases,
+			Kind:    properties.Type,
+			Group:   properties.Group,
 		}
-		languages[field.Name] = languageItem
-		extensions := reflectValueToStringSlice(languageAttributes.FieldByName("Extensions"))
+		languages[name] = languageItem
+		extensions := properties.Extensions
 		for _, ext := range extensions {
 			languagesByExtension := extensionsXLanguage[ext]
 			languagesByExtension = append(languagesByExtension, languageItem)
@@ -63,16 +59,16 @@ func create() *LanguageFile {
 	}
 }
 
-func getLanguagesFileContent() schema.Languages {
+func getLanguagesProperties() schema.LanguagesProperties {
 	langFilePath, err := getLanguagesFilePath()
 	if err != nil {
-		return schema.Languages{}
+		return schema.LanguagesProperties{}
 	}
 	yamlFile, err := os.ReadFile(langFilePath)
 	if err != nil {
-		return schema.Languages{}
+		return schema.LanguagesProperties{}
 	}
-	var data schema.Languages
+	var data schema.LanguagesProperties
 	yaml.Unmarshal(yamlFile, &data)
 	return data
 }
@@ -82,24 +78,9 @@ func getLanguagesFilePath() (string, error) {
 	basepath := filepath.Dir(b)
 	langFilePath := filepath.Join(basepath, "..", "..", "languages.yml")
 	if _, err := os.Stat(langFilePath); errors.Is(err, os.ErrNotExist) {
-		return "", errors.New("No languages.yml file found")
+		return "", errors.New("no languages.yml file found")
 	}
 	return langFilePath, nil
-}
-
-func reflectValueToString(value reflect.Value) string {
-	if !value.IsValid() {
-		return ""
-	}
-	return value.String()
-}
-
-func reflectValueToStringSlice(value reflect.Value) []string {
-	var slice, _ = []string{}, false
-	if value.IsValid() {
-		slice, _ = value.Interface().([]string)
-	}
-	return slice
 }
 
 func (l LanguageFile) GetLanguagesByExtension(extension string) []LanguageFileItem {
@@ -107,11 +88,10 @@ func (l LanguageFile) GetLanguagesByExtension(extension string) []LanguageFileIt
 }
 
 func (l LanguageFile) GetLanguageByName(name string) (LanguageFileItem, error) {
-	var languageItem LanguageFileItem
 	for langName, langItem := range l.languages {
 		if langName == name {
 			return langItem, nil
 		}
 	}
-	return languageItem, errors.New("No language found with this name")
+	return LanguageFileItem{}, errors.New("no language found with this name")
 }

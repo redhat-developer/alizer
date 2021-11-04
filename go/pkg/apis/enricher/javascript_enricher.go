@@ -1,0 +1,34 @@
+package recognizer
+
+import (
+	framework "github.com/redhat-developer/alizer/pkg/apis/enricher/framework/javascript/nodejs"
+	"github.com/redhat-developer/alizer/pkg/apis/language"
+	utils "github.com/redhat-developer/alizer/pkg/utils"
+)
+
+type JavaScriptEnricher struct{}
+
+func getJavaScriptFrameworkDetectors() []FrameworkDetectorWithConfigFile {
+	return []FrameworkDetectorWithConfigFile{
+		&framework.ExpressDetector{},
+	}
+}
+
+func (j JavaScriptEnricher) GetSupportedLanguages() []string {
+	return []string{"javascript", "typescript"}
+}
+
+func (j JavaScriptEnricher) DoEnrichLanguage(language *language.Language, files *[]string) {
+	packageJson := utils.GetFile(files, "package.json")
+
+	if packageJson != "" {
+		language.Tools = []string{"NodeJs"}
+		detectJavaScriptFrameworks(language, packageJson)
+	}
+}
+
+func detectJavaScriptFrameworks(language *language.Language, configFile string) {
+	for _, detector := range getJavaScriptFrameworkDetectors() {
+		detector.DoFrameworkDetection(language, configFile)
+	}
+}
