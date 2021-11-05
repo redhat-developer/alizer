@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
 public class LanguageFileHandler {
     private static final Logger logger = LoggerFactory.getLogger(LanguageFileHandler.class);
 
-    private static final String LANGUAGES_YAML_PATH = "../../resources/languages.yml";
-    private static final String LANGUAGES_CUSTOMIZATION_YAML_PATH = "../../resources/languages-customization.yml";
+    private static final String LANGUAGES_YAML_PATH = "languages.yml";
+    private static final String LANGUAGES_CUSTOMIZATION_YAML_PATH = "languages-customization.yml";
     private static final ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory());
     private static LanguageFileHandler INSTANCE;
     private Map<String, LanguageFileItem> languages = new HashMap<>();
@@ -51,7 +51,7 @@ public class LanguageFileHandler {
 
     private void initLanguages() {
         try {
-            String yamlAsString = IOUtils.toString(new File(LANGUAGES_YAML_PATH).toURI(), Charset.defaultCharset());
+            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_YAML_PATH), Charset.defaultCharset());
             JsonNode node = YAML_MAPPER.readTree(yamlAsString);
             for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
                 Map.Entry<String, JsonNode> entry = it.next();
@@ -72,7 +72,7 @@ public class LanguageFileHandler {
 
     private void customizeLanguages() {
         try {
-            String yamlAsString = IOUtils.toString(new File(LANGUAGES_CUSTOMIZATION_YAML_PATH).toURI(), Charset.defaultCharset());
+            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_CUSTOMIZATION_YAML_PATH), Charset.defaultCharset());
             JsonNode node = YAML_MAPPER.readTree(yamlAsString);
             for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
                 Map.Entry<String, JsonNode> entry = it.next();
