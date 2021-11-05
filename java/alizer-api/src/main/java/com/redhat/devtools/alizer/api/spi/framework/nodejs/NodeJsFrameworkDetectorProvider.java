@@ -15,6 +15,7 @@ import com.redhat.devtools.alizer.api.utils.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public abstract class NodeJsFrameworkDetectorProvider implements FrameworkDetect
     private Map<?, ?> getDependenciesFromPackageJson(File file) throws IOException {
         Map<?, ?> packageJsonContent = Utils.getJsonFileAsMap(file);
         if (!packageJsonContent.containsKey("dependencies")) {
-            throw new IOException("No package.json found");
+            return Collections.emptyMap();
         }
         return (Map<?, ?>) packageJsonContent.get("dependencies");
     }
