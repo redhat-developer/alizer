@@ -64,7 +64,7 @@ export async function detectLanguages(root: string): Promise<Language[]> {
         throw new Error('The project root is not valid');
     }
     
-    const YAMLFileWithAllLanguages = await fs.readFile(path.join(__dirname, '..', 'resources', 'languages.yaml'), 'utf-8');
+    const YAMLFileWithAllLanguages = await fs.readFile(path.join(__dirname, 'resources', 'languages.yml'), 'utf-8');
     const allLanguages = jsyaml.safeLoad(YAMLFileWithAllLanguages);
     
     const allFilesFromRoot = await getFiles(root);
