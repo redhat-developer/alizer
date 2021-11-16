@@ -46,7 +46,7 @@ The first step in our deeper Java detection is finding the configuration file us
 Alizer assumes is a Maven project. The same for a `build.gradle` file which is a Gradle Project or a `build.xml` for an
 Ant project.
 
-NOTE: Maven, Gradle and Ant are saved as Tools inside the Language
+NOTE: Maven, Gradle and Ant are saved as Tools inside the data structure returned by the analyze primitive
 
 By reading the content of its configuration file and mainly its dependencies section, Alizer is also able to detect 
 frameworks. Currently, it recognizes:
@@ -99,11 +99,11 @@ To recognize it, it scans all files within the source looking for a file such as
 
 ## DevFile detection
 
-It is also possible to select a devfile from a list of existing devfiles (from a devfile registry or other storage) 
-based on information that Alizer extracts from the source.
+It is possible to select a devfile from a list of devfile metadatas provided by the caller based on information that 
+Alizer extracts from the source.
 
-If a registry url is fed to Alizer, it will try to download all devfiles from it and select the one which fits best the 
-source, by prioritizing frameworks over tools and languages.
+The CLI, through the registry-support module, also works with URLS. If a registry URL is fed to Alizer, it will try to 
+download all devfiles from it and select the one which fits best the source, by prioritizing frameworks over tools and languages.
 For example, if the source is a Java Maven Quarkus project and the devfiles list contains a Quarkus devfile and a Maven 
 one, the Quarkus devfile will be selected.
 
@@ -127,3 +127,12 @@ modules pom.xml are taken into account) and if it uses at least one framework. I
 If no config file is detected, Alizer assumes it is dealing with a `language without a configuration file` which can be 
 a potential component. It then performs a basic language detection. If a valid `language without a configuration file`
 is discovered, a component is found.
+
+## Feature table
+
+|                                  | Java API | CLI | Javascript | Go |
+|----------------------------------|----------|-----|------------|----|
+| Language/Framework detection     | X        | X   | X          |    |
+| Devfile detection (metadata)     | X        | X   | X          |    |
+| Devfile detection (registry URL) |          | X   |            |    |
+| Component detection              | X        | X   |            |    |
