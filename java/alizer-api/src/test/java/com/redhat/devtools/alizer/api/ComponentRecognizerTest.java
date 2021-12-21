@@ -100,4 +100,11 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
         assertEquals(4, components.stream().filter(component -> "javascript".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
         assertEquals(3, components.stream().filter(component -> "java".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
     }
+
+    @Test
+    public void testDotNetComponent() throws IOException {
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/s2i-dotnetcore-ex").getCanonicalPath());
+        assertEquals(1, components.size());
+        assertEquals(1, components.stream().filter(component -> "c#".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
+    }
 }

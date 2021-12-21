@@ -74,7 +74,7 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
     private List<Component> getComponentsWithoutConfigFile(List<Path> directories) throws IOException {
         List<Component> components = new ArrayList<>();
         for (Path directory: directories) {
-            Component component = detectComponent(directory, "");
+            Component component = detectComponent(directory, Collections.emptyList());
             // only takes component with languages that have no config file
             // E.g if the directory consists of javascript files but it doesn't contain a package.json, something is wrong
             // and we do not consider it as an actual component
@@ -104,18 +104,30 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
     }
 
     private List<Component> detectComponents(List<File> files) throws IOException {
-        Map<String, String> configurationPerLanguage = LanguageFileHandler.get().getConfigurationPerLanguageMapping();
+        Map<String, List<String>> configurationPerLanguages = LanguageFileHandler.get().getConfigurationPerLanguageMapping();
         List<Component> components = new ArrayList<>();
         for (File file: files) {
-            if (configurationPerLanguage.containsKey(file.getName())
-                    && isConfigurationValid(configurationPerLanguage.get(file.getName()), file)) {
-                Component component = detectComponent(file.getParentFile().toPath(), configurationPerLanguage.get(file.getName()));
-                if (component != null) {
-                    components.add(component);
+            if (configurationPerLanguages.containsKey(file.getName())) {
+                List<String> languagesPerConfiguration = getLanguagesWithWhichConfigurationIsValid(configurationPerLanguages.get(file.getName()), file);
+                if (!languagesPerConfiguration.isEmpty()) {
+                    Component component = detectComponent(file.getParentFile().toPath(), configurationPerLanguages.get(file.getName()));
+                    if (component != null) {
+                        components.add(component);
+                    }
                 }
             }
         }
         return components;
+    }
+
+    private List<String> getLanguagesWithWhichConfigurationIsValid(List<String> languages, File file) {
+        List<String> validLanguages = new ArrayList<>();
+        for (String language: languages) {
+            if (isConfigurationValid(language, file)) {
+                validLanguages.add(language);
+            }
+        }
+        return validLanguages;
     }
 
     private boolean isConfigurationValid(String language, File file) {
@@ -130,15 +142,15 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
      * Create a new component from root folder
      *
      * @param root folder where the component is stored
-     * @param configurationLanguage language of the config file (e.g pom.xml -> java)
+     * @param configurationLanguages languages which uses this config file (e.g pom.xml -> java)
      * @return new component or null if folder doesn't contain anything valid
      * @throws IOException if errored while detecting languages/framework used
      */
-    private Component detectComponent(Path root, String configurationLanguage) throws IOException {
+    private Component detectComponent(Path root, List<String> configurationLanguages) throws IOException {
         RecognizerFactory recognizerFactory = new RecognizerFactory();
         LanguageRecognizer languageRecognizer = recognizerFactory.createLanguageRecognizer();
 
-        List<Language> languages = getLanguagesWeightedByConfigFile(languageRecognizer.analyze(root.toString()), configurationLanguage);
+        List<Language> languages = getLanguagesWeightedByConfigFile(languageRecognizer.analyze(root.toString()), configurationLanguages);
         if (isLanguageSupported(languages)) {
             return new Component(root, languages);
         }
@@ -161,15 +173,16 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
      * of languages needs to be swapped -> 1. JAVA 2. Javascript
      *
      * @param languages list of all languages
-     * @param configurationLanguage configuration file language
+     * @param configurationLanguages languages that uses that configuration file
      * @return an ordered language list based on the configuration file, original language list if configLanguage is empty
      */
-    private List<Language> getLanguagesWeightedByConfigFile(List<Language> languages, String configurationLanguage) {
-        if (configurationLanguage.isEmpty()) {
+    private List<Language> getLanguagesWeightedByConfigFile(List<Language> languages, List<String> configurationLanguages) {
+        if (configurationLanguages.isEmpty()) {
             return languages;
         }
 
-        Optional<Language> language = languages.stream().filter(lang -> lang.getName().equalsIgnoreCase(configurationLanguage)).findFirst();
+        Optional<Language> language = languages.stream()
+                .filter(lang -> configurationLanguages.stream().anyMatch(l -> l.equalsIgnoreCase(lang.getName()))).findFirst();
         if (language.isPresent()) {
             languages.remove(language.get());
             languages.add(0, language.get());

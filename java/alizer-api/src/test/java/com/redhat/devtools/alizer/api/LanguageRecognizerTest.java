@@ -34,21 +34,9 @@ public class LanguageRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
-    public void testJAVAMetaDevFile() throws IOException {
-        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/micronaut").getCanonicalPath(), devfileTypes);
-        assertTrue(devFile.getName().equalsIgnoreCase("java-maven"));
-    }
-
-    @Test
     public void testQuarkus() throws IOException {
         List<Language> status = recognizer.analyze(new File("../../resources/projects/quarkus").getCanonicalPath());
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("JAVA")));
-    }
-
-    @Test
-    public void testQuarkusDevFileType() throws IOException {
-        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/quarkus").getCanonicalPath(), devfileTypes);
-        assertTrue(devFile.getName().equalsIgnoreCase("java-quarkus"));
     }
 
     @Test
@@ -58,33 +46,14 @@ public class LanguageRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
-    public void testMicronautDevFile() throws IOException {
-        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/micronaut").getCanonicalPath(), devfileTypes);
-        assertTrue(devFile.getName().equalsIgnoreCase("java-maven"));
-    }
-
-    @Test
     public void testNode() throws IOException {
         List<Language> status = recognizer.analyze(new File("../../resources/projects/nodejs-ex").getCanonicalPath());
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("JavaScript")));
     }
 
     @Test
-    public void testNodeDevFile() throws IOException {
-        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/nodejs-ex").getCanonicalPath(), devfileTypes);
-        assertTrue(devFile.getName().equalsIgnoreCase("nodejs"));
-    }
-
-
-    @Test
     public void testDjango() throws IOException {
         List<Language> status = recognizer.analyze(new File("../../resources/projects/django").getCanonicalPath());
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("Python")));
-    }
-
-    @Test
-    public void testDjangoDevFile() throws IOException {
-        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/django").getCanonicalPath(), devfileTypes);
-        assertTrue(devFile.getName().equalsIgnoreCase("python-django"));
     }
 }

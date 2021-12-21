@@ -15,6 +15,10 @@ public class RecognizerFactory {
         return new LanguageRecognizerImpl(this);
     }
 
+    public DevFileRecognizer createDevFileRecognizer() {
+        return new DevFileRecognizerImpl(this);
+    }
+
     public ComponentRecognizer createComponentRecognizer() {
         return new ComponentRecognizerImpl(this);
     }

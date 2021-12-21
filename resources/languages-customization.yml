@@ -1,3 +1,10 @@
+C#:
+  configuration_files:
+    - ".csproj"
+    - "appsettings.json"
+    - "packages.config"
+    - "app.config"
+  component: true
 Go:
   configuration_files:
     - "go.mod"
@@ -19,4 +26,11 @@ Python:
 Rust:
   configuration_files:
     - "Cargo.toml"
+  component: true
+Visual Basic .NET:
+  configuration_files:
+    - "appsettings.json"
+    - "packages.config"
+    - "app.config"
+    - "Web.config"
   component: true

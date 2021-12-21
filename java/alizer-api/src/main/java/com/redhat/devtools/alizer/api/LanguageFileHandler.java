@@ -149,13 +149,19 @@ public class LanguageFileHandler {
         return languageFileItem.orElse(null);
     }
 
-    public Map<String, String> getConfigurationPerLanguageMapping() {
-        Map<String, String> configurationPerLanguage = new HashMap<>();
+    public Map<String, List<String>> getConfigurationPerLanguageMapping() {
+        Map<String, List<String>> configurationPerLanguage = new HashMap<>();
         for (LanguageFileItem fileItem: languages.values()) {
             List<String> configurationFiles = fileItem.getConfigurationFiles();
             if (!configurationFiles.isEmpty()) {
                 for (String configFile: configurationFiles) {
-                    configurationPerLanguage.put(configFile, fileItem.getName());
+                    configurationPerLanguage.compute(configFile, (k, v) -> {
+                        if (v == null) {
+                            v = new ArrayList<>();
+                        }
+                        v.add(fileItem.getName());
+                        return v;
+                    });
                 }
             }
         }
