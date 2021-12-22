@@ -1,0 +1,159 @@
+﻿<%@ Master Language="VB" CodeFile="MasterPage.master.vb" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Adidas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/font.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/logo.png">
+
+    <!-- =========== -->
+    <!-- Google Font -->
+    <!-- =========== -->
+
+    <script type="text/javascript">
+
+        // Add Google Font name here
+
+        WebFontConfig = { google: { families: ['Bangers', 'Lato'] } };
+        (function () {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+            '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })();
+
+    </script>
+
+    <style type="text/css">
+        /* Add Google Font name here */
+
+        .wf-active {
+            font-family: 'Lato',serif;
+            font-size: 13px;
+        }
+
+            .wf-active .logo {
+                font-family: 'Bangers', serif;
+            }
+    </style>
+
+    <!--[if lt IE 9]>
+			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <!--[if IE 7]>
+			<link rel="stylesheet" href="css/ie7.css" />
+		<![endif]-->
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+
+<body class="wf-active">
+
+    <!-- =========== -->
+    <!-- Top section -->
+    <!-- =========== -->
+
+    <div class="container welcome">
+        <div class="row-fluid">
+            <div class="pull-right cart tright">
+
+                <!-- Cart  -->
+                <div class="counter">
+                    <a href="viewcart.aspx">View Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================ -->
+    <!-- Branding section -->
+    <!-- ================ -->
+
+    <div class="container head">
+        <div class="row">
+            <div class="span12 clearfix">
+                <div class="top row">
+
+                    <div class="span8 logo image">
+                        <a href="Category.aspx">
+                            <img src="img/logo.png" alt="" /></a>
+                    </div>
+
+                    <div class="cart span4">
+                        <form action="#" class="topsearch">
+                            <input type="search" class="top-search" placeholder="Search" />
+                            <button type="submit"><i class="icon-search"></i></button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================ -->
+    <!-- Main Nav section -->
+    <!-- ================ -->
+   
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <nav class="horizontal-nav full-width">
+                    <ul class="nav" id="nav">
+                        <asp:SqlDataSource ID="SqlDSMainCategory" runat="server" ConnectionString="<%$ ConnectionStrings:CategoryConnection %>" SelectCommand="SELECT * FROM [Category] Where Parent = 0"></asp:SqlDataSource>
+                        <asp:Repeater ID="rpDesktop" runat="server" DataSourceID="SqlDSMainCategory">
+                            <ItemTemplate>
+                                <li><a href="Category.aspx?MainCategoryID=<%# Container.DataItem("CategoryID")%>&CategoryName=<%# Container.DataItem("CategoryName")%>"><%# Container.DataItem("CategoryName")%></a></li>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========== -->
+    <!-- Main Slider -->
+    <!-- =========== -->
+
+    <div class="container">
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        </asp:ContentPlaceHolder>
+
+    </div>
+
+
+
+
+    <!-- ============== -->
+    <!-- Footer section -->
+    <!-- ============== -->
+
+    <footer>
+        <div class="container">
+            <section class="row-fluid social">
+                <div class="pull-left">&copy; 2015 Adidas</div>
+            </section>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="js/jquery.tweet.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/shop.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+
+</body>
+</html>

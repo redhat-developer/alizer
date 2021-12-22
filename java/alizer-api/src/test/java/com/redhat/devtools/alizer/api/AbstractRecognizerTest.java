@@ -29,6 +29,8 @@ public abstract class AbstractRecognizerTest {
     protected static DevfileType PYTHON_DJANGO;
     protected static DevfileType PYTHON;
     protected static DevfileType CSHARP;
+    protected static DevfileType VB_NET4_5;
+    protected static DevfileType VB_NET4_6;
 
     @BeforeClass
     public static void init() {
@@ -43,7 +45,9 @@ public abstract class AbstractRecognizerTest {
                 NODEJS = createDevfileType("nodejs", "nodejs", "nodejs", "NodeJS", "Express", "ubi8"),
                 PYTHON_DJANGO = createDevfileType("python-django", "python", "django", "Python", "pip", "Django"),
                 PYTHON = createDevfileType("python", "python", "python", "Python", "pip"),
-                CSHARP = createDevfileType("csharp", "c#", "csharp", "csharp", ".net")
+                CSHARP = createDevfileType("csharp", "c#", "csharp", "csharp", ".net"),
+                VB_NET4_5 = createDevfileType("net4.5", "Visual Basic .NET", "vb", "4.5", ".net"),
+                VB_NET4_6 = createDevfileType("net4.6", "Visual Basic .NET", "vb", "4.6", ".net")
         );
     }
 

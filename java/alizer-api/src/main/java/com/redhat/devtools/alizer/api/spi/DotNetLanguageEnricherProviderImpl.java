@@ -5,6 +5,7 @@ import com.redhat.devtools.alizer.api.spi.framework.FrameworkDetectorProvider;
 import com.redhat.devtools.alizer.api.spi.framework.nodejs.NodeJsFrameworkDetectorProvider;
 import com.redhat.devtools.alizer.api.utils.DocumentParser;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -64,14 +65,20 @@ public class DotNetLanguageEnricherProviderImpl extends LanguageEnricherProvider
         return frameworks;
     }
 
-    protected String getFramework(File file) throws ParserConfigurationException, IOException, SAXException {
-        NodeList httpRuntimeNodeList = DocumentParser.getElementsByTag(file, "httpRuntime");
-        if (httpRuntimeNodeList.getLength() > 0) {
-            return httpRuntimeNodeList.item(0).getTextContent();
+    private String getFramework(File file) throws ParserConfigurationException, IOException, SAXException {
+        Node httpRuntimeNode = DocumentParser.getElementsByTag(file, "httpRuntime").item(0);
+        if (httpRuntimeNode != null) {
+            String framework = getFrameworkAttribute(httpRuntimeNode);
+            if (!framework.isEmpty()) {
+                return framework;
+            }
         }
-        NodeList compilationNodeList = DocumentParser.getElementsByTag(file, "compilation");
-        if (compilationNodeList.getLength() > 0) {
-            return compilationNodeList.item(0).getTextContent();
+        Node compilationNode = DocumentParser.getElementsByTag(file, "compilation").item(0);
+        if (compilationNode != null) {
+            String framework = getFrameworkAttribute(compilationNode);
+            if (!framework.isEmpty()) {
+                return framework;
+            }
         }
         NodeList targetFrameworkVersionNodeList = DocumentParser.getElementsByTag(file, "TargetFrameworkVersion");
         if (targetFrameworkVersionNodeList.getLength() > 0) {
@@ -83,4 +90,18 @@ public class DotNetLanguageEnricherProviderImpl extends LanguageEnricherProvider
         }
         return "";
     }
+
+    private String getFrameworkAttribute(Node node) {
+        NamedNodeMap attributes = node.getAttributes();
+        if (attributes == null) {
+            return "";
+        }
+
+        Node targetFrameworkNode = attributes.getNamedItem("targetFramework");
+        if (targetFrameworkNode != null) {
+            return targetFrameworkNode.getTextContent();
+        }
+        return "";
+    }
+
 }
