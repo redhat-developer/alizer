@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ComponentRecognizerImpl extends Recognizer implements ComponentRecognizer {
 
@@ -121,13 +122,7 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
     }
 
     private List<String> getLanguagesWithWhichConfigurationIsValid(List<String> languages, File file) {
-        List<String> validLanguages = new ArrayList<>();
-        for (String language: languages) {
-            if (isConfigurationValid(language, file)) {
-                validLanguages.add(language);
-            }
-        }
-        return validLanguages;
+        return languages.stream().filter(language -> isConfigurationValid(language, file)).collect(Collectors.toList());
     }
 
     private boolean isConfigurationValid(String language, File file) {
