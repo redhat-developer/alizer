@@ -1,9 +1,17 @@
 C#:
+  aliases:
+    - "dotnet"
   configuration_files:
-    - ".csproj"
+    - ".*\\.\\w+proj"
     - "appsettings.json"
     - "packages.config"
     - "app.config"
+  component: true
+F#:
+  aliases:
+    - "dotnet"
+  configuration_files:
+    - ".*\\.\\w+proj"
   component: true
 Go:
   configuration_files:
@@ -28,6 +36,8 @@ Rust:
     - "Cargo.toml"
   component: true
 Visual Basic .NET:
+  aliases:
+    - "dotnet"
   configuration_files:
     - "appsettings.json"
     - "packages.config"

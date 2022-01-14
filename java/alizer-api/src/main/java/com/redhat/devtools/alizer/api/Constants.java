@@ -17,6 +17,7 @@ public class Constants {
     public static final String JAVASCRIPT = "JAVASCRIPT";
     public static final String TYPESCRIPT = "TYPESCRIPT";
     public static final String CSHARP = "C#";
+    public static final String FSHARP = "F#";
     public static final String VBNET = "VISUAL BASIC .NET";
 
 

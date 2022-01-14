@@ -22,8 +22,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ComponentRecognizerImpl extends Recognizer implements ComponentRecognizer {
@@ -108,17 +110,23 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
         Map<String, List<String>> configurationPerLanguages = LanguageFileHandler.get().getConfigurationPerLanguageMapping();
         List<Component> components = new ArrayList<>();
         for (File file: files) {
-            if (configurationPerLanguages.containsKey(file.getName())) {
-                List<String> languagesPerConfiguration = getLanguagesWithWhichConfigurationIsValid(configurationPerLanguages.get(file.getName()), file);
+            Optional<String> configurationMatched = getConfigurationByFile(configurationPerLanguages.keySet(), file);
+            if (configurationMatched.isPresent()) {
+                List<String> languagesPerConfiguration = getLanguagesWithWhichConfigurationIsValid(configurationPerLanguages.get(configurationMatched.get()), file);
                 if (!languagesPerConfiguration.isEmpty()) {
-                    Component component = detectComponent(file.getParentFile().toPath(), configurationPerLanguages.get(file.getName()));
-                    if (component != null) {
+                    Component component = detectComponent(file.getParentFile().toPath(), configurationPerLanguages.get(configurationMatched.get()));
+                    if (component != null
+                        && components.stream().noneMatch(comp -> comp.getPath().equals(component.getPath()))) {
                         components.add(component);
                     }
                 }
             }
         }
         return components;
+    }
+
+    private Optional<String> getConfigurationByFile(Set<String> regexes, File file) {
+        return regexes.stream().filter(regex -> Pattern.matches(regex, file.getName())).findFirst();
     }
 
     private List<String> getLanguagesWithWhichConfigurationIsValid(List<String> languages, File file) {

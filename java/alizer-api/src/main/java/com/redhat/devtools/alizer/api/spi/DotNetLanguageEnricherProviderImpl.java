@@ -21,12 +21,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.redhat.devtools.alizer.api.Constants.CSHARP;
+import static com.redhat.devtools.alizer.api.Constants.FSHARP;
 import static com.redhat.devtools.alizer.api.Constants.VBNET;
 
 public class DotNetLanguageEnricherProviderImpl extends LanguageEnricherProvider {
+
+    private static final Pattern PROJ_PATTERN = Pattern.compile(".*\\.\\w+proj");
+
     @Override
     public LanguageEnricherProvider create() {
         return new DotNetLanguageEnricherProviderImpl();
@@ -34,13 +39,14 @@ public class DotNetLanguageEnricherProviderImpl extends LanguageEnricherProvider
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(CSHARP, VBNET);
+        return Arrays.asList(CSHARP, FSHARP, VBNET);
     }
 
     @Override
     public Language getEnrichedLanguage(Language language, List<File> files) throws IOException {
         List<File> configFiles = files.stream()
-                .filter(file -> file.getName().endsWith(".config") || file.getName().endsWith(".csproj"))
+                .filter(file -> file.getName().endsWith(".config")
+                        || PROJ_PATTERN.matcher(file.getName()).matches())
                 .collect(Collectors.toList());
 
         if (!configFiles.isEmpty()) {

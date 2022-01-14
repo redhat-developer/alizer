@@ -64,8 +64,14 @@ public class LanguageRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
-    public void testVBNet() throws IOException {
-        List<Language> status = recognizer.analyze(new File("../../resources/projects/VB.NET-ECommerce").getCanonicalPath());
+    public void testFSharp() throws IOException {
+        List<Language> status = recognizer.analyze(new File("../../resources/projects/net-fsharp").getCanonicalPath());
+        assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("F#")));
+    }
+
+    @Test
+    public void testVB() throws IOException {
+        List<Language> status = recognizer.analyze(new File("../../resources/projects/net-vb").getCanonicalPath());
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("Visual Basic .NET")));
     }
 }

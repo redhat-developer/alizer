@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -53,8 +54,14 @@ public class DevFileRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
-    public void testVBNetDevFile() throws IOException {
-        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/VB.NET-ECommerce").getCanonicalPath(), devfileTypes);
-        assertTrue(devFile.getName().equalsIgnoreCase("net4.5"));
+    public void testFSharpDevFile() throws IOException {
+        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/net-fsharp").getCanonicalPath(), devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("fsharp"));
+    }
+
+    @Test
+    public void testVBDevFile() throws IOException {
+        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/net-vb").getCanonicalPath(), devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("netcore3.1"));
     }
 }

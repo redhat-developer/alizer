@@ -82,11 +82,13 @@ public class LanguageFileHandler {
                     JsonNode languageAttributes = entry.getValue();
                     List<String> configurationFiles = getValueAsList(languageAttributes, "configuration_files");
                     List<String> excludeFolders = getValueAsList(languageAttributes, "exclude_folders");
+                    List<String> aliases = getValueAsList(languageAttributes, "aliases");
                     boolean canBeComponent = languageAttributes.has("component") && languageAttributes.get("component").asBoolean();
 
                     languageFileItem.setConfigurationFiles(configurationFiles);
                     languageFileItem.setExcludeFolders(excludeFolders);
                     languageFileItem.setCanBeComponent(canBeComponent);
+                    languageFileItem.addAliases(aliases);
                     languages.put(nameLanguage, languageFileItem);
                 }
             }

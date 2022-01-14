@@ -94,7 +94,7 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
     @Test
     public void testMultipleComponents() throws IOException {
         List<Component> components = recognizer.analyze(new File("../../resources/projects").getCanonicalPath());
-        assertEquals(10, components.size());
+        assertEquals(11, components.size());
         assertEquals(1, components.stream().filter(component -> "python".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
         assertEquals(2, components.stream().filter(component -> component.getLanguages().get(0).getFrameworks().contains("Quarkus")).count());
         assertEquals(4, components.stream().filter(component -> "javascript".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
@@ -110,8 +110,15 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
-    public void testVBNetComponent() throws IOException {
-        List<Component> components = recognizer.analyze(new File("../../resources/projects/VB.NET-ECommerce").getCanonicalPath());
+    public void testFSharpComponent() throws IOException {
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/net-fsharp").getCanonicalPath());
+        assertEquals(1, components.size());
+        assertEquals(1, components.stream().filter(component -> "F#".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
+    }
+
+    @Test
+    public void testVBComponent() throws IOException {
+        List<Component> components = recognizer.analyze(new File("../../resources/projects/net-vb").getCanonicalPath());
         assertEquals(1, components.size());
         assertEquals(1, components.stream().filter(component -> "Visual Basic .NET".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
     }
