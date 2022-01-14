@@ -45,8 +45,7 @@ public class DotNetLanguageEnricherProviderImpl extends LanguageEnricherProvider
     @Override
     public Language getEnrichedLanguage(Language language, List<File> files) throws IOException {
         List<File> configFiles = files.stream()
-                .filter(file -> file.getName().endsWith(".config")
-                        || PROJ_PATTERN.matcher(file.getName()).matches())
+                .filter(file -> PROJ_PATTERN.matcher(file.getName()).matches())
                 .collect(Collectors.toList());
 
         if (!configFiles.isEmpty()) {

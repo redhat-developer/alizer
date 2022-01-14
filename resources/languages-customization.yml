@@ -4,14 +4,13 @@ C#:
   configuration_files:
     - ".*\\.\\w+proj"
     - "appsettings.json"
-    - "packages.config"
-    - "app.config"
   component: true
 F#:
   aliases:
     - "dotnet"
   configuration_files:
     - ".*\\.\\w+proj"
+    - "appsettings.json"
   component: true
 Go:
   configuration_files:
@@ -39,8 +38,6 @@ Visual Basic .NET:
   aliases:
     - "dotnet"
   configuration_files:
+    - ".*\\.\\w+proj"
     - "appsettings.json"
-    - "packages.config"
-    - "app.config"
-    - "Web.config"
   component: true
