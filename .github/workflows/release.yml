@@ -55,7 +55,7 @@ jobs:
           tar cfJ java/alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-${{ matrix.suffix }} java/alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-runner
         if: ${{ matrix.os != 'windows-latest' }}
       - name: Simple conventional changelog
-        uses: lstocchi/simple-conventional-changelog@0.0.6
+        uses: lstocchi/simple-conventional-changelog@0.0.11
         id: changelog
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
