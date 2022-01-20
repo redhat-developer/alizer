@@ -86,7 +86,7 @@ func getLanguagesProperties() schema.LanguagesProperties {
 func getLanguagesFilePath() (string, error) {
 	_, b, _, _ := runtime.Caller(0)
 	basepath := filepath.Dir(b)
-	langFilePath := filepath.Join(basepath, "..", "..", "languages.yml")
+	langFilePath := filepath.Join(basepath, "..", "..", "..", "resources", "languages.yml")
 	if _, err := os.Stat(langFilePath); errors.Is(err, os.ErrNotExist) {
 		return "", errors.New("no languages.yml file found")
 	}
