@@ -13,7 +13,8 @@ Alizer (which stands for Application Analyzer) is a utilily whose goal is to ext
 - framework used inside the application
 - tools used to build the application
 
-Also based on these informations, Alizer can also select one devfile (cloud workspace file) from a list of available devfiles.
+Also based on these informations, Alizer can also select one devfile (cloud workspace file) from a list of available devfiles 
+and/or detect components (the concept of component is taken from Odo and its definition can be read on [odo.dev](https://odo.dev/docs/getting-started/basics/#component)).
 
 ## Usage
 
@@ -21,7 +22,7 @@ Also based on these informations, Alizer can also select one devfile (cloud work
 
 First, get access to the Alizer API through a LanguageRecognizer object which can be built like that:
 ```java
-LanguageRecognizer recognizer = new LanguageRecognizerBuilder().build();
+LanguageRecognizer recognizer = new RecognizerFactory().createLanguageRecognizer();
 ```
 
 Then, access the project information with the `analyze` method:
@@ -48,6 +49,24 @@ where devfiles is a list of objects implementing the `DevfileType` interface whi
 - *tags*: list of tags associated with the devfile
 
 Please note that the devfile object that is returned by the method is one of the object from the list of devfiles given in input for better matching for the user.
+
+### Component detection
+
+Alizer is also able to detect components. The concept of component is taken from Odo and its definition can be read on [odo.dev](https://odo.dev/docs/getting-started/basics/#component).
+
+The detection of a component is based on two rules. It is discovered if and only if:
+
+1) The main language of the component source is one of those that supports component detection (Java, Python, Javascript, Go)
+2) The source has at least one framework
+
+The result is a list of components where each component consists of:
+- *path*: root of the component 
+- *languages*: list of languages belonging to the component ordered by their relevance.
+
+```java
+ComponentRecognizer recognizer = new RecognizerFactory().createComponentRecognizer();
+List<Component> components = recognizer.analyze("myproject");
+```
 
 ## CLI
 
