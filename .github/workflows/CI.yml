@@ -82,5 +82,6 @@ jobs:
           go env -w GOPATH=$GITHUB_WORKSPACE
           go env -w GO111MODULE=auto
           cd go
+          make init
           go mod tidy
           go test -v test/apis/language_recognizer_test.go
