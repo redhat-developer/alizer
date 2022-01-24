@@ -17,6 +17,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LanguageRecognizerTest extends AbstractRecognizerTest {
@@ -73,5 +74,16 @@ public class LanguageRecognizerTest extends AbstractRecognizerTest {
     public void testVB() throws IOException {
         List<Language> status = recognizer.analyze(new File("../../resources/projects/net-vb").getCanonicalPath());
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("Visual Basic .NET")));
+    }
+
+    @Test
+    public void testMultipleDotNetFrameworks() throws IOException {
+        List<Language> status = recognizer.analyze(new File("../../resources/projects/multiple-dotnet-target-frameworks").getCanonicalPath());
+        assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("C#")));
+        Language cSharpLang = status.stream().filter(lang -> lang.getName().equalsIgnoreCase("C#")).findFirst().get();
+        assertEquals(cSharpLang.getFrameworks().size(), 3);
+        assertTrue(cSharpLang.getFrameworks().stream().anyMatch(f -> f.equalsIgnoreCase("net6.0")));
+        assertTrue(cSharpLang.getFrameworks().stream().anyMatch(f -> f.equalsIgnoreCase("net5.0")));
+        assertTrue(cSharpLang.getFrameworks().stream().anyMatch(f -> f.equalsIgnoreCase("netcoreapp3.1")));
     }
 }

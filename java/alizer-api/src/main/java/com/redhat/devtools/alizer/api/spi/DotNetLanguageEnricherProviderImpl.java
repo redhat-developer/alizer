@@ -59,9 +59,9 @@ public class DotNetLanguageEnricherProviderImpl extends LanguageEnricherProvider
         List<String> frameworks = new ArrayList<>();
         try {
             for (File file: files) {
-                String framework = getFramework(file);
-                if (!framework.isEmpty()) {
-                    frameworks.add(framework);
+                List<String> frameworksDetected = getFramework(file);
+                if (!frameworksDetected.isEmpty()) {
+                    frameworks.addAll(frameworksDetected);
                 }
             }
         } catch (ParserConfigurationException | SAXException e) {
@@ -70,30 +70,37 @@ public class DotNetLanguageEnricherProviderImpl extends LanguageEnricherProvider
         return frameworks;
     }
 
-    private String getFramework(File file) throws ParserConfigurationException, IOException, SAXException {
+    private List<String> getFramework(File file) throws ParserConfigurationException, IOException, SAXException {
         Node httpRuntimeNode = DocumentParser.getElementsByTag(file, "httpRuntime").item(0);
         if (httpRuntimeNode != null) {
             String framework = getFrameworkAttribute(httpRuntimeNode);
             if (!framework.isEmpty()) {
-                return framework;
+                return Collections.singletonList(framework);
             }
         }
         Node compilationNode = DocumentParser.getElementsByTag(file, "compilation").item(0);
         if (compilationNode != null) {
             String framework = getFrameworkAttribute(compilationNode);
             if (!framework.isEmpty()) {
-                return framework;
+                return Collections.singletonList(framework);
             }
         }
         NodeList targetFrameworkVersionNodeList = DocumentParser.getElementsByTag(file, "TargetFrameworkVersion");
         if (targetFrameworkVersionNodeList.getLength() > 0) {
-            return targetFrameworkVersionNodeList.item(0).getTextContent();
+            return Collections.singletonList(targetFrameworkVersionNodeList.item(0).getTextContent());
         }
         NodeList targetFrameworkNodeList = DocumentParser.getElementsByTag(file, "TargetFramework");
         if (targetFrameworkNodeList.getLength() > 0) {
-            return targetFrameworkNodeList.item(0).getTextContent();
+            return Collections.singletonList(targetFrameworkNodeList.item(0).getTextContent());
         }
-        return "";
+        NodeList targetFrameworksNodeList = DocumentParser.getElementsByTag(file, "TargetFrameworks");
+        if (targetFrameworksNodeList.getLength() > 0) {
+            String value = targetFrameworksNodeList.item(0).getTextContent();
+            if (value.contains(";")) {
+                return Arrays.stream(value.split(";")).filter(v -> !v.trim().isEmpty()).collect(Collectors.toList());
+            }
+        }
+        return Collections.emptyList();
     }
 
     private String getFrameworkAttribute(Node node) {
