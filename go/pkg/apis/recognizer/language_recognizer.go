@@ -11,22 +11,23 @@
 package recognizer
 
 import (
+	"math"
 	"os"
 	"path/filepath"
 	"sort"
 
 	enricher "github.com/redhat-developer/alizer/pkg/apis/enricher"
 	"github.com/redhat-developer/alizer/pkg/apis/language"
-	"github.com/redhat-developer/alizer/pkg/utils"
+	langfile "github.com/redhat-developer/alizer/pkg/utils/langfiles"
 )
 
 type languageItem struct {
-	item       utils.LanguageFileItem
+	item       langfile.LanguageItem
 	percentage int
 }
 
 func Analyze(path string) ([]language.Language, error) {
-	languagesFile := utils.Get()
+	languagesFile := langfile.Get()
 	languagesDetected := make(map[string]languageItem)
 
 	paths, err := getFilePaths(path)
@@ -34,14 +35,16 @@ func Analyze(path string) ([]language.Language, error) {
 		return []language.Language{}, err
 	}
 	extensionsGrouped := extractExtensions(paths)
+	extensionHasProgrammingLanguage := false
+	totalProgrammingOccurrences := 0
 	for extension := range extensionsGrouped {
-		languages := (*languagesFile).GetLanguagesByExtension(extension)
+		languages := languagesFile.GetLanguagesByExtension(extension)
 		if len(languages) == 0 {
 			continue
 		}
 		for _, language := range languages {
 			if language.Kind == "programming" {
-				var languageFileItem utils.LanguageFileItem
+				var languageFileItem langfile.LanguageItem
 				var err error
 				if len(language.Group) == 0 {
 					languageFileItem = language
@@ -55,18 +58,27 @@ func Analyze(path string) ([]language.Language, error) {
 				percentage := languagesDetected[tmpLanguageItem.item.Name].percentage + extensionsGrouped[extension]
 				tmpLanguageItem.percentage = percentage
 				languagesDetected[tmpLanguageItem.item.Name] = tmpLanguageItem
+				extensionHasProgrammingLanguage = true
 			}
+		}
+		if extensionHasProgrammingLanguage {
+			totalProgrammingOccurrences += extensionsGrouped[extension]
+			extensionHasProgrammingLanguage = false
 		}
 	}
 
 	var languagesFound []language.Language
 	for name, item := range languagesDetected {
-		tmpLanguage := language.Language{name, item.item.Aliases, float64(item.percentage), []string{}, []string{}, false}
-		langEnricher := enricher.GetEnricherByLanguage(&tmpLanguage)
-		if langEnricher != nil {
-			langEnricher.DoEnrichLanguage(&tmpLanguage, &paths)
+		tmpPercentage := float64(item.percentage) / float64(totalProgrammingOccurrences)
+		tmpPercentage = math.Round(tmpPercentage*100) / 100
+		if tmpPercentage > 0.02 {
+			tmpLanguage := language.Language{name, item.item.Aliases, tmpPercentage * 100, []string{}, []string{}, false}
+			langEnricher := enricher.GetEnricherByLanguage(&tmpLanguage)
+			if langEnricher != nil {
+				langEnricher.DoEnrichLanguage(&tmpLanguage, &paths)
+			}
+			languagesFound = append(languagesFound, tmpLanguage)
 		}
-		languagesFound = append(languagesFound, tmpLanguage)
 	}
 
 	sort.SliceStable(languagesFound, func(i, j int) bool {
