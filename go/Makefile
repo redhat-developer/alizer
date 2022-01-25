@@ -1,16 +1,24 @@
-RELEASE_DIR = ./pkg/utils/langfiles/resources
-RELEASE_FILES = ../resources/languages.yml ../resources/languages-customization.yml
-
 ifdef OS
-   CP = copy /y
+   CP = copy
+   DEST_DIR = .\pkg\utils\langfiles\resources
+   LANG_FILE = ..\resources\languages.yml
+   CUSTOM_LANG_FILE = ..\resources\languages-customization.yml
 else
    CP = cp -f
+   DEST_DIR = ./pkg/utils/langfiles/resources
+   LANG_FILES = ../resources/languages.yml ../resources/languages-customization.yml
 endif
 
 init: copy build
+initWin: copyWin build
 
 copy: 
-	mkdir $(RELEASE_DIR); for u in $(RELEASE_FILES); do $(CP) $$u $(RELEASE_DIR); done
+	mkdir -p $(DEST_DIR); for u in $(LANG_FILES); do $(CP) $$u $(DEST_DIR); done
+
+copyWin:
+	mkdir $(DEST_DIR)
+	$(CP) $(LANG_FILE) $(DEST_DIR)
+	$(CP) $(CUSTOM_LANG_FILE) $(DEST_DIR)
 
 build:
 	go build ./...
