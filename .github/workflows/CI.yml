@@ -68,3 +68,20 @@ jobs:
       - name: Build
         run: npm run test
         working-directory: js
+
+  build-go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go environment
+        uses: actions/setup-go@v2.1.4
+        with:
+          go-version: 1.17
+      - name: Set envs
+        run: |
+          go env -w GOPATH=$GITHUB_WORKSPACE
+          go env -w GO111MODULE=auto
+          cd go
+          make init
+          go mod tidy
+          go test -v test/apis/language_recognizer_test.go

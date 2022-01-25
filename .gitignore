@@ -42,3 +42,7 @@ nb-configuration.xml
 lib/
 node_modules/
 .npmignore
+
+# Go
+/pkg/
+go/pkg/utils/langfiles/resources/
