@@ -37,7 +37,7 @@ func TestAnalyzeOnDjango(t *testing.T) {
 }
 
 func isLanguageInProject(t *testing.T, project string, wantedLanguage string, wantedTools []string, wantedFrameworks []string) {
-	testingProjectPath := getTestProjectPath(project)
+	testingProjectPath := GetTestProjectPath(project)
 
 	languages, err := recognizer.Analyze(testingProjectPath)
 	if err != nil {
@@ -94,7 +94,7 @@ func hasWantedTool(language language.Language, wantedTool string) bool {
 	return false
 }
 
-func getTestProjectPath(folder string) string {
+func GetTestProjectPath(folder string) string {
 	_, b, _, _ := runtime.Caller(0)
 	basepath := filepath.Dir(b)
 	return filepath.Join(basepath, "..", "..", "..", "resources/projects", folder)
