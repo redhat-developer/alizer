@@ -132,7 +132,7 @@ is discovered, a component is found.
 
 |                                  | Java API | CLI | Javascript | Go |
 |----------------------------------|----------|-----|------------|----|
-| Language/Framework detection     | X        | X   | X          |    |
+| Language/Framework detection     | X        | X   | X          | X  |
 | Devfile detection (metadata)     | X        | X   | X          |    |
 | Devfile detection (registry URL) |          | X   |            |    |
 | Component detection              | X        | X   |            |    |
