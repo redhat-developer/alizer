@@ -17,7 +17,7 @@ import "github.com/redhat-developer/alizer/pkg/apis/recognizer"
 languages, err := recognizer.Analyze("./")
 ```
 
-The result is an ordered list of information for each language detected in the source tree, with the following informations:
+The result is an ordered list of information for each language detected in the source tree, with the following [data](https://github.com/redhat-developer/alizer/blob/main/go/pkg/apis/language/language.go#L13):
 
 - *Name*: the name of the detected language
 - *Aliases*: other names which identify the detected language
