@@ -55,14 +55,21 @@ func (j JavaEnricher) IsConfigValidForComponentDetection(language string, config
 	return IsConfigurationValidForLanguage(language, config) && !isParentModuleMaven(config)
 }
 
+/*
+	isParentModuleMaven checks if configuration file is a parent pom.xml
+	Parameters:
+		configPath: configuration file path
+	Returns:
+		bool: true if config file is parent
+*/
 func isParentModuleMaven(configPath string) bool {
 	_, file := filepath.Split(configPath)
 	if !strings.EqualFold(file, "pom.xml") {
 		return false
 	}
 
-	utils.IsTagInPomXMLFile(configPath, "modules")
-	return false
+	hasTag, _ := utils.IsTagInPomXMLFile(configPath, "modules")
+	return hasTag
 }
 
 func detectJavaFrameworks(language *language.Language, configFile string) {

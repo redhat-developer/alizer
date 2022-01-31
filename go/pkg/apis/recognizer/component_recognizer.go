@@ -27,30 +27,43 @@ func DetectComponents(path string) ([]Component, error) {
 
 	// it may happen that a language has no a specific configuration file (e.g opposite to JAVA -> pom.xml and Nodejs -> package.json)
 	// we then rely on the language recognizer
-	//TODO
-	directoriesNotBelongingToExistingComponent := getDirectoriesPathsWithoutConfigFile(path, components)
+	directoriesNotBelongingToExistingComponent := getDirectoriesWithoutConfigFile(path, components)
 	components = append(components, getComponentsWithoutConfigFile(directoriesNotBelongingToExistingComponent)...)
 
 	return components, nil
 }
 
+/*
+	getComponentsWithoutConfigFile retrieves the components which are written with a language that does not require a config file
+	Parameters:
+		directories: list of directories to analyze
+	Returns:
+		components found
+*/
 func getComponentsWithoutConfigFile(directories []string) []Component {
 	var components []Component
 	for _, dir := range directories {
 		component, _ := detectComponent(dir, "")
-		if component.path != "" && isValidNoConfigComponent(component) {
+		if component.path != "" && isLangForNoConfigComponent(component.languages) {
 			components = append(components, component)
 		}
 	}
 	return components
 }
 
-func isValidNoConfigComponent(component Component) bool {
-	if len(component.languages) == 0 {
+/*
+	isLangForNoConfigComponent verify if main language requires any config file
+	Parameters:
+		component:
+	Returns:
+		bool: true if language does not require any config file
+*/
+func isLangForNoConfigComponent(languages []language.Language) bool {
+	if len(languages) == 0 {
 		return false
 	}
 
-	lang, err := langfiles.Get().GetLanguageByNameOrAlias(component.languages[0].Name)
+	lang, err := langfiles.Get().GetLanguageByNameOrAlias(languages[0].Name)
 	if err != nil {
 		return false
 	}
@@ -58,7 +71,15 @@ func isValidNoConfigComponent(component Component) bool {
 	return len(lang.ConfigurationFiles) == 0
 }
 
-func getDirectoriesPathsWithoutConfigFile(root string, components []Component) []string {
+/*
+	getDirectoriesPathsWithoutConfigFile retrieves all directories that do not contain any Component
+	Parameters:
+		root: root folder where to start the search
+		components: list of components already detected
+	Returns:
+		list of directories path that does not contain any component
+*/
+func getDirectoriesWithoutConfigFile(root string, components []Component) []string {
 	if len(components) == 0 {
 		return []string{root}
 	}
@@ -67,7 +88,7 @@ func getDirectoriesPathsWithoutConfigFile(root string, components []Component) [
 		if strings.EqualFold(root, path) {
 			return filepath.SkipDir
 		}
-		if !hasDirectoryAnyComponent(path, components) {
+		if !isAnyComponentInPath(path, components) {
 			directories = getParentFolders(path, directories)
 		}
 		return nil
@@ -103,7 +124,15 @@ func getParentFolders(path string, directories []string) []string {
 	return updatedDirectories
 }
 
-func hasDirectoryAnyComponent(path string, components []Component) bool {
+/*
+	isAnyComponentInPath checks if a component is present in path
+	Parameters:
+		path: path where to search for component
+		components: list of components
+	Returns:
+		true if a component is found starting from path
+*/
+func isAnyComponentInPath(path string, components []Component) bool {
 	for _, component := range components {
 		if strings.EqualFold(path, component.path) || isFirstPathParentOfSecond(component.path, path) {
 			return true
@@ -112,10 +141,25 @@ func hasDirectoryAnyComponent(path string, components []Component) bool {
 	return false
 }
 
+/*
+	isFirstPathParentOfSecond check if first path is parent (direct or not) of second path
+	Parameters:
+		firstPath: path to be used as parent
+		secondPath: path to be used as child
+	Returns:
+		true if firstPath is part of secondPath
+*/
 func isFirstPathParentOfSecond(firstPath string, secondPath string) bool {
 	return strings.Contains(secondPath, firstPath)
 }
 
+/*
+	detectComponents detect components by analyzing all files
+	Parameters:
+		files: list of files to analyze
+	Returns:
+		list of components detected or err if any error occurs
+*/
 func detectComponents(files []string) ([]Component, error) {
 	configurationPerLanguage := langfiles.Get().GetConfigurationPerLanguageMapping()
 	var components []Component
@@ -134,6 +178,17 @@ func detectComponents(files []string) ([]Component, error) {
 	return components, nil
 }
 
+/*
+	detectComponent returns a Component if found:
+							- language must be enabled for component detection
+							- there should be at least one framework detected
+					, error otherwise
+	Parameters:
+		root: path to be used as root where to start the detection
+		language: language to be used as target for detection
+	Returns:
+		component detected or error if any error occurs
+*/
 func detectComponent(root string, language string) (Component, error) {
 	languages, err := Analyze(root)
 	if err != nil {
@@ -150,6 +205,15 @@ func detectComponent(root string, language string) (Component, error) {
 
 }
 
+/*
+	getLanguagesWeightedByConfigFile returns the list of languages reordered by importance per config file.
+									 Language found by analyzing the config file is used as target.
+	Parameters:
+		languages: list of languages to be reordered
+		languageByConfig: target language
+	Returns:
+		list of languages reordered
+*/
 func getLanguagesWeightedByConfigFile(languages []language.Language, languageByConfig string) []language.Language {
 	if languageByConfig == "" {
 		return languages

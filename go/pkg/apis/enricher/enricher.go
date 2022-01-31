@@ -34,6 +34,18 @@ type FrameworkDetectorWithoutConfigFile interface {
 	DoFrameworkDetection(language *language.Language, files *[]string)
 }
 
+/*
+	IsConfigurationValidForLanguage check whether the configuration file is valid for current language.
+									For example when analyzing a nodejs project, we could find a package.json
+									within the node_modules folder. That is not to be considered valid
+									for component detection.
+	Paramenters:
+		language: language name
+		file: configuration file name
+	Returns:
+		bool: true if config file is valid for current language
+
+*/
 func IsConfigurationValidForLanguage(language string, file string) bool {
 	languageItem, err := langfiles.Get().GetLanguageByName(language)
 	if err != nil {
@@ -51,6 +63,14 @@ func IsConfigurationValidForLanguage(language string, file string) bool {
 	return true
 }
 
+/*
+	isFolderNameIncludedInPath check if fullpath contains potentialSubFolderName
+	Parameters:
+		fullPath: 				complete path of a file
+		potentialSubFolderName: folder name
+	Returns:
+		bool: true if potentialSubFolderName is included in fullPath
+*/
 func isFolderNameIncludedInPath(fullPath string, potentialSubFolderName string) bool {
 	pathSeparator := fmt.Sprintf("%c", os.PathSeparator)
 	dir, _ := filepath.Split(fullPath)
