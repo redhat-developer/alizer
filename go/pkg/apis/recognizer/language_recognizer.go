@@ -77,7 +77,7 @@ func Analyze(path string) ([]language.Language, error) {
 				UsageInPercentage: tmpPercentage * 100,
 				Frameworks:        []string{},
 				Tools:             []string{},
-				CanBeComponent:    false}
+				CanBeComponent:    item.item.Component}
 			langEnricher := enricher.GetEnricherByLanguage(name)
 			if langEnricher != nil {
 				langEnricher.DoEnrichLanguage(&tmpLanguage, &paths)

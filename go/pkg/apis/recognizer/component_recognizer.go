@@ -11,8 +11,8 @@ import (
 )
 
 type Component struct {
-	path      string
-	languages []language.Language
+	Path      string
+	Languages []language.Language
 }
 
 func DetectComponents(path string) ([]Component, error) {
@@ -44,7 +44,7 @@ func getComponentsWithoutConfigFile(directories []string) []Component {
 	var components []Component
 	for _, dir := range directories {
 		component, _ := detectComponent(dir, "")
-		if component.path != "" && isLangForNoConfigComponent(component.languages) {
+		if component.Path != "" && isLangForNoConfigComponent(component.Languages) {
 			components = append(components, component)
 		}
 	}
@@ -134,7 +134,7 @@ func getParentFolders(path string, directories []string) []string {
 */
 func isAnyComponentInPath(path string, components []Component) bool {
 	for _, component := range components {
-		if strings.EqualFold(path, component.path) || isFirstPathParentOfSecond(component.path, path) {
+		if strings.EqualFold(path, component.Path) || isFirstPathParentOfSecond(component.Path, path) {
 			return true
 		}
 	}
@@ -164,13 +164,13 @@ func detectComponents(files []string) ([]Component, error) {
 	configurationPerLanguage := langfiles.Get().GetConfigurationPerLanguageMapping()
 	var components []Component
 	for _, file := range files {
-		if language, isConfig := configurationPerLanguage[file]; isConfig && isConfigurationValid(language, file) {
-			dir, _ := filepath.Split(file)
+		dir, fileName := filepath.Split(file)
+		if language, isConfig := configurationPerLanguage[fileName]; isConfig && isConfigurationValid(language, fileName) {
 			component, err := detectComponent(dir, language)
 			if err != nil {
 				return []Component{}, err
 			}
-			if component.path != "" {
+			if component.Path != "" {
 				components = append(components, component)
 			}
 		}
@@ -197,8 +197,8 @@ func detectComponent(root string, language string) (Component, error) {
 	languages = getLanguagesWeightedByConfigFile(languages, language)
 	if mainLang := languages[0]; mainLang.CanBeComponent && len(mainLang.Frameworks) > 0 {
 		return Component{
-			path:      root,
-			languages: languages,
+			Path:      root,
+			Languages: languages,
 		}, nil
 	}
 	return Component{}, nil
