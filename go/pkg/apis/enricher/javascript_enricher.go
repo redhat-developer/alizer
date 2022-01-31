@@ -37,6 +37,10 @@ func (j JavaScriptEnricher) DoEnrichLanguage(language *language.Language, files 
 	}
 }
 
+func (j JavaScriptEnricher) IsConfigValidForComponentDetection(language string, config string) bool {
+	return IsConfigurationValidForLanguage(language, config)
+}
+
 func detectJavaScriptFrameworks(language *language.Language, configFile string) {
 	for _, detector := range getJavaScriptFrameworkDetectors() {
 		detector.DoFrameworkDetection(language, configFile)

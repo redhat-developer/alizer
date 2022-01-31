@@ -11,6 +11,9 @@
 package recognizer
 
 import (
+	"path/filepath"
+	"strings"
+
 	framework "github.com/redhat-developer/alizer/go/pkg/apis/enricher/framework/java"
 	"github.com/redhat-developer/alizer/go/pkg/apis/language"
 	utils "github.com/redhat-developer/alizer/go/pkg/utils"
@@ -46,6 +49,20 @@ func (j JavaEnricher) DoEnrichLanguage(language *language.Language, files *[]str
 	} else if ant != "" {
 		language.Tools = []string{"Ant"}
 	}
+}
+
+func (j JavaEnricher) IsConfigValidForComponentDetection(language string, config string) bool {
+	return IsConfigurationValidForLanguage(language, config) && !isParentModuleMaven(config)
+}
+
+func isParentModuleMaven(configPath string) bool {
+	_, file := filepath.Split(configPath)
+	if !strings.EqualFold(file, "pom.xml") {
+		return false
+	}
+
+	utils.IsTagInPomXMLFile(configPath, "modules")
+	return false
 }
 
 func detectJavaFrameworks(language *language.Language, configFile string) {

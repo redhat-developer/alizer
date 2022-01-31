@@ -17,7 +17,7 @@ import (
 type SpringDetector struct{}
 
 func (s SpringDetector) DoFrameworkDetection(language *language.Language, config string) {
-	if hasFramework(config, "org.springframework") {
+	if hasFwk, _ := hasFramework(config, "org.springframework"); hasFwk {
 		language.Frameworks = append(language.Frameworks, "Spring")
 	}
 }

@@ -72,7 +72,7 @@ func Analyze(path string) ([]language.Language, error) {
 		tmpPercentage = float64(int(tmpPercentage*10000)) / 10000
 		if tmpPercentage > 0.02 {
 			tmpLanguage := language.Language{name, item.item.Aliases, tmpPercentage * 100, []string{}, []string{}, false}
-			langEnricher := enricher.GetEnricherByLanguage(&tmpLanguage)
+			langEnricher := enricher.GetEnricherByLanguage(name)
 			if langEnricher != nil {
 				langEnricher.DoEnrichLanguage(&tmpLanguage, &paths)
 			}
