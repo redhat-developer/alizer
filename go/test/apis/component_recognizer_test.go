@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 Red Hat, Inc.
+ * Copyright (c) 2022 Red Hat, Inc.
  * Distributed under license by Red Hat, Inc. All rights reserved.
  * This program is made available under the terms of the
  * Eclipse Public License v2.0 which accompanies this distribution,
@@ -32,6 +32,24 @@ func TestComponentDetectionOnJavascript(t *testing.T) {
 
 func TestComponentDetectionOnDjango(t *testing.T) {
 	isComponentsInProject(t, "django", 1, "python")
+}
+
+func TestComponentDetectionNoResult(t *testing.T) {
+	components := getComponentsFromProject(t, "simple")
+	if len(components) > 0 {
+		t.Errorf("Expected 0 components but found " + strconv.Itoa(len(components)))
+	}
+}
+
+func TestComponentDetectionOnDoubleComponents(t *testing.T) {
+	isComponentsInProject(t, "double-components", 2, "javascript")
+}
+
+func TestComponentDetectionMultiProjects(t *testing.T) {
+	components := getComponentsFromProject(t, "")
+	if len(components) != 8 {
+		t.Errorf("Expected 8 components but found " + strconv.Itoa(len(components)))
+	}
 }
 
 func getComponentsFromProject(t *testing.T, project string) []recognizer.Component {

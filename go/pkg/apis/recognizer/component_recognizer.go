@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2022 Red Hat, Inc.
+ * Distributed under license by Red Hat, Inc. All rights reserved.
+ * This program is made available under the terms of the
+ * Eclipse Public License v2.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v20.html
+ *
+ * Contributors:
+ * Red Hat, Inc.
+ ******************************************************************************/
 package recognizer
 
 import (
@@ -84,15 +94,15 @@ func getDirectoriesWithoutConfigFile(root string, components []Component) []stri
 		return []string{root}
 	}
 	directories := []string{}
-	filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
-		if strings.EqualFold(root, path) {
-			return filepath.SkipDir
-		}
-		if !isAnyComponentInPath(path, components) {
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+		if !strings.EqualFold(root, path) && d.IsDir() && !isAnyComponentInPath(path, components) {
 			directories = getParentFolders(path, directories)
 		}
 		return nil
 	})
+	if err != nil {
+		return []string{}
+	}
 	return directories
 }
 
@@ -105,22 +115,20 @@ func getDirectoriesWithoutConfigFile(root string, components []Component) []stri
 * @param directories list of all previously added paths
 * @return the list containing all paths which are not sub-folders of any other
  */
-func getParentFolders(path string, directories []string) []string {
+func getParentFolders(target string, directories []string) []string {
 	updatedDirectories := []string{}
 	for _, dir := range directories {
-		if isFirstPathParentOfSecond(dir, path) {
+		if isFirstPathParentOfSecond(dir, target) {
 			return directories
 		}
 
-		if isFirstPathParentOfSecond(path, dir) {
+		if isFirstPathParentOfSecond(target, dir) {
 			continue
 		}
 		updatedDirectories = append(updatedDirectories, dir)
 	}
 
-	if len(updatedDirectories) != len(directories) {
-		updatedDirectories = append(updatedDirectories, path)
-	}
+	updatedDirectories = append(updatedDirectories, target)
 	return updatedDirectories
 }
 
@@ -134,7 +142,7 @@ func getParentFolders(path string, directories []string) []string {
 */
 func isAnyComponentInPath(path string, components []Component) bool {
 	for _, component := range components {
-		if strings.EqualFold(path, component.Path) || isFirstPathParentOfSecond(component.Path, path) {
+		if strings.EqualFold(path, component.Path) || isFirstPathParentOfSecond(component.Path, path) || isFirstPathParentOfSecond(path, component.Path) {
 			return true
 		}
 	}

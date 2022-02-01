@@ -21,6 +21,7 @@ type JavaScriptEnricher struct{}
 func getJavaScriptFrameworkDetectors() []FrameworkDetectorWithConfigFile {
 	return []FrameworkDetectorWithConfigFile{
 		&framework.ExpressDetector{},
+		&framework.ReactJsDetector{},
 	}
 }
 
