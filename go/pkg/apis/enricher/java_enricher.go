@@ -11,9 +11,9 @@
 package recognizer
 
 import (
-	framework "github.com/redhat-developer/alizer/pkg/apis/enricher/framework/java"
-	"github.com/redhat-developer/alizer/pkg/apis/language"
-	utils "github.com/redhat-developer/alizer/pkg/utils"
+	framework "github.com/redhat-developer/alizer/go/pkg/apis/enricher/framework/java"
+	"github.com/redhat-developer/alizer/go/pkg/apis/language"
+	utils "github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 type JavaEnricher struct{}

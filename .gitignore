@@ -45,4 +45,3 @@ node_modules/
 
 # Go
 /pkg/
-go/pkg/utils/langfiles/resources/

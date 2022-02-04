@@ -18,7 +18,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/redhat-developer/alizer/pkg/schema"
+	"github.com/redhat-developer/alizer/go/pkg/schema"
 )
 
 func GetFile(filePaths *[]string, wantedFile string) string {

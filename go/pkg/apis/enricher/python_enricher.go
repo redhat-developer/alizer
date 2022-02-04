@@ -11,8 +11,8 @@
 package recognizer
 
 import (
-	framework "github.com/redhat-developer/alizer/pkg/apis/enricher/framework/python"
-	"github.com/redhat-developer/alizer/pkg/apis/language"
+	framework "github.com/redhat-developer/alizer/go/pkg/apis/enricher/framework/python"
+	"github.com/redhat-developer/alizer/go/pkg/apis/language"
 )
 
 type PythonEnricher struct{}

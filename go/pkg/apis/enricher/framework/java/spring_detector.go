@@ -11,7 +11,7 @@
 package recognizer
 
 import (
-	"github.com/redhat-developer/alizer/pkg/apis/language"
+	"github.com/redhat-developer/alizer/go/pkg/apis/language"
 )
 
 type SpringDetector struct{}
