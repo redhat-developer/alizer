@@ -15,9 +15,9 @@ import (
 	"path/filepath"
 	"sort"
 
-	enricher "github.com/redhat-developer/alizer/pkg/apis/enricher"
-	"github.com/redhat-developer/alizer/pkg/apis/language"
-	langfile "github.com/redhat-developer/alizer/pkg/utils/langfiles"
+	enricher "github.com/redhat-developer/alizer/go/pkg/apis/enricher"
+	"github.com/redhat-developer/alizer/go/pkg/apis/language"
+	langfile "github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
 )
 
 type languageItem struct {

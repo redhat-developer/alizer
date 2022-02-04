@@ -14,7 +14,7 @@ import (
 	"embed"
 	"errors"
 
-	"github.com/redhat-developer/alizer/pkg/schema"
+	"github.com/redhat-developer/alizer/go/pkg/schema"
 	"gopkg.in/yaml.v3"
 )
 

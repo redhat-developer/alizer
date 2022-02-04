@@ -11,7 +11,7 @@
 package recognizer
 
 import (
-	utils "github.com/redhat-developer/alizer/pkg/utils"
+	utils "github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 func hasFramework(files *[]string, tag string) bool {

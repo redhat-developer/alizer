@@ -1,4 +1,4 @@
-module github.com/redhat-developer/alizer
+module github.com/redhat-developer/alizer/go
 
 go 1.17
 

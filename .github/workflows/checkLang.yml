@@ -1,0 +1,24 @@
+name: Check Languages Files
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-files:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: GuillaumeFalourd/diff-action@v1
+        with:
+          first_file_path: resources/languages.yml
+          second_file_path: go/pkg/utils/langfiles/resources/languages.yml
+          expected_result: PASSED
+      - uses: GuillaumeFalourd/diff-action@v1
+        with:
+          first_file_path: resources/languages-customization.yml
+          second_file_path: go/pkg/utils/langfiles/resources/languages-customization.yml
+          expected_result: PASSED

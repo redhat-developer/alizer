@@ -13,7 +13,7 @@ package recognizer
 import (
 	"strings"
 
-	"github.com/redhat-developer/alizer/pkg/apis/language"
+	"github.com/redhat-developer/alizer/go/pkg/apis/language"
 )
 
 type Enricher interface {

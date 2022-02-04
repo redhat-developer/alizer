@@ -16,8 +16,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/redhat-developer/alizer/pkg/apis/language"
-	"github.com/redhat-developer/alizer/pkg/apis/recognizer"
+	"github.com/redhat-developer/alizer/go/pkg/apis/language"
+	"github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
 )
 
 func TestAnalyzeOnMicronaut(t *testing.T) {

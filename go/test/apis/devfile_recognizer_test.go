@@ -13,7 +13,7 @@ package recognizer
 import (
 	"testing"
 
-	"github.com/redhat-developer/alizer/pkg/apis/recognizer"
+	"github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
 )
 
 func TestDetectQuarkusDevfile(t *testing.T) {
