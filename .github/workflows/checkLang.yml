@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-java:
+  check-files:
 
     runs-on: ubuntu-latest
 
