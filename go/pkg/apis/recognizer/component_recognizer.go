@@ -203,12 +203,15 @@ func detectComponent(root string, language string) (Component, error) {
 		return Component{}, err
 	}
 	languages = getLanguagesWeightedByConfigFile(languages, language)
-	if mainLang := languages[0]; mainLang.CanBeComponent && len(mainLang.Frameworks) > 0 {
-		return Component{
-			Path:      root,
-			Languages: languages,
-		}, nil
+	if len(languages) > 0 {
+		if mainLang := languages[0]; mainLang.CanBeComponent && len(mainLang.Frameworks) > 0 {
+			return Component{
+				Path:      root,
+				Languages: languages,
+			}, nil
+		}
 	}
+
 	return Component{}, nil
 
 }
