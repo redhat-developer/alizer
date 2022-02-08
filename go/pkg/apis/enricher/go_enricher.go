@@ -30,6 +30,10 @@ func getGoFrameworkDetectors() []GoFrameworkDetector {
 	return []GoFrameworkDetector{
 		&framework.GinDetector{},
 		&framework.BeegoDetector{},
+		&framework.EchoDetector{},
+		&framework.FastHttpDetector{},
+		&framework.GoFiberDetector{},
+		&framework.MuxDetector{},
 	}
 }
 
