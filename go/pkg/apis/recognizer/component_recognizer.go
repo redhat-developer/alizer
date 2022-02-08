@@ -173,7 +173,7 @@ func detectComponents(files []string) ([]Component, error) {
 	var components []Component
 	for _, file := range files {
 		dir, fileName := filepath.Split(file)
-		if language, isConfig := configurationPerLanguage[fileName]; isConfig && isConfigurationValid(language, fileName) {
+		if language, isConfig := configurationPerLanguage[fileName]; isConfig && isConfigurationValid(language, file) {
 			component, err := detectComponent(dir, language)
 			if err != nil {
 				return []Component{}, err
