@@ -51,11 +51,7 @@ func IsConfigurationValidForLanguage(language string, file string) bool {
 	if err != nil {
 		return false
 	}
-	excludeFolders := languageItem.ExcludeFolders
-	if len(excludeFolders) == 0 {
-		return true
-	}
-	for _, excludeFolder := range excludeFolders {
+	for _, excludeFolder := range languageItem.ExcludeFolders {
 		if isFolderNameIncludedInPath(file, excludeFolder) {
 			return false
 		}
