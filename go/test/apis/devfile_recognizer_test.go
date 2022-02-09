@@ -13,6 +13,7 @@ package recognizer
 import (
 	"testing"
 
+	"github.com/redhat-developer/alizer/go/pkg/apis/language"
 	"github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
 )
 
@@ -32,12 +33,72 @@ func TestDetectDjangoDevfile(t *testing.T) {
 	detectDevFile(t, "django", "python-django")
 }
 
+func TestDetectDjangoDevfileUsingLanguages(t *testing.T) {
+	languages := []language.Language{
+		{
+			Name: "Python",
+			Aliases: []string{
+				"python3",
+			},
+			UsageInPercentage: 88.23,
+			Frameworks: []string{
+				"Django",
+			},
+			Tools:          []string{},
+			CanBeComponent: false,
+		},
+		{
+			Name: "Shell",
+			Aliases: []string{
+				"sh",
+			},
+			UsageInPercentage: 11.77,
+			Frameworks:        []string{},
+			Tools:             []string{},
+			CanBeComponent:    false,
+		},
+	}
+	detectDevFileUsingLanguages(t, "", languages, "python-django")
+}
+
+func TestDetectQuarkusDevfileUsingLanguages(t *testing.T) {
+	detectDevFileUsingLanguages(t, "quarkus", []language.Language{}, "java-quarkus")
+}
+
+func TestDetectMicronautDevfileUsingLanguages(t *testing.T) {
+	detectDevFileUsingLanguages(t, "micronaut", []language.Language{}, "java-maven")
+}
+
+func TestDetectNodeJSDevfileUsingLanguages(t *testing.T) {
+	detectDevFileUsingLanguages(t, "nodejs-ex", []language.Language{}, "nodejs")
+}
+
 func detectDevFile(t *testing.T, projectName string, devFileName string) {
+	detectDevFileFunc := func(devFileTypes []recognizer.DevFileType) (recognizer.DevFileType, error) {
+		testingProjectPath := GetTestProjectPath(projectName)
+		return recognizer.SelectDevFileFromTypes(testingProjectPath, devFileTypes)
+	}
+	detectDevFileInner(t, devFileName, detectDevFileFunc)
+}
+
+func detectDevFileUsingLanguages(t *testing.T, projectName string, languages []language.Language, devFileName string) {
+	if projectName != "" {
+		testingProjectPath := GetTestProjectPath(projectName)
+		var err error
+		languages, err = recognizer.Analyze(testingProjectPath)
+		if err != nil {
+			t.Error(err)
+		}
+	}
+	detectDevFileFunc := func(devFileTypes []recognizer.DevFileType) (recognizer.DevFileType, error) {
+		return recognizer.SelectDevFileUsingLanguagesFromTypes(languages, devFileTypes)
+	}
+	detectDevFileInner(t, devFileName, detectDevFileFunc)
+}
+
+func detectDevFileInner(t *testing.T, devFileName string, detectFuncInner func([]recognizer.DevFileType) (recognizer.DevFileType, error)) {
 	devFileTypes := getDevFileTypes()
-
-	testingProjectPath := GetTestProjectPath(projectName)
-
-	devFileType, err := recognizer.SelectDevFileFromTypes(testingProjectPath, devFileTypes)
+	devFileType, err := detectFuncInner(devFileTypes)
 	if err != nil {
 		t.Error(err)
 	}
