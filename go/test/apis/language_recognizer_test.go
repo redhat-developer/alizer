@@ -48,6 +48,10 @@ func TestAnalyzeOnVBNET(t *testing.T) {
 	isLanguageInProject(t, "net-vb", "visual basic .net", []string{}, []string{"netcoreapp3.1"})
 }
 
+func TestAnalyzeOnGoGin(t *testing.T) {
+	isLanguageInProject(t, "golang-gin-app", "go", []string{"1.15"}, []string{"gin"})
+}
+
 func isLanguageInProject(t *testing.T, project string, wantedLanguage string, wantedTools []string, wantedFrameworks []string) {
 	testingProjectPath := GetTestProjectPath(project)
 

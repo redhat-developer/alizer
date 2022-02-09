@@ -47,8 +47,9 @@ func TestComponentDetectionOnDoubleComponents(t *testing.T) {
 
 func TestComponentDetectionMultiProjects(t *testing.T) {
 	components := getComponentsFromProject(t, "")
-	if len(components) != 8 {
-		t.Errorf("Expected 8 components but found " + strconv.Itoa(len(components)))
+	nComps := 11
+	if len(components) != nComps {
+		t.Errorf("Expected " + strconv.Itoa(nComps) + " components but found " + strconv.Itoa(len(components)))
 	}
 }
 

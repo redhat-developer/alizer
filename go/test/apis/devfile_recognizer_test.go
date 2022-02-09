@@ -73,6 +73,10 @@ func TestDetectNodeJSDevfileUsingLanguages(t *testing.T) {
 	detectDevFileUsingLanguages(t, "nodejs-ex", []language.Language{}, "nodejs")
 }
 
+func TestDetectGoDevfile(t *testing.T) {
+	detectDevFile(t, "golang-gin-app", "go")
+}
+
 func detectDevFile(t *testing.T, projectName string, devFileName string) {
 	detectDevFileFunc := func(devFileTypes []recognizer.DevFileType) (recognizer.DevFileType, error) {
 		testingProjectPath := GetTestProjectPath(projectName)
@@ -177,6 +181,14 @@ func getDevFileTypes() []recognizer.DevFileType {
 			Tags: []string{
 				"Python",
 				"pip",
+			},
+		},
+		{
+			Name:        "go",
+			Language:    "go",
+			ProjectType: "go",
+			Tags: []string{
+				"go",
 			},
 		},
 	}
