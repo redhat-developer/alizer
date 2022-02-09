@@ -36,6 +36,18 @@ func TestAnalyzeOnDjango(t *testing.T) {
 	isLanguageInProject(t, "django", "python", []string{}, []string{"django"})
 }
 
+func TestAnalyzeOnCSharp(t *testing.T) {
+	isLanguageInProject(t, "s2i-dotnetcore-ex", "c#", []string{}, []string{"net6.0"})
+}
+
+func TestAnalyzeOnFSharp(t *testing.T) {
+	isLanguageInProject(t, "net-fsharp", "f#", []string{}, []string{"netcoreapp3.1"})
+}
+
+func TestAnalyzeOnVBNET(t *testing.T) {
+	isLanguageInProject(t, "net-vb", "visual basic .net", []string{}, []string{"netcoreapp3.1"})
+}
+
 func isLanguageInProject(t *testing.T, project string, wantedLanguage string, wantedTools []string, wantedFrameworks []string) {
 	testingProjectPath := GetTestProjectPath(project)
 

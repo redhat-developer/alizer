@@ -34,6 +34,7 @@ func getEnrichers() []Enricher {
 		&JavaEnricher{},
 		&JavaScriptEnricher{},
 		&PythonEnricher{},
+		&DotNetEnricher{},
 	}
 }
 
@@ -48,7 +49,7 @@ func GetEnricherByLanguage(language *language.Language) Enricher {
 
 func isLanguageSupportedByEnricher(nameLanguage string, enricher Enricher) bool {
 	for _, language := range enricher.GetSupportedLanguages() {
-		if strings.ToLower(language) == strings.ToLower(nameLanguage) {
+		if strings.EqualFold(language, nameLanguage) {
 			return true
 		}
 	}
