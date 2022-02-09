@@ -17,6 +17,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LanguageRecognizerTest extends AbstractRecognizerTest {
@@ -34,21 +35,9 @@ public class LanguageRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
-    public void testJAVAMetaDevFile() throws IOException {
-        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/micronaut").getCanonicalPath(), devfileTypes);
-        assertTrue(devFile.getName().equalsIgnoreCase("java-maven"));
-    }
-
-    @Test
     public void testQuarkus() throws IOException {
         List<Language> status = recognizer.analyze(new File("../../resources/projects/quarkus").getCanonicalPath());
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("JAVA")));
-    }
-
-    @Test
-    public void testQuarkusDevFileType() throws IOException {
-        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/quarkus").getCanonicalPath(), devfileTypes);
-        assertTrue(devFile.getName().equalsIgnoreCase("java-quarkus"));
     }
 
     @Test
@@ -58,23 +47,10 @@ public class LanguageRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
-    public void testMicronautDevFile() throws IOException {
-        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/micronaut").getCanonicalPath(), devfileTypes);
-        assertTrue(devFile.getName().equalsIgnoreCase("java-maven"));
-    }
-
-    @Test
     public void testNode() throws IOException {
         List<Language> status = recognizer.analyze(new File("../../resources/projects/nodejs-ex").getCanonicalPath());
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("JavaScript")));
     }
-
-    @Test
-    public void testNodeDevFile() throws IOException {
-        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/nodejs-ex").getCanonicalPath(), devfileTypes);
-        assertTrue(devFile.getName().equalsIgnoreCase("nodejs"));
-    }
-
 
     @Test
     public void testDjango() throws IOException {
@@ -83,8 +59,31 @@ public class LanguageRecognizerTest extends AbstractRecognizerTest {
     }
 
     @Test
-    public void testDjangoDevFile() throws IOException {
-        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/django").getCanonicalPath(), devfileTypes);
-        assertTrue(devFile.getName().equalsIgnoreCase("python-django"));
+    public void testCSharp() throws IOException {
+        List<Language> status = recognizer.analyze(new File("../../resources/projects/s2i-dotnetcore-ex").getCanonicalPath());
+        assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("C#")));
+    }
+
+    @Test
+    public void testFSharp() throws IOException {
+        List<Language> status = recognizer.analyze(new File("../../resources/projects/net-fsharp").getCanonicalPath());
+        assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("F#")));
+    }
+
+    @Test
+    public void testVB() throws IOException {
+        List<Language> status = recognizer.analyze(new File("../../resources/projects/net-vb").getCanonicalPath());
+        assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("Visual Basic .NET")));
+    }
+
+    @Test
+    public void testMultipleDotNetFrameworks() throws IOException {
+        List<Language> status = recognizer.analyze(new File("../../resources/projects/multiple-dotnet-target-frameworks").getCanonicalPath());
+        assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("C#")));
+        Language cSharpLang = status.stream().filter(lang -> lang.getName().equalsIgnoreCase("C#")).findFirst().get();
+        assertEquals(cSharpLang.getFrameworks().size(), 3);
+        assertTrue(cSharpLang.getFrameworks().stream().anyMatch(f -> f.equalsIgnoreCase("net6.0")));
+        assertTrue(cSharpLang.getFrameworks().stream().anyMatch(f -> f.equalsIgnoreCase("net5.0")));
+        assertTrue(cSharpLang.getFrameworks().stream().anyMatch(f -> f.equalsIgnoreCase("netcoreapp3.1")));
     }
 }

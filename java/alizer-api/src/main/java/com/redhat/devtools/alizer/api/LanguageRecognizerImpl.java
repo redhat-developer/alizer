@@ -37,21 +37,6 @@ public class LanguageRecognizerImpl extends Recognizer implements LanguageRecogn
         super(builder);
     }
 
-    public <T extends DevfileType> T selectDevFileFromTypes(String srcPath, List<T> devfileTypes) throws IOException {
-        List<Language> languages = analyze(srcPath);
-        return selectDevFileFromTypes(languages, devfileTypes);
-    }
-
-    public <T extends DevfileType> T selectDevFileFromTypes(List<Language> languages, List<T> devfileTypes) {
-        for (Language language: languages) {
-            Optional<LanguageScore> score = devfileTypes.stream().map(devfileType -> new LanguageScore(language, devfileType)).sorted().findFirst();
-            if (score.isPresent() && score.get().getScore() > 0) {
-                return (T) score.get().getDevfileType();
-            }
-        }
-        return null;
-    }
-
     public List<Language> analyze(String path) throws IOException {
         Map<LanguageFileItem, Integer> languagesDetected = new HashMap<>();
         // init dictionary with languages file

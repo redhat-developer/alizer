@@ -11,7 +11,9 @@
 package com.redhat.devtools.alizer.api;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class LanguageFileItem {
     private String name;
@@ -40,6 +42,20 @@ public class LanguageFileItem {
     }
 
     public List<String> getAliases() { return aliases; }
+
+    public void addAliases(List<String> aliasesToBeAdded) {
+        if (aliasesToBeAdded.isEmpty()) {
+            return;
+        }
+
+        if (aliases == null) {
+            aliases = new ArrayList<>();
+        }
+
+        Set<String> aliasesAsSet = new HashSet<>(aliases);
+        aliasesAsSet.addAll(aliasesToBeAdded);
+        aliases = new ArrayList<>(aliasesAsSet);
+    }
 
     public String getGroup() {
         return group;

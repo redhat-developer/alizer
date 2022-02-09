@@ -28,6 +28,9 @@ public abstract class AbstractRecognizerTest {
     protected static DevfileType NODEJS;
     protected static DevfileType PYTHON_DJANGO;
     protected static DevfileType PYTHON;
+    protected static DevfileType CSHARP;
+    protected static DevfileType NETCORE3_1;
+    protected static DevfileType FSHARP;
 
     @BeforeClass
     public static void init() {
@@ -41,7 +44,10 @@ public abstract class AbstractRecognizerTest {
                 JAVA_WILDFLY = createDevfileType("java-wildfly", "java", "wildfly", "Java", "WildFly"),
                 NODEJS = createDevfileType("nodejs", "nodejs", "nodejs", "NodeJS", "Express", "ubi8"),
                 PYTHON_DJANGO = createDevfileType("python-django", "python", "django", "Python", "pip", "Django"),
-                PYTHON = createDevfileType("python", "python", "python", "Python", "pip")
+                PYTHON = createDevfileType("python", "python", "python", "Python", "pip"),
+                CSHARP = createDevfileType("csharp", "c#", "csharp", "csharp", ".net"),
+                FSHARP = createDevfileType("fsharp", "f#", "fsharp", "dotnet", "fsharp"),
+                NETCORE3_1 = createDevfileType("netcore3.1", "dotnet", "dotnet", "dotnetcore-3.1", ".net")
         );
     }
 

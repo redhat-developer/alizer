@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.redhat.devtools.alizer.cli;
 
+import com.redhat.devtools.alizer.api.DevFileRecognizer;
 import com.redhat.devtools.alizer.api.DevfileType;
 import com.redhat.devtools.alizer.api.LanguageRecognizer;
 import com.redhat.devtools.alizer.api.RecognizerFactory;
@@ -37,7 +38,7 @@ public class DevfileCommand extends BaseCommand implements Runnable{
 
     @Override
     public void run() {
-        LanguageRecognizer reco = new RecognizerFactory().createLanguageRecognizer();
+        DevFileRecognizer reco = new RecognizerFactory().createDevFileRecognizer();
         DevfileType type = null;
         try {
             if (registries != null && !registries.isEmpty()) {
