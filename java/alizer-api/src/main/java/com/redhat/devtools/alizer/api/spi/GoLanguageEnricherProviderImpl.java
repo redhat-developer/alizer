@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,17 +55,12 @@ public class GoLanguageEnricherProviderImpl extends LanguageEnricherProvider{
     }
 
     private String getGoVersion(File goMod) throws IOException {
-        Pattern goVersionLine = Pattern.compile("^go\\s+");
-        try (FileReader fr = new FileReader(goMod)) {
-            try(BufferedReader br = new BufferedReader(fr)) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    if(goVersionLine.matcher(line).find()) {
-                        String[] version = goVersionLine.split(line);
-                        return version.length > 0 ? version[1] : "";
-                    }
-                }
-            }
+        Pattern goVersionLinePattern = Pattern.compile("^go\\s+");
+        Optional<String> goVersionLine = Files.readAllLines(goMod.toPath()).stream()
+                .filter(line -> goVersionLinePattern.matcher(line).find()).findFirst();
+        if(goVersionLine.isPresent()) {
+            String[] version = goVersionLinePattern.split(goVersionLine.get());
+            return version.length > 0 ? version[1] : "";
         }
         return "";
     }
