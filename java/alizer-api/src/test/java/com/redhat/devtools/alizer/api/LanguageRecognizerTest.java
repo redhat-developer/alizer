@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -74,6 +75,15 @@ public class LanguageRecognizerTest extends AbstractRecognizerTest {
     public void testVB() throws IOException {
         List<Language> status = recognizer.analyze(new File("../../resources/projects/net-vb").getCanonicalPath());
         assertTrue(status.stream().anyMatch(lang -> lang.getName().equalsIgnoreCase("Visual Basic .NET")));
+    }
+
+    @Test
+    public void testGo() throws IOException {
+        List<Language> status = recognizer.analyze(new File("../../resources/projects/golang-gin-app").getCanonicalPath());
+        Optional<Language> goLang = status.stream().filter(lang -> lang.getName().equalsIgnoreCase("Go")).findFirst();
+        assertTrue(goLang.isPresent());
+        assertEquals("Gin", goLang.get().getFrameworks().get(0));
+        assertEquals("1.15", goLang.get().getTools().get(0));
     }
 
     @Test

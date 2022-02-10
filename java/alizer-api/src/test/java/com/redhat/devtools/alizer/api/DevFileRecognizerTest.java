@@ -64,4 +64,10 @@ public class DevFileRecognizerTest extends AbstractRecognizerTest {
         DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/net-vb").getCanonicalPath(), devfileTypes);
         assertTrue(devFile.getName().equalsIgnoreCase("netcore3.1"));
     }
+
+    @Test
+    public void testGoDevFile() throws IOException {
+        DevfileType devFile = recognizer.selectDevFileFromTypes(new File("../../resources/projects/golang-gin-app").getCanonicalPath(), devfileTypes);
+        assertTrue(devFile.getName().equalsIgnoreCase("go"));
+    }
 }
