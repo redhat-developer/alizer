@@ -21,7 +21,7 @@ public class GoFiberFrameworkDetectorProviderImpl extends GoFrameworkDetectorPro
     private static final String GOFIBER_TAG = "github.com/gofiber/fiber";
     @Override
     public FrameworkDetectorProvider create() {
-        return new EchoFrameworkDetectorProviderImpl();
+        return new GoFiberFrameworkDetectorProviderImpl();
     }
 
     @Override

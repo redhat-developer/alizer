@@ -21,7 +21,7 @@ public class MuxFrameworkDetectorProviderImpl extends GoFrameworkDetectorProvide
     private static final String MUX_TAG = "github.com/gorilla/mux";
     @Override
     public FrameworkDetectorProvider create() {
-        return new EchoFrameworkDetectorProviderImpl();
+        return new MuxFrameworkDetectorProviderImpl();
     }
 
     @Override

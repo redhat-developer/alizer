@@ -21,7 +21,7 @@ public class BeegoFrameworkDetectorProviderImpl extends GoFrameworkDetectorProvi
     private static final String BEEGO_TAG = "github.com/beego/beego";
     @Override
     public FrameworkDetectorProvider create() {
-        return new EchoFrameworkDetectorProviderImpl();
+        return new BeegoFrameworkDetectorProviderImpl();
     }
 
     @Override
