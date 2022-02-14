@@ -16,10 +16,27 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/redhat-developer/alizer/go/pkg/schema"
 )
+
+func GetFilesByRegex(filePaths *[]string, regexFile string) []string {
+	matchedPaths := []string{}
+	for _, path := range *filePaths {
+		if isPathOfWantedRegex(path, regexFile) {
+			matchedPaths = append(matchedPaths, path)
+		}
+	}
+	return matchedPaths
+}
+
+func isPathOfWantedRegex(path string, regexFile string) bool {
+	_, file := filepath.Split(path)
+	matched, _ := regexp.MatchString(regexFile, file)
+	return matched
+}
 
 func GetFile(filePaths *[]string, wantedFile string) string {
 	for _, path := range *filePaths {
@@ -41,7 +58,7 @@ func HasFile(files *[]string, wantedFile string) bool {
 
 func IsPathOfWantedFile(path string, wantedFile string) bool {
 	_, file := filepath.Split(path)
-	return file == wantedFile
+	return strings.EqualFold(file, wantedFile)
 }
 
 func IsTagInFile(file string, tag string) bool {
@@ -97,4 +114,14 @@ func AddToArrayIfValueExist(arr *[]string, val string) {
 	if val != "" {
 		*arr = append(*arr, val)
 	}
+}
+
+func Contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+
+	return false
 }
