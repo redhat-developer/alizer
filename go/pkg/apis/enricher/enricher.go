@@ -86,6 +86,7 @@ func getEnrichers() []Enricher {
 		&JavaScriptEnricher{},
 		&PythonEnricher{},
 		&DotNetEnricher{},
+		&GoEnricher{},
 	}
 }
 
