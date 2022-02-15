@@ -61,19 +61,32 @@ func IsPathOfWantedFile(path string, wantedFile string) bool {
 	return strings.EqualFold(file, wantedFile)
 }
 
-func IsTagInFile(file string, tag string) bool {
+func IsTagInFile(file string, tag string) (bool, error) {
 	contentInByte, err := ioutil.ReadFile(file)
 	if err != nil {
-		return false
+		return false, err
 	}
 	content := string(contentInByte)
-	return strings.Contains(content, tag)
+	return strings.Contains(content, tag), nil
 }
 
-func IsTagInPomXMLFile(file string, tag string) bool {
-	xmlFile, err := os.Open(file)
+func IsTagInPomXMLFile(pomFilePath string, tag string) (bool, error) {
+	pom, err := GetPomFileContent(pomFilePath)
 	if err != nil {
-		return false
+		return false, err
+	}
+	for _, dependency := range pom.Dependencies.Dependency {
+		if strings.Contains(dependency.GroupId, tag) {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+func GetPomFileContent(pomFilePath string) (schema.Pom, error) {
+	xmlFile, err := os.Open(pomFilePath)
+	if err != nil {
+		return schema.Pom{}, err
 	}
 	byteValue, _ := ioutil.ReadAll(xmlFile)
 
@@ -81,12 +94,7 @@ func IsTagInPomXMLFile(file string, tag string) bool {
 	xml.Unmarshal(byteValue, &pom)
 
 	defer xmlFile.Close()
-	for _, dependency := range pom.Dependencies.Dependency {
-		if strings.Contains(dependency.GroupId, tag) {
-			return true
-		}
-	}
-	return false
+	return pom, nil
 }
 
 func IsTagInPackageJsonFile(file string, tag string) bool {

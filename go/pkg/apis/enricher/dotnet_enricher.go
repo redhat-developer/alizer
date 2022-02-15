@@ -35,6 +35,10 @@ func (j DotNetEnricher) DoEnrichLanguage(language *language.Language, files *[]s
 	}
 }
 
+func (j DotNetEnricher) IsConfigValidForComponentDetection(language string, config string) bool {
+	return IsConfigurationValidForLanguage(language, config)
+}
+
 func getDotNetFrameworks(language *language.Language, configFile string) {
 	for _, detector := range getDotNetFrameworkDetectors() {
 		detector.DoFrameworkDetection(language, configFile)
