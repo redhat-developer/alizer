@@ -25,6 +25,22 @@ type DevFileType struct {
 }
 
 func SelectDevFileFromTypes(path string, devFileTypes []DevFileType) (DevFileType, error) {
+	components, _ := DetectComponentsInRoot(path)
+	if len(components) > 0 {
+		devfile, err := selectDevFileByLanguage(components[0].Languages[0], devFileTypes)
+		if err == nil {
+			return devfile, nil
+		}
+	}
+
+	components, _ = DetectComponents(path)
+	if len(components) > 0 {
+		devfile, err := selectDevFileByLanguage(components[0].Languages[0], devFileTypes)
+		if err == nil {
+			return devfile, nil
+		}
+	}
+
 	languages, err := Analyze(path)
 	if err != nil {
 		return DevFileType{}, err
