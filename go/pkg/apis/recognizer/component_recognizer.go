@@ -59,11 +59,11 @@ func DetectComponents(path string) ([]Component, error) {
 }
 
 /*
-	 getComponentsWithoutConfigFile retrieves the components which are written with a language that does not require a config file
-	 Parameters:
-		 directories: list of directories to analyze
-	 Returns:
-		 components found
+	getComponentsWithoutConfigFile retrieves the components which are written with a language that does not require a config file
+	Parameters:
+		directories: list of directories to analyze
+	Returns:
+		components found
 */
 func getComponentsWithoutConfigFile(directories []string) []Component {
 	var components []Component
@@ -77,11 +77,11 @@ func getComponentsWithoutConfigFile(directories []string) []Component {
 }
 
 /*
-	 isLangForNoConfigComponent verify if main language requires any config file
-	 Parameters:
-		 component:
-	 Returns:
-		 bool: true if language does not require any config file
+	isLangForNoConfigComponent verify if main language requires any config file
+	Parameters:
+		component:
+	Returns:
+		bool: true if language does not require any config file
 */
 func isLangForNoConfigComponent(languages []language.Language) bool {
 	if len(languages) == 0 {
@@ -97,12 +97,12 @@ func isLangForNoConfigComponent(languages []language.Language) bool {
 }
 
 /*
-	 getDirectoriesPathsWithoutConfigFile retrieves all directories that do not contain any Component
-	 Parameters:
-		 root: root folder where to start the search
-		 components: list of components already detected
-	 Returns:
-		 list of directories path that does not contain any component
+	getDirectoriesPathsWithoutConfigFile retrieves all directories that do not contain any Component
+	Parameters:
+		root: root folder where to start the search
+		components: list of components already detected
+	Returns:
+		list of directories path that does not contain any component
 */
 func getDirectoriesWithoutConfigFile(root string, components []Component) []string {
 	if len(components) == 0 {
@@ -121,15 +121,16 @@ func getDirectoriesWithoutConfigFile(root string, components []Component) []stri
 	return directories
 }
 
-/**
- * Return all paths which are not sub-folders of some other path within the list
- * Target will be added to the list if it is not a sub-folder of any other path within the list
- * If a path in the list is sub-folder of Target, that path will be removed.
- *
- * @param target new path to be added
- * @param directories list of all previously added paths
- * @return the list containing all paths which are not sub-folders of any other
- */
+/*
+	getParentFolders return all paths which are not sub-folders of some other path within the list
+	Target will be added to the list if it is not a sub-folder of any other path within the list
+	If a path in the list is sub-folder of Target, that path will be removed.
+	Parameters:
+		target: new path to be added
+		directories: list of all previously added paths
+	Returns:
+		the list containing all paths which are not sub-folders of any other
+*/
 func getParentFolders(target string, directories []string) []string {
 	updatedDirectories := []string{}
 	for _, dir := range directories {
@@ -148,12 +149,12 @@ func getParentFolders(target string, directories []string) []string {
 }
 
 /*
-	 isAnyComponentInPath checks if a component is present in path
-	 Parameters:
-		 path: path where to search for component
-		 components: list of components
-	 Returns:
-		 true if a component is found starting from path
+	isAnyComponentInPath checks if a component is present in path
+	Parameters:
+		path: path where to search for component
+		components: list of components
+	Returns:
+		true if a component is found starting from path
 */
 func isAnyComponentInPath(path string, components []Component) bool {
 	for _, component := range components {
@@ -165,23 +166,23 @@ func isAnyComponentInPath(path string, components []Component) bool {
 }
 
 /*
-	 isFirstPathParentOfSecond check if first path is parent (direct or not) of second path
-	 Parameters:
-		 firstPath: path to be used as parent
-		 secondPath: path to be used as child
-	 Returns:
-		 true if firstPath is part of secondPath
+	isFirstPathParentOfSecond check if first path is parent (direct or not) of second path
+	Parameters:
+		firstPath: path to be used as parent
+		secondPath: path to be used as child
+	Returns:
+		true if firstPath is part of secondPath
 */
 func isFirstPathParentOfSecond(firstPath string, secondPath string) bool {
 	return strings.Contains(secondPath, firstPath)
 }
 
 /*
-	 detectComponents detect components by analyzing all files
-	 Parameters:
-		 files: list of files to analyze
-	 Returns:
-		 list of components detected or err if any error occurs
+	detectComponents detect components by analyzing all files
+	Parameters:
+		files: list of files to analyze
+	Returns:
+		list of components detected or err if any error occurs
 */
 func detectComponents(files []string) ([]Component, error) {
 	configurationPerLanguage := langfiles.Get().GetConfigurationPerLanguageMapping()
@@ -224,14 +225,14 @@ func getLanguagesByConfigurationFile(configurationPerLanguage map[string][]strin
 }
 
 /*
-	 detectComponent returns a Component if found:
-							 - language must be enabled for component detection
-					 , error otherwise
-	 Parameters:
-		 root: path to be used as root where to start the detection
-		 configLanguages: languages associated to the config file found and to be used as target for detection
-	 Returns:
-		 component detected or error if any error occurs
+	detectComponent returns a Component if found:
+							- language must be enabled for component detection
+					, error otherwise
+	Parameters:
+		root: path to be used as root where to start the detection
+		configLanguages: languages associated to the config file found and to be used as target for detection
+	Returns:
+		component detected or error if any error occurs
 */
 func detectComponent(root string, configLanguages []string) (Component, error) {
 	languages, err := Analyze(root)
@@ -253,13 +254,13 @@ func detectComponent(root string, configLanguages []string) (Component, error) {
 }
 
 /*
-	 getLanguagesWeightedByConfigFile returns the list of languages reordered by importance per config file.
-									  Language found by analyzing the config file is used as target.
-	 Parameters:
-		 languages: list of languages to be reordered
-		 configLanguages: languages associated to the config file found and to be used as target languages
-	 Returns:
-		 list of languages reordered
+	getLanguagesWeightedByConfigFile returns the list of languages reordered by importance per config file.
+									Language found by analyzing the config file is used as target.
+	Parameters:
+		languages: list of languages to be reordered
+		configLanguages: languages associated to the config file found and to be used as target languages
+	Returns:
+		list of languages reordered
 */
 func getLanguagesWeightedByConfigFile(languages []language.Language, configLanguages []string) []language.Language {
 	if len(configLanguages) == 0 {
