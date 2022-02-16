@@ -24,7 +24,7 @@ type DevFileType struct {
 	Tags        []string
 }
 
-func SelectDevFileFromTypes(path string, devFileTypes []DevFileType) (DevFileType, error) {
+func SelectDevFileFromTypes(path string, devFileTypes []DevFileType) (int, error) {
 	components, _ := DetectComponentsInRoot(path)
 	if len(components) > 0 {
 		devfile, err := selectDevFileByLanguage(components[0].Languages[0], devFileTypes)
@@ -43,31 +43,31 @@ func SelectDevFileFromTypes(path string, devFileTypes []DevFileType) (DevFileTyp
 
 	languages, err := Analyze(path)
 	if err != nil {
-		return DevFileType{}, err
+		return -1, err
 	}
 	devfile, err := SelectDevFileUsingLanguagesFromTypes(languages, devFileTypes)
 	if err != nil {
-		return DevFileType{}, errors.New("No valid devfile found for project in " + path)
+		return -1, errors.New("No valid devfile found for project in " + path)
 	}
 	return devfile, nil
 }
 
-func SelectDevFileUsingLanguagesFromTypes(languages []language.Language, devFileTypes []DevFileType) (DevFileType, error) {
+func SelectDevFileUsingLanguagesFromTypes(languages []language.Language, devFileTypes []DevFileType) (int, error) {
 	for _, language := range languages {
 		devfile, err := selectDevFileByLanguage(language, devFileTypes)
 		if err == nil {
 			return devfile, nil
 		}
 	}
-	return DevFileType{}, errors.New("no valid devfile found by using those languages")
+	return -1, errors.New("no valid devfile found by using those languages")
 }
 
-func selectDevFileByLanguage(language language.Language, devFileTypes []DevFileType) (DevFileType, error) {
+func selectDevFileByLanguage(language language.Language, devFileTypes []DevFileType) (int, error) {
 	scoreTarget := 0
-	devfileTarget := DevFileType{}
+	devfileTarget := -1
 	FRAMEWORK_WEIGHT := 10
 	TOOL_WEIGHT := 5
-	for _, devFile := range devFileTypes {
+	for index, devFile := range devFileTypes {
 		score := 0
 		if strings.EqualFold(devFile.Language, language.Name) || matches(language.Aliases, devFile.Language) {
 			score++
@@ -85,7 +85,7 @@ func selectDevFileByLanguage(language language.Language, devFileTypes []DevFileT
 		}
 		if score > scoreTarget {
 			scoreTarget = score
-			devfileTarget = devFile
+			devfileTarget = index
 		}
 	}
 

@@ -78,7 +78,7 @@ func TestDetectGoDevfile(t *testing.T) {
 }
 
 func detectDevFile(t *testing.T, projectName string, devFileName string) {
-	detectDevFileFunc := func(devFileTypes []recognizer.DevFileType) (recognizer.DevFileType, error) {
+	detectDevFileFunc := func(devFileTypes []recognizer.DevFileType) (int, error) {
 		testingProjectPath := GetTestProjectPath(projectName)
 		return recognizer.SelectDevFileFromTypes(testingProjectPath, devFileTypes)
 	}
@@ -94,21 +94,21 @@ func detectDevFileUsingLanguages(t *testing.T, projectName string, languages []l
 			t.Error(err)
 		}
 	}
-	detectDevFileFunc := func(devFileTypes []recognizer.DevFileType) (recognizer.DevFileType, error) {
+	detectDevFileFunc := func(devFileTypes []recognizer.DevFileType) (int, error) {
 		return recognizer.SelectDevFileUsingLanguagesFromTypes(languages, devFileTypes)
 	}
 	detectDevFileInner(t, devFileName, detectDevFileFunc)
 }
 
-func detectDevFileInner(t *testing.T, devFileName string, detectFuncInner func([]recognizer.DevFileType) (recognizer.DevFileType, error)) {
+func detectDevFileInner(t *testing.T, devFileName string, detectFuncInner func([]recognizer.DevFileType) (int, error)) {
 	devFileTypes := getDevFileTypes()
-	devFileType, err := detectFuncInner(devFileTypes)
+	devFileTarget, err := detectFuncInner(devFileTypes)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if devFileType.Name != devFileName {
-		t.Error("Expected value " + devFileName + " but it was" + devFileType.Name)
+	if devFileTypes[devFileTarget].Name != devFileName {
+		t.Error("Expected value " + devFileName + " but it was" + devFileTypes[devFileTarget].Name)
 	}
 }
 
