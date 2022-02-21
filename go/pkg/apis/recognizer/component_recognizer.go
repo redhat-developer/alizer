@@ -189,6 +189,9 @@ func detectComponents(files []string) ([]Component, error) {
 	var components []Component
 	for _, file := range files {
 		dir, fileName := filepath.Split(file)
+		if dir == "" {
+			dir = "./"
+		}
 		languages, err := getLanguagesByConfigurationFile(configurationPerLanguage, fileName)
 		if err != nil {
 			continue
