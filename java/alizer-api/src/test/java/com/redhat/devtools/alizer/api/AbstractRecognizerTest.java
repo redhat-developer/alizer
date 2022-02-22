@@ -31,6 +31,7 @@ public abstract class AbstractRecognizerTest {
     protected static DevfileType CSHARP;
     protected static DevfileType NETCORE3_1;
     protected static DevfileType FSHARP;
+    protected static DevfileType GO;
 
     @BeforeClass
     public static void init() {
@@ -47,7 +48,8 @@ public abstract class AbstractRecognizerTest {
                 PYTHON = createDevfileType("python", "python", "python", "Python", "pip"),
                 CSHARP = createDevfileType("csharp", "c#", "csharp", "csharp", ".net"),
                 FSHARP = createDevfileType("fsharp", "f#", "fsharp", "dotnet", "fsharp"),
-                NETCORE3_1 = createDevfileType("netcore3.1", "dotnet", "dotnet", "dotnetcore-3.1", ".net")
+                NETCORE3_1 = createDevfileType("netcore3.1", "dotnet", "dotnet", "dotnetcore-3.1", ".net"),
+                GO = createDevfileType("go", "go", "go", "go")
         );
     }
 

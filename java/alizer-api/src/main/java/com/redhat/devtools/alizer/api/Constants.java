@@ -19,6 +19,7 @@ public class Constants {
     public static final String CSHARP = "C#";
     public static final String FSHARP = "F#";
     public static final String VBNET = "VISUAL BASIC .NET";
+    public static final String GO = "Go";
 
 
     public static final String QUARKUS = "Quarkus";
@@ -29,4 +30,10 @@ public class Constants {
     public static final String DJANGO = "Django";
     public static final String EXPRESS = "Express";
     public static final String REACT = "React";
+    public static final String GIN = "Gin";
+    public static final String FAST_HTTP = "FastHttp";
+    public static final String ECHO = "Echo";
+    public static final String BEEGO = "Beego";
+    public static final String GOFIBER = "GoFiber";
+    public static final String MUX = "Mux";
 }
