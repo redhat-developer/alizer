@@ -33,7 +33,7 @@ func Analyze(path string) ([]language.Language, error) {
 	languagesFile := langfile.Get()
 	languagesDetected := make(map[string]languageItem)
 
-	paths, err := getFilePathsFromRoot(path)
+	paths, err := GetFilePathsFromRoot(path)
 	if err != nil {
 		return []language.Language{}, err
 	}
@@ -110,7 +110,7 @@ func extractExtensions(paths []string) map[string]int {
 	return extensions
 }
 
-func getFilePathsFromRoot(root string) ([]string, error) {
+func GetFilePathsFromRoot(root string) ([]string, error) {
 	var files []string
 	ignoreFile, errorIgnoreFile := getIgnoreFile(root)
 	errWalk := filepath.Walk(root,
