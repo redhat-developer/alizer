@@ -16,7 +16,7 @@ Alizer (which stands for Application Analyzer) is a utilily whose goal is to ext
 Also based on these informations, Alizer can also select one devfile (cloud workspace file) from a list of available devfiles 
 and/or detect components (the concept of component is taken from Odo and its definition can be read on [odo.dev](https://odo.dev/docs/getting-started/basics/#component)).
 
-Alizer comes in 4 different formats:
+Alizer comes in 4 different implementations:
 
 - Java library
 - CLI

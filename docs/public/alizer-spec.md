@@ -10,7 +10,7 @@ Currently, Alizer provides 3 detection options:
 - DevFile Detection
 - Component Detection
 
-in 4 different formats:
+in 4 different implementations:
 
 - Java library
 - CLI
