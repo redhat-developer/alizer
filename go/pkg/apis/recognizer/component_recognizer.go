@@ -244,7 +244,7 @@ func detectComponent(root string, configLanguages []string) (Component, error) {
 	}
 	languages = getLanguagesWeightedByConfigFile(languages, configLanguages)
 	if len(languages) > 0 {
-		if mainLang := languages[0]; mainLang.CanBeComponent && len(mainLang.Frameworks) > 0 {
+		if mainLang := languages[0]; mainLang.CanBeComponent {
 			return Component{
 				Path:      root,
 				Languages: languages,
