@@ -25,8 +25,8 @@ import (
 )
 
 type languageItem struct {
-	item       langfile.LanguageItem
-	percentage int
+	item   langfile.LanguageItem
+	weight int
 }
 
 func Analyze(path string) ([]model.Language, error) {
@@ -58,8 +58,8 @@ func Analyze(path string) ([]model.Language, error) {
 					}
 				}
 				tmpLanguageItem := languageItem{languageFileItem, 0}
-				percentage := languagesDetected[tmpLanguageItem.item.Name].percentage + extensionsGrouped[extension]
-				tmpLanguageItem.percentage = percentage
+				weight := languagesDetected[tmpLanguageItem.item.Name].weight + extensionsGrouped[extension]
+				tmpLanguageItem.weight = weight
 				languagesDetected[tmpLanguageItem.item.Name] = tmpLanguageItem
 				extensionHasProgrammingLanguage = true
 			}
@@ -72,16 +72,16 @@ func Analyze(path string) ([]model.Language, error) {
 
 	var languagesFound []model.Language
 	for name, item := range languagesDetected {
-		tmpPercentage := float64(item.percentage) / float64(totalProgrammingOccurrences)
-		tmpPercentage = float64(int(tmpPercentage*10000)) / 10000
-		if tmpPercentage > 0.02 {
+		tmpWeight := float64(item.weight) / float64(totalProgrammingOccurrences)
+		tmpWeight = float64(int(tmpWeight*10000)) / 10000
+		if tmpWeight > 0.02 {
 			tmpLanguage := model.Language{
-				Name:              name,
-				Aliases:           item.item.Aliases,
-				UsageInPercentage: tmpPercentage * 100,
-				Frameworks:        []string{},
-				Tools:             []string{},
-				CanBeComponent:    item.item.Component}
+				Name:           name,
+				Aliases:        item.item.Aliases,
+				Weight:         tmpWeight * 100,
+				Frameworks:     []string{},
+				Tools:          []string{},
+				CanBeComponent: item.item.Component}
 			langEnricher := enricher.GetEnricherByLanguage(name)
 			if langEnricher != nil {
 				langEnricher.DoEnrichLanguage(&tmpLanguage, &paths)
@@ -91,7 +91,7 @@ func Analyze(path string) ([]model.Language, error) {
 	}
 
 	sort.SliceStable(languagesFound, func(i, j int) bool {
-		return languagesFound[i].UsageInPercentage > languagesFound[j].UsageInPercentage
+		return languagesFound[i].Weight > languagesFound[j].Weight
 	})
 
 	return languagesFound, nil

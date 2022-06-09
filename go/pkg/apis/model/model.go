@@ -11,12 +11,12 @@
 package model
 
 type Language struct {
-	Name              string
-	Aliases           []string
-	UsageInPercentage float64
-	Frameworks        []string
-	Tools             []string
-	CanBeComponent    bool
+	Name           string
+	Aliases        []string
+	Weight         float64
+	Frameworks     []string
+	Tools          []string
+	CanBeComponent bool
 }
 
 type Component struct {
