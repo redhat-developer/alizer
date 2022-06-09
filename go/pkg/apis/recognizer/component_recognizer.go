@@ -237,12 +237,12 @@ func detectComponentByFolderAnalysis(root string, configLanguages []string) (mod
 
 }
 
-func detectComponentByAnalyzingConfigFile(file string, language string) (model.Component, error) {
-	if !isConfigurationValid(language, file) {
+func detectComponentByAnalyzingConfigFile(file string, mainLang string) (model.Component, error) {
+	if !isConfigurationValid(mainLang, file) {
 		return model.Component{}, errors.New("language not valid for component detection")
 	}
 	dir, _ := utils.NormalizeSplit(file)
-	lang, err := AnalyzeFile(file, language)
+	lang, err := AnalyzeFile(file, mainLang)
 	if err != nil {
 		return model.Component{}, err
 	}

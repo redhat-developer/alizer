@@ -107,6 +107,7 @@ func AnalyzeFile(configFile string, targetLanguage string) (model.Language, erro
 		Aliases:        lang.Aliases,
 		Frameworks:     []string{},
 		Tools:          []string{},
+		Weight:         100,
 		CanBeComponent: true}
 	langEnricher := enricher.GetEnricherByLanguage(targetLanguage)
 	if langEnricher != nil {
