@@ -11,6 +11,8 @@
 package recognizer
 
 import (
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
@@ -45,6 +47,50 @@ func TestComponentDetectionOnDoubleComponents(t *testing.T) {
 	isComponentsInProject(t, "double-components", 2, "javascript")
 }
 
+func TestComponentDetectionWithGitIgnoreRule(t *testing.T) {
+	testingProjectPath := GetTestProjectPath("component-wrapped-in-folder")
+	files, err := recognizer.GetFilePathsFromRoot(testingProjectPath)
+	if err != nil {
+		t.Error(err)
+	}
+
+	components := getComponentsFromFiles(t, files)
+
+	if len(components) != 1 {
+		t.Errorf("Expected 1 components but found " + strconv.Itoa(len(components)))
+	}
+
+	//now add a gitIgnore with a rule to exclude the only component found
+	gitIgnorePath := filepath.Join(testingProjectPath, ".gitignore")
+	err = updateContent(gitIgnorePath, []byte("**/quarkus/"))
+	if err != nil {
+		t.Error(err)
+	}
+	files, err = recognizer.GetFilePathsFromRoot(testingProjectPath)
+	if err != nil {
+		t.Error(err)
+	}
+	componentsWithUpdatedGitIgnore := getComponentsFromFiles(t, files)
+	//delete gitignore file
+	os.Remove(gitIgnorePath)
+
+	if len(componentsWithUpdatedGitIgnore) != 0 {
+		t.Errorf("Expected 0 components but found " + strconv.Itoa(len(componentsWithUpdatedGitIgnore)))
+	}
+}
+
+func updateContent(filePath string, data []byte) error {
+	f, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	if _, err := f.Write(data); err != nil {
+		return err
+	}
+	return nil
+}
+
 func TestComponentDetectionMultiProjects(t *testing.T) {
 	components := getComponentsFromProject(t, "")
 	nComps := 13
@@ -57,6 +103,15 @@ func getComponentsFromProject(t *testing.T, project string) []recognizer.Compone
 	testingProjectPath := GetTestProjectPath(project)
 
 	components, err := recognizer.DetectComponents(testingProjectPath)
+	if err != nil {
+		t.Error(err)
+	}
+
+	return components
+}
+
+func getComponentsFromFiles(t *testing.T, files []string) []recognizer.Component {
+	components, err := recognizer.DetectComponentsFromFilesList(files)
 	if err != nil {
 		t.Error(err)
 	}

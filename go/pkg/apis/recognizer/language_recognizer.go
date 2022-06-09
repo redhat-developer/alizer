@@ -11,6 +11,7 @@
 package recognizer
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -20,6 +21,7 @@ import (
 	enricher "github.com/redhat-developer/alizer/go/pkg/apis/enricher"
 	"github.com/redhat-developer/alizer/go/pkg/apis/language"
 	langfile "github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
+	ignore "github.com/sabhiram/go-gitignore"
 )
 
 type languageItem struct {
@@ -31,7 +33,7 @@ func Analyze(path string) ([]language.Language, error) {
 	languagesFile := langfile.Get()
 	languagesDetected := make(map[string]languageItem)
 
-	paths, err := getFilePathsFromRoot(path)
+	paths, err := GetFilePathsFromRoot(path)
 	if err != nil {
 		return []language.Language{}, err
 	}
@@ -108,10 +110,14 @@ func extractExtensions(paths []string) map[string]int {
 	return extensions
 }
 
-func getFilePathsFromRoot(root string) ([]string, error) {
+func GetFilePathsFromRoot(root string) ([]string, error) {
 	var files []string
-	err := filepath.Walk(root,
+	ignoreFile, errorIgnoreFile := getIgnoreFile(root)
+	errWalk := filepath.Walk(root,
 		func(path string, info os.FileInfo, err error) error {
+			if errorIgnoreFile == nil && ignoreFile.MatchesPath(path) {
+				return filepath.SkipDir
+			}
 			if !info.IsDir() && isFileInRoot(root, path) {
 				files = append([]string{path}, files...)
 			} else {
@@ -119,7 +125,15 @@ func getFilePathsFromRoot(root string) ([]string, error) {
 			}
 			return nil
 		})
-	return files, err
+	return files, errWalk
+}
+
+func getIgnoreFile(root string) (*ignore.GitIgnore, error) {
+	gitIgnorePath := filepath.Join(root, ".gitignore")
+	if _, err := os.Stat(gitIgnorePath); err == nil {
+		return ignore.CompileIgnoreFile(gitIgnorePath)
+	}
+	return nil, errors.New("no git ignore file found")
 }
 
 func isFileInRoot(root string, file string) bool {

@@ -32,7 +32,7 @@ func DetectComponentsInRoot(path string) ([]Component, error) {
 	if err != nil {
 		return []Component{}, err
 	}
-	components, err := detectComponents(files)
+	components, err := DetectComponentsFromFilesList(files)
 	if err != nil {
 		return []Component{}, err
 	}
@@ -41,11 +41,11 @@ func DetectComponentsInRoot(path string) ([]Component, error) {
 }
 
 func DetectComponents(path string) ([]Component, error) {
-	files, err := getFilePathsFromRoot(path)
+	files, err := GetFilePathsFromRoot(path)
 	if err != nil {
 		return []Component{}, err
 	}
-	components, err := detectComponents(files)
+	components, err := DetectComponentsFromFilesList(files)
 	if err != nil {
 		return []Component{}, err
 	}
@@ -178,13 +178,13 @@ func isFirstPathParentOfSecond(firstPath string, secondPath string) bool {
 }
 
 /*
-	detectComponents detect components by analyzing all files
+	DetectComponentsFromFilesList detect components by analyzing all files
 	Parameters:
 		files: list of files to analyze
 	Returns:
 		list of components detected or err if any error occurs
 */
-func detectComponents(files []string) ([]Component, error) {
+func DetectComponentsFromFilesList(files []string) ([]Component, error) {
 	configurationPerLanguage := langfiles.Get().GetConfigurationPerLanguageMapping()
 	var components []Component
 	for _, file := range files {
