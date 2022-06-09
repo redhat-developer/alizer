@@ -128,12 +128,7 @@ func getComponentsFromProject(t *testing.T, project string) []model.Component {
 }
 
 func getComponentsFromFiles(t *testing.T, files []string) []model.Component {
-	components, err := recognizer.DetectComponentsFromFilesList(files)
-	if err != nil {
-		t.Error(err)
-	}
-
-	return components
+	return recognizer.DetectComponentsFromFilesList(files)
 }
 
 func isComponentsInProject(t *testing.T, project string, expectedNumber int, expectedLanguage string, expectedProjectName string) {

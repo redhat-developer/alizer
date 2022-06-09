@@ -138,3 +138,11 @@ func Contains(s []string, str string) bool {
 
 	return false
 }
+
+func NormalizeSplit(file string) (string, string) {
+	dir, fileName := filepath.Split(file)
+	if dir == "" {
+		dir = "./"
+	}
+	return dir, fileName
+}
