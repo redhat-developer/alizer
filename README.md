@@ -7,14 +7,25 @@
 
 ## Overview
 
-Alizer (which stands for Application Analyzer) is a utilily whose goal is to extract information about an application source code. Such information is:
+Alizer (which stands for Application Analyzer) is a utilily whose goal is to extract informations about an application source code. Such informations are:
 
-- source langage
-- framework used inside the application
+- source languages
+- frameworks used inside the application
 - tools used to build the application
 
 Also based on these informations, Alizer can also select one devfile (cloud workspace file) from a list of available devfiles 
 and/or detect components (the concept of component is taken from Odo and its definition can be read on [odo.dev](https://odo.dev/docs/getting-started/basics/#component)).
+
+Alizer comes in 4 different implementations:
+
+- Java library
+- CLI
+- NPM package
+- Go library
+
+so that it can be integrated easily in other projects.
+
+NOTE: Not all implementations support the same features. Please check the table at [alizer-spec](https://github.com/redhat-developer/alizer/blob/main/docs/public/alizer-spec.md#feature-table) for a detailed overview.
 
 ## Usage
 
