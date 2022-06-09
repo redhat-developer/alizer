@@ -45,7 +45,9 @@ The result is an ordered list of information for each language detected in the s
 - *name*: the name of the detected language
 - *framework*: a list of detected frameworks (Quarkus, Flash,...) used by the application
 - *tools*: a list of tools (Maven,...) used by the application
-- *usageInPercentage*: a double value that represents the language weight compared to the others.
+- *weight*: a double value that represents the language weight compared to the others.
+
+NOTE: the sum of all weights can be over 100 because a file may be associated to multiple languages and Alizer may not be able to detect it precisely. E.g. a SQL script could be associated to SPLPL, TSQL, PLSQL languages so Alizer will return all 3 with the same weight.
 
 ### Devfile selection
 
