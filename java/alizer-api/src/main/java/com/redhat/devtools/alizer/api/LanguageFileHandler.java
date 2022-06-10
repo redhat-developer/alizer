@@ -51,9 +51,12 @@ public class LanguageFileHandler {
 
     private void initLanguages() {
         try {
-            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_YAML_PATH), Charset.defaultCharset());
-            JsonNode node = YAML_MAPPER.readTree(yamlAsString);
-            for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
+            String languagesYamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_YAML_PATH), Charset.defaultCharset());
+            JsonNode languagesAsJsonNode = YAML_MAPPER.readTree(languagesYamlAsString);
+
+            String customizationYamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_CUSTOMIZATION_YAML_PATH), Charset.defaultCharset());
+            JsonNode customizationAsJsonNode = YAML_MAPPER.readTree(customizationYamlAsString);
+            for (Iterator<Map.Entry<String, JsonNode>> it = languagesAsJsonNode.fields(); it.hasNext(); ) {
                 Map.Entry<String, JsonNode> entry = it.next();
                 String nameLanguage = entry.getKey();
                 JsonNode languageAttributes = entry.getValue();
@@ -61,39 +64,31 @@ public class LanguageFileHandler {
                 String group = languageAttributes.has("group") ? languageAttributes.get("group").asText() : "";
                 List<String> aliases = getValueAsList(languageAttributes, "aliases");
                 LanguageFileItem languageFileItem = new LanguageFileItem(nameLanguage, aliases, type, group);
-                languages.put(nameLanguage, languageFileItem);
-                populateLanguageList(extensionXLanguage, languageAttributes, "extensions", languageFileItem);
+                customizeLanguage(customizationAsJsonNode, languageFileItem);
+                if (!languageFileItem.isDisabled()) {
+                    languages.put(nameLanguage, languageFileItem);
+                    populateLanguageList(extensionXLanguage, languageAttributes, "extensions", languageFileItem);
+                }
             }
-            customizeLanguages();
         } catch (IOException e) {
             logger.warn(e.getLocalizedMessage(), e);
         }
     }
 
-    private void customizeLanguages() {
-        try {
-            String yamlAsString = IOUtils.toString(LanguageFileHandler.class.getResourceAsStream("/" + LANGUAGES_CUSTOMIZATION_YAML_PATH), Charset.defaultCharset());
-            JsonNode node = YAML_MAPPER.readTree(yamlAsString);
-            for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
-                Map.Entry<String, JsonNode> entry = it.next();
-                String nameLanguage = entry.getKey();
-                LanguageFileItem languageFileItem = languages.get(nameLanguage);
-                if (languageFileItem != null) {
-                    JsonNode languageAttributes = entry.getValue();
-                    List<String> configurationFiles = getValueAsList(languageAttributes, "configuration_files");
-                    List<String> excludeFolders = getValueAsList(languageAttributes, "exclude_folders");
-                    List<String> aliases = getValueAsList(languageAttributes, "aliases");
-                    boolean canBeComponent = languageAttributes.has("component") && languageAttributes.get("component").asBoolean();
+    private void customizeLanguage(JsonNode customizationsNode, LanguageFileItem languageFileItem) {
+        JsonNode languageCustomization = customizationsNode.findValue(languageFileItem.getName());
+        if (languageCustomization != null) {
+            List<String> configurationFiles = getValueAsList(languageCustomization, "configuration_files");
+            List<String> excludeFolders = getValueAsList(languageCustomization, "exclude_folders");
+            List<String> aliases = getValueAsList(languageCustomization, "aliases");
+            boolean canBeComponent = languageCustomization.has("component") && languageCustomization.get("component").asBoolean();
+            boolean disabled = languageCustomization.has("disable_detection") && languageCustomization.get("disable_detection").asBoolean();
 
-                    languageFileItem.setConfigurationFiles(configurationFiles);
-                    languageFileItem.setExcludeFolders(excludeFolders);
-                    languageFileItem.setCanBeComponent(canBeComponent);
-                    languageFileItem.addAliases(aliases);
-                    languages.put(nameLanguage, languageFileItem);
-                }
-            }
-        } catch (IOException e) {
-            logger.warn(e.getLocalizedMessage(), e);
+            languageFileItem.setConfigurationFiles(configurationFiles);
+            languageFileItem.setExcludeFolders(excludeFolders);
+            languageFileItem.setCanBeComponent(canBeComponent);
+            languageFileItem.addAliases(aliases);
+            languageFileItem.setDisabled(disabled);
         }
     }
 
