@@ -22,6 +22,7 @@ public class LanguageFileItem {
     private String group;
     private List<String> configurationFiles, excludeFolders;
     private boolean canBeComponent;
+    private boolean disabled;
 
     public LanguageFileItem(String name, List<String> aliases, String type, String group) {
         this.name = name;
@@ -31,6 +32,7 @@ public class LanguageFileItem {
         this.configurationFiles = new ArrayList<>();
         this.excludeFolders = new ArrayList<>();
         this.canBeComponent = false;
+        this.disabled = false;
     }
 
     public String getName() {
@@ -87,5 +89,13 @@ public class LanguageFileItem {
 
     public void setCanBeComponent(boolean canBeComponent) {
         this.canBeComponent = canBeComponent;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }
