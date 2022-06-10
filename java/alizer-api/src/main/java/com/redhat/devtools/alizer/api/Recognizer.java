@@ -26,7 +26,7 @@ public class Recognizer {
         return Files.walk(rootDirectory, Integer.MAX_VALUE).filter(Files::isRegularFile).map(Path::toFile).collect(Collectors.toList());
     }
 
-    protected List<File> getFilesInDirectory(Path dir) throws IOException {
+    protected List<File> getFilesInDirectory(Path dir) {
         File[] files = dir.toFile().listFiles();
         return files != null
                 ? new ArrayList<>(Arrays.asList(files))

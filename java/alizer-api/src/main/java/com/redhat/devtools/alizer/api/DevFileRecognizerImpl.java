@@ -13,6 +13,14 @@ public class DevFileRecognizerImpl extends Recognizer implements DevFileRecogniz
         this.builder = builder;
     }
 
+    /**
+     * It tries to detect a component in the root and return a devfile for it. If there is no component in root,
+     * it start looking for some components within the sub-folders. If there are none, it uses the outcome of analyze.
+     * @param srcPath path (root) where to start the search
+     * @param devfileTypes list of all devfileTypes to pick a devfile from
+     * @return the devfile that matches the project the most
+     * @throws IOException if an error occurred
+     */
     public <T extends DevfileType> T selectDevFileFromTypes(String srcPath, List<T> devfileTypes) throws IOException {
         ComponentRecognizer componentRecognizer = builder.createComponentRecognizer();
         List<Component> componentsInRoot = componentRecognizer.analyzeRoot(srcPath);
