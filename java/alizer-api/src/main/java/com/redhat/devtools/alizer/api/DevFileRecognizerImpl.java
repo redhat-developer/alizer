@@ -15,9 +15,14 @@ public class DevFileRecognizerImpl extends Recognizer implements DevFileRecogniz
 
     public <T extends DevfileType> T selectDevFileFromTypes(String srcPath, List<T> devfileTypes) throws IOException {
         ComponentRecognizer componentRecognizer = builder.createComponentRecognizer();
-        List<Component> components = componentRecognizer.analyze(srcPath);
-        if (!components.isEmpty()) {
-            return selectDevFileFromTypes(components.get(0).getLanguages(), devfileTypes);
+        List<Component> componentsInRoot = componentRecognizer.analyzeRoot(srcPath);
+        if (!componentsInRoot.isEmpty()) {
+            return selectDevFileFromTypes(componentsInRoot.get(0).getLanguages(), devfileTypes);
+        }
+
+        List<Component> componentsWithinFullProject = componentRecognizer.analyze(srcPath);
+        if (!componentsWithinFullProject.isEmpty()) {
+            return selectDevFileFromTypes(componentsWithinFullProject.get(0).getLanguages(), devfileTypes);
         }
 
         LanguageRecognizer languageRecognizer = builder.createLanguageRecognizer();

@@ -14,5 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ComponentRecognizer {
+    List<Component> analyzeRoot(String path) throws IOException;
     List<Component> analyze(String path) throws IOException;
 }

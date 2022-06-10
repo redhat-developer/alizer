@@ -34,6 +34,11 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
         super(builder);
     }
 
+    public List<Component> analyzeRoot(String path) throws IOException {
+        List<File> files = getFilesInDirectory(Paths.get(path));
+        return detectComponents(files);
+    }
+
     public List<Component> analyze(String path) throws IOException {
         List<File> files = getFiles(Paths.get(path));
         List<Component> components = detectComponents(files);
@@ -165,8 +170,7 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
             return false;
         }
         Language mainLanguage = languages.get(0);
-        return mainLanguage.canBeComponent() &&
-                !mainLanguage.getFrameworks().isEmpty();
+        return mainLanguage.canBeComponent();
     }
 
     /**
