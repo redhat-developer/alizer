@@ -8,7 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package recognizer
+package enricher
 
 import (
 	"errors"
@@ -23,7 +23,9 @@ import (
 type GoEnricher struct{}
 
 type GoFrameworkDetector interface {
+	GetSupportedFrameworks() []string
 	DoFrameworkDetection(language *model.Language, goMod *modfile.File)
+	DoPortsDetection(component *model.Component)
 }
 
 func getGoFrameworkDetectors() []GoFrameworkDetector {
@@ -59,6 +61,19 @@ func (j GoEnricher) DoEnrichLanguage(language *model.Language, files *[]string) 
 func (j GoEnricher) DoEnrichComponent(component *model.Component) {
 	projectName := GetDefaultProjectName(component.Path)
 	component.Name = projectName
+
+	ports := GetPortsFromDockerFile(component.Path)
+	if len(ports) > 0 {
+		component.Ports = ports
+		return
+	}
+	for _, detector := range getGoFrameworkDetectors() {
+		for _, framework := range component.Languages[0].Frameworks {
+			if utils.Contains(detector.GetSupportedFrameworks(), framework) {
+				detector.DoPortsDetection(component)
+			}
+		}
+	}
 }
 
 func (j GoEnricher) IsConfigValidForComponentDetection(language string, config string) bool {

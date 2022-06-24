@@ -78,7 +78,7 @@ func TestDetectGoDevfile(t *testing.T) {
 }
 
 func detectDevFile(t *testing.T, projectName string, devFileName string) {
-	detectDevFileFunc := func(devFileTypes []recognizer.DevFileType) (int, error) {
+	detectDevFileFunc := func(devFileTypes []model.DevFileType) (int, error) {
 		testingProjectPath := GetTestProjectPath(projectName)
 		return recognizer.SelectDevFileFromTypes(testingProjectPath, devFileTypes)
 	}
@@ -94,13 +94,13 @@ func detectDevFileUsingLanguages(t *testing.T, projectName string, languages []m
 			t.Error(err)
 		}
 	}
-	detectDevFileFunc := func(devFileTypes []recognizer.DevFileType) (int, error) {
+	detectDevFileFunc := func(devFileTypes []model.DevFileType) (int, error) {
 		return recognizer.SelectDevFileUsingLanguagesFromTypes(languages, devFileTypes)
 	}
 	detectDevFileInner(t, devFileName, detectDevFileFunc)
 }
 
-func detectDevFileInner(t *testing.T, devFileName string, detectFuncInner func([]recognizer.DevFileType) (int, error)) {
+func detectDevFileInner(t *testing.T, devFileName string, detectFuncInner func([]model.DevFileType) (int, error)) {
 	devFileTypes := getDevFileTypes()
 	devFileTarget, err := detectFuncInner(devFileTypes)
 	if err != nil {
@@ -112,8 +112,8 @@ func detectDevFileInner(t *testing.T, devFileName string, detectFuncInner func([
 	}
 }
 
-func getDevFileTypes() []recognizer.DevFileType {
-	return []recognizer.DevFileType{
+func getDevFileTypes() []model.DevFileType {
+	return []model.DevFileType{
 		{
 			Name:        "java",
 			Language:    "java",

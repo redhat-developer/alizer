@@ -59,12 +59,15 @@ The result is a list of components where each component consists of:
 - *name*: name of the component
 - *path*: root of the component 
 - *languages*: list of languages belonging to the component ordered by their relevance.
+- *ports*: list of ports used by the component
 
 ```
 import "github.com/redhat-developer/alizer/pkg/apis/recognizer"
 
 components, err := recognizer.DetectComponents("./")
 ```
+
+Port detection is a long and consuming job and because of the different algorithm used for each different framework it deserves its own section. For more info check [port detection](docs/port_detection.md)
 
 For more info about name detection plase check the [name detection](docs/name_detection.md) doc.
 ### Devfile Detection

@@ -8,7 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package recognizer
+package enricher
 
 import (
 	"os"
@@ -45,7 +45,7 @@ func (j JavaScriptEnricher) DoEnrichComponent(component *model.Component) {
 	projectName := ""
 	packageJsonPath := filepath.Join(component.Path, "package.json")
 	if _, err := os.Stat(packageJsonPath); err == nil {
-		packageJson, err := utils.GetPackageJsonFile(packageJsonPath)
+		packageJson, err := utils.GetPackageJsonSchemaFromFile(packageJsonPath)
 		if err == nil {
 			projectName = packageJson.Name
 		}
@@ -54,6 +54,19 @@ func (j JavaScriptEnricher) DoEnrichComponent(component *model.Component) {
 		projectName = GetDefaultProjectName(component.Path)
 	}
 	component.Name = projectName
+
+	ports := GetPortsFromDockerFile(component.Path)
+	if len(ports) > 0 {
+		component.Ports = ports
+		return
+	}
+	for _, detector := range getJavaScriptFrameworkDetectors() {
+		for _, framework := range component.Languages[0].Frameworks {
+			if utils.Contains(detector.GetSupportedFrameworks(), framework) {
+				detector.DoPortsDetection(component)
+			}
+		}
+	}
 }
 
 func (j JavaScriptEnricher) IsConfigValidForComponentDetection(language string, config string) bool {

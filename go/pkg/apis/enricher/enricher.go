@@ -8,14 +8,17 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package recognizer
+package enricher
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
+	"github.com/moby/buildkit/frontend/dockerfile/parser"
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
 )
@@ -28,11 +31,15 @@ type Enricher interface {
 }
 
 type FrameworkDetectorWithConfigFile interface {
+	GetSupportedFrameworks() []string
 	DoFrameworkDetection(language *model.Language, config string)
+	DoPortsDetection(component *model.Component)
 }
 
 type FrameworkDetectorWithoutConfigFile interface {
+	GetSupportedFrameworks() []string
 	DoFrameworkDetection(language *model.Language, files *[]string)
+	DoPortsDetection(component *model.Component)
 }
 
 /*
@@ -111,4 +118,33 @@ func isLanguageSupportedByEnricher(nameLanguage string, enricher Enricher) bool 
 
 func GetDefaultProjectName(path string) string {
 	return filepath.Base(path)
+}
+
+func GetPortsFromDockerFile(root string) []int {
+	file, err := os.Open(filepath.Join(root, "Dockerfile"))
+	if err == nil {
+		return getPortsFromReader(file)
+	}
+	defer file.Close()
+	return []int{}
+}
+
+func getPortsFromReader(file io.Reader) []int {
+	ports := []int{}
+	res, err := parser.Parse(file)
+	if err != nil {
+		return ports
+	}
+
+	for _, child := range res.AST.Children {
+		if strings.ToLower(child.Value) == "expose" {
+			for n := child.Next; n != nil; n = n.Next {
+				if port, err := strconv.Atoi(n.Value); err == nil {
+					ports = append(ports, port)
+				}
+
+			}
+		}
+	}
+	return ports
 }

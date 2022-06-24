@@ -8,11 +8,12 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package recognizer
+package enricher
 
 import (
 	framework "github.com/redhat-developer/alizer/go/pkg/apis/enricher/framework/python"
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
+	utils "github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 type PythonEnricher struct{}
@@ -35,6 +36,19 @@ func (p PythonEnricher) DoEnrichLanguage(language *model.Language, files *[]stri
 func (j PythonEnricher) DoEnrichComponent(component *model.Component) {
 	projectName := GetDefaultProjectName(component.Path)
 	component.Name = projectName
+
+	ports := GetPortsFromDockerFile(component.Path)
+	if len(ports) > 0 {
+		component.Ports = ports
+		return
+	}
+	for _, detector := range getPythonFrameworkDetectors() {
+		for _, framework := range component.Languages[0].Frameworks {
+			if utils.Contains(detector.GetSupportedFrameworks(), framework) {
+				detector.DoPortsDetection(component)
+			}
+		}
+	}
 }
 
 func (p PythonEnricher) IsConfigValidForComponentDetection(language string, config string) bool {

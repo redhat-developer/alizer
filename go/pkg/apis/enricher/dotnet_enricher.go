@@ -8,7 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package recognizer
+package enricher
 
 import (
 	framework "github.com/redhat-developer/alizer/go/pkg/apis/enricher/framework/dotnet"
@@ -38,6 +38,12 @@ func (j DotNetEnricher) DoEnrichLanguage(language *model.Language, files *[]stri
 func (j DotNetEnricher) DoEnrichComponent(component *model.Component) {
 	projectName := GetDefaultProjectName(component.Path)
 	component.Name = projectName
+
+	ports := GetPortsFromDockerFile(component.Path)
+	if len(ports) > 0 {
+		component.Ports = ports
+		return
+	}
 }
 
 func (j DotNetEnricher) IsConfigValidForComponentDetection(language string, config string) bool {

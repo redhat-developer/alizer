@@ -19,6 +19,7 @@ import (
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
+	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 func TestComponentDetectionOnMicronaut(t *testing.T) {
@@ -66,7 +67,7 @@ func TestComponentDetectionOnDoubleComponents(t *testing.T) {
 
 func TestComponentDetectionWithGitIgnoreRule(t *testing.T) {
 	testingProjectPath := GetTestProjectPath("component-wrapped-in-folder")
-	files, err := recognizer.GetFilePathsFromRoot(testingProjectPath)
+	files, err := utils.GetFilePathsFromRoot(testingProjectPath)
 	if err != nil {
 		t.Error(err)
 	}
@@ -83,7 +84,7 @@ func TestComponentDetectionWithGitIgnoreRule(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	files, err = recognizer.GetFilePathsFromRoot(testingProjectPath)
+	files, err = utils.GetFilePathsFromRoot(testingProjectPath)
 	if err != nil {
 		t.Error(err)
 	}

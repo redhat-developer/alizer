@@ -19,11 +19,12 @@ import (
 
 	enricher "github.com/redhat-developer/alizer/go/pkg/apis/enricher"
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
+	"github.com/redhat-developer/alizer/go/pkg/utils"
 	"github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
 )
 
 func DetectComponentsInRoot(path string) ([]model.Component, error) {
-	files, err := getFilePathsInRoot(path)
+	files, err := utils.GetFilePathsInRoot(path)
 	if err != nil {
 		return []model.Component{}, err
 	}
@@ -36,7 +37,7 @@ func DetectComponentsInRoot(path string) ([]model.Component, error) {
 }
 
 func DetectComponents(path string) ([]model.Component, error) {
-	files, err := GetFilePathsFromRoot(path)
+	files, err := utils.GetFilePathsFromRoot(path)
 	if err != nil {
 		return []model.Component{}, err
 	}
@@ -254,6 +255,13 @@ func detectComponent(root string, configLanguages []string) (model.Component, er
 
 }
 
+func enrichComponent(component *model.Component) {
+	componentEnricher := enricher.GetEnricherByLanguage(component.Languages[0].Name)
+	if componentEnricher != nil {
+		componentEnricher.DoEnrichComponent(component)
+	}
+}
+
 /*
 	getLanguagesWeightedByConfigFile returns the list of languages reordered by importance per config file.
 									Language found by analyzing the config file is used as target.
@@ -285,11 +293,4 @@ func isConfigurationValid(language string, file string) bool {
 		return langEnricher.IsConfigValidForComponentDetection(language, file)
 	}
 	return false
-}
-
-func enrichComponent(component *model.Component) {
-	componentEnricher := enricher.GetEnricherByLanguage(component.Languages[0].Name)
-	if componentEnricher != nil {
-		componentEnricher.DoEnrichComponent(component)
-	}
 }

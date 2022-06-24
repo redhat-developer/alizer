@@ -47,6 +47,8 @@ func main() {
 			"message": "pong",
 		})
 	})
+	var host string
+	host = ":8789"
 
 	// test 1 to 1
 	tx1 := db.Begin()
@@ -68,6 +70,6 @@ func main() {
 	//    UserModelID:userA.ID,
 	//}).First(&userAA)
 	//fmt.Println(userAA)
-
-	r.Run() // listen and serve on 0.0.0.0:8080
+	
+	r.Run(host) // listen and serve on 0.0.0.0:8080
 }

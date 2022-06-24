@@ -8,14 +8,51 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package recognizer
+package enricher
 
-import "github.com/redhat-developer/alizer/go/pkg/apis/model"
+import (
+	"github.com/redhat-developer/alizer/go/pkg/apis/model"
+	utils "github.com/redhat-developer/alizer/go/pkg/utils"
+	"gopkg.in/yaml.v3"
+)
 
 type MicronautDetector struct{}
+
+type MicronautApplicationProps struct {
+	Micronaut struct {
+		Server struct {
+			Port int `yaml:"port,omitempty"`
+		} `yaml:"server,omitempty"`
+	} `yaml:"micronaut,omitempty"`
+}
+
+func (m MicronautDetector) GetSupportedFrameworks() []string {
+	return []string{"Micronaut"}
+}
 
 func (m MicronautDetector) DoFrameworkDetection(language *model.Language, config string) {
 	if hasFwk, _ := hasFramework(config, "io.micronaut"); hasFwk {
 		language.Frameworks = append(language.Frameworks, "Micronaut")
+	}
+}
+
+func (m MicronautDetector) DoPortsDetection(component *model.Component) {
+	bytes, err := utils.ReadAnyApplicationFile(component.Path, []model.ApplicationFileInfo{
+		{
+			Dir:  "src/main/resources",
+			File: "application.yml",
+		},
+		{
+			Dir:  "src/main/resources",
+			File: "application.yaml",
+		},
+	})
+	if err != nil {
+		return
+	}
+	var data MicronautApplicationProps
+	yaml.Unmarshal(bytes, &data)
+	if utils.IsValidPort(data.Micronaut.Server.Port) {
+		component.Ports = []int{data.Micronaut.Server.Port}
 	}
 }

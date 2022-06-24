@@ -10,6 +10,8 @@
  ******************************************************************************/
 package model
 
+import "regexp"
+
 type Language struct {
 	Name           string
 	Aliases        []string
@@ -23,4 +25,32 @@ type Component struct {
 	Name      string
 	Path      string
 	Languages []Language
+	Ports     []int
+}
+
+type DevFileType struct {
+	Name        string
+	Language    string
+	ProjectType string
+	Tags        []string
+}
+
+type ApplicationFileInfo struct {
+	Dir  string
+	File string
+}
+
+type PortMatchRules struct {
+	MatchIndexRegexes []PortMatchRule
+	MatchRegexes      []PortMatchSubRule
+}
+
+type PortMatchRule struct {
+	Regex     *regexp.Regexp
+	ToReplace string
+}
+
+type PortMatchSubRule struct {
+	Regex    *regexp.Regexp
+	SubRegex *regexp.Regexp
 }

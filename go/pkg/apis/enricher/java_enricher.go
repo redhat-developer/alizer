@@ -8,7 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package recognizer
+package enricher
 
 import (
 	"os"
@@ -62,6 +62,19 @@ func (j JavaEnricher) DoEnrichComponent(component *model.Component) {
 		projectName = GetDefaultProjectName(component.Path)
 	}
 	component.Name = projectName
+
+	ports := GetPortsFromDockerFile(component.Path)
+	if len(ports) > 0 {
+		component.Ports = ports
+		return
+	}
+	for _, detector := range getJavaFrameworkDetectors() {
+		for _, framework := range component.Languages[0].Frameworks {
+			if utils.Contains(detector.GetSupportedFrameworks(), framework) {
+				detector.DoPortsDetection(component)
+			}
+		}
+	}
 }
 
 func getProjectNameGradle(root string) string {
