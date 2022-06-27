@@ -44,6 +44,11 @@ func (j DotNetEnricher) DoEnrichComponent(component *model.Component) {
 		component.Ports = ports
 		return
 	}
+	ports = GetPortsFromDockerComposeFile(component.Path)
+	if len(ports) > 0 {
+		component.Ports = ports
+		return
+	}
 }
 
 func (j DotNetEnricher) IsConfigValidForComponentDetection(language string, config string) bool {

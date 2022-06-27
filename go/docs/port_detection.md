@@ -1,15 +1,69 @@
 ## Port Detection in Alizer
 
-When performing a component detection one of the property that is being analyzed are the ports which are used by the component itself and should be opened on the container.
+Port detection is one of the step included during component detection and it refers to the ports used by the component that should be opened in the container.
 Because of the different nature of each framework, Alizer tries to use customized ways to detect them, if necessary.
 Only ports with value > 0 and < 65535 are valid.
 
 The process consists of two steps:
 1) Alizer looks for a Dockerfile in the root folder and tries to extract ports from it; if it fails it proceeds with (2)
-2) If a framework has been detected during component detection, a customized detection is performed. Below a detailed overview of the different strategies for each supported framework
+2) Alizer searches for a docker-compose file in the root folder and tries to extract port of the web service from it; if it fails it proceeds with (3)
+3) If a framework has been detected during component detection, a customized detection is performed. Below a detailed overview of the different strategies for each supported framework.
 
 If no port is found an empty list is returned.
 
+### Port detection with a docker-compose file
+
+The port detection in a `docker-compose.[yml|yaml]` file targets the `expose` and `ports` fields of the `web` service, if any. 
+If no `web` service is found no port is detected.
+
+Example of `expose` - the result is [3000,8000]
+```
+services:
+  web:
+    ...
+    expose:
+      - "3000"
+      - "8000"
+  myapp2:
+    ...
+    expose:
+      - "5000"
+```
+
+Example of short syntax `ports` (`[HOST:]CONTAINER[/PROTOCOL]`) - the result is [3000,3005,8000,8081,8002,6060]
+```
+services:
+  web:
+    ...
+  ports:
+    - "3000"                             # container port (3000), assigned to random host port
+    - "8000:8000"                        # container port (8000), assigned to given host port (8000)
+    - "127.0.0.1:8002:8002"              # container port (8002), assigned to given host port (8002) and bind to 127.0.0.1
+    - "6060:6060/udp"                    # container port (6060) restricted to UDP protocol, assigned to given host (6060)
+  myapp2:
+    ...
+    expose:
+      - "5000"
+```
+
+Example of long syntax `ports` - the result is [6060]
+```
+services:
+  web:
+    ...
+  ports:
+    - target: 6060
+      host_ip: 127.0.0.1
+      published: 6060
+      protocol: udp
+      mode: host
+  myapp2:
+    ...
+    expose:
+      - "5000"
+```
+
+### Port detection with frameworks
 ### Java Frameworks
 
 #### Micronaut
@@ -80,11 +134,11 @@ Alizer searches for any `json` file in `src/main/conf` folder and verify if a po
 
 #### Express
 
-Alizer searches for function `listen` calls as Express uses it to define `port` and `host` to use. 
+Alizer searches for function `listen` calls as Express uses it to define `port` and `host` to be used use. 
 Once all occurrences are found it tries to get the ports in three step:
 1) The port is written in clear within the `listen` function (e.g `.listen(3000)`), Alizer extracts it.
 2) The port argument is an env variable and Alizer tries to look for its value locally.
-3) The port argument is a variable and Alizer tries to find it in the code that exists before the `.listen` call
+3) The port argument is a variable set within the code and Alizer tries to find it in the code that exists before the `.listen` call
 
 Example of all 3 cases
 ```
@@ -163,7 +217,6 @@ func main() {
   s := http.Server{
     Addr:        ":8080",
     Handler:     e,
-    //ReadTimeout: 30 * time.Second, // customize http.Server timeouts
   }
   if err := s.ListenAndServe(); err != http.ErrServerClosed {
     log.Fatal(err)
@@ -204,7 +257,6 @@ If `<port>` is a variable, it tries to find its value within the code.
 srv := &http.Server{
         Handler:      r,
         Addr:         "127.0.0.1:8000",
-        // Good practice: enforce timeouts for servers you create!
         WriteTimeout: 15 * time.Second,
         ReadTimeout:  15 * time.Second,
     }

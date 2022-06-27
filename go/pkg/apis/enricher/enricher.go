@@ -15,12 +15,16 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/moby/buildkit/frontend/dockerfile/parser"
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
+	"github.com/redhat-developer/alizer/go/pkg/schema"
+	utils "github.com/redhat-developer/alizer/go/pkg/utils"
 	"github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
+	"gopkg.in/yaml.v3"
 )
 
 type Enricher interface {
@@ -143,6 +147,69 @@ func getPortsFromReader(file io.Reader) []int {
 					ports = append(ports, port)
 				}
 
+			}
+		}
+	}
+	return ports
+}
+
+func GetPortsFromDockerComposeFile(root string) []int {
+	ports := []int{}
+	bytes, err := utils.ReadAnyApplicationFile(root, []model.ApplicationFileInfo{
+		{
+			Dir:  "",
+			File: "docker-compose.yml",
+		},
+		{
+			Dir:  "",
+			File: "docker-compose.yaml",
+		},
+	})
+	if err != nil {
+		return ports
+	}
+	var data schema.DockerComposeFile
+	err = yaml.Unmarshal(bytes, &data)
+	if err != nil {
+		return ports
+	}
+	if len(data.Services.Web.Ports) > 0 {
+		re := regexp.MustCompile(`(\d+)\/*\w*$`) // ports syntax [HOST:]CONTAINER[/PROTOCOL] or map[string]interface
+		for _, portInterface := range data.Services.Web.Ports {
+			port := -1
+			switch portInterfaceValue := portInterface.(type) {
+			case string:
+				port = utils.FindPortSubmatch(re, portInterfaceValue, 1)
+			case map[string]interface{}:
+				if targetInterface, exists := portInterfaceValue["target"]; exists {
+					switch targetInterfaceValue := targetInterface.(type) {
+					case int:
+						if utils.IsValidPort(targetInterfaceValue) {
+							port = targetInterfaceValue
+						}
+					case string:
+						portValue, err := utils.GetValidPort(portInterfaceValue["target"].(string))
+						if err == nil {
+							port = portValue
+						}
+					default:
+						break
+					}
+				}
+			default:
+				break
+			}
+			if port != -1 {
+				ports = append(ports, port)
+			}
+		}
+	}
+
+	if len(data.Services.Web.Expose) > 0 {
+		for _, portValue := range data.Services.Web.Expose {
+			port, err := utils.GetValidPort(portValue)
+			if err == nil {
+				ports = append(ports, port)
 			}
 		}
 	}
