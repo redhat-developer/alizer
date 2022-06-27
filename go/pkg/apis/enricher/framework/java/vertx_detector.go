@@ -21,7 +21,7 @@ type VertxDetector struct{}
 
 type VertxConf struct {
 	Port         int          `json:"http.port,omitempty"`
-	ServerConfig ServerConfig `json:"http.server.config,omitempty"`
+	ServerConfig ServerConfig `json:"http.server,omitempty"`
 }
 type ServerConfig struct {
 	Port int `json:"http.server.port,omitempty"`
@@ -48,7 +48,10 @@ func (v VertxDetector) DoPortsDetection(component *model.Component) {
 		return
 	}
 	var data VertxConf
-	json.Unmarshal(bytes, &data)
+	err = json.Unmarshal(bytes, &data)
+	if err != nil {
+		return
+	}
 	if utils.IsValidPort(data.Port) {
 		component.Ports = []int{data.Port}
 	} else if utils.IsValidPort(data.ServerConfig.Port) {

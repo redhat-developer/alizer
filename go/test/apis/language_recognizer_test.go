@@ -115,3 +115,9 @@ func GetTestProjectPath(folder string) string {
 	basepath := filepath.Dir(b)
 	return filepath.Join(basepath, "..", "..", "..", "resources/projects", folder)
 }
+
+func GetTestPortProjectPath(folder string) string {
+	_, b, _, _ := runtime.Caller(0)
+	basepath := filepath.Dir(b)
+	return filepath.Join(basepath, "..", "..", "..", "resources/projectPortTesting", folder)
+}

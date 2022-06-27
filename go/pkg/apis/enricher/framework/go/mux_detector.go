@@ -47,7 +47,7 @@ func (m MuxDetector) DoPortsDetection(component *model.Component) {
 		MatchRegexes: []model.PortMatchSubRule{
 			{
 				Regex:    regexp.MustCompile(`Addr:\s+"([^",]+)`),
-				SubRegex: regexp.MustCompile(`[^:](\d+)$`),
+				SubRegex: regexp.MustCompile(`:*(\d+)$`),
 			},
 		},
 	}
