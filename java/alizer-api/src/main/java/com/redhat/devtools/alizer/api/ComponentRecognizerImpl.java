@@ -34,6 +34,23 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
         super(builder);
     }
 
+    /**
+     * Analyze only files existing in path. It doesn't walk through all subfolders
+     * @param path path (root) where to make the analysis
+     * @return list of components found
+     * @throws IOException if an error occurred
+     */
+    public List<Component> analyzeRoot(String path) throws IOException {
+        List<File> files = getFilesInDirectory(Paths.get(path));
+        return detectComponents(files);
+    }
+
+    /**
+     * Analyze all files within the project to detect all components. It walks from the root through all subfolders.
+     * @param path path (root) where to start the search
+     * @return list of components found ordered. First component is the one in root.
+     * @throws IOException if an error occurred
+     */
     public List<Component> analyze(String path) throws IOException {
         List<File> files = getFiles(Paths.get(path));
         List<Component> components = detectComponents(files);
@@ -42,6 +59,15 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
         // we then rely on the language recognizer
         List<Path> directoriesPathsWithoutConfigFile = getDirectoriesPathsWithoutConfigFile(Paths.get(path), components);
         components.addAll(getComponentsWithoutConfigFile(directoriesPathsWithoutConfigFile));
+
+        components.sort((o1, o2) -> {
+            if (o1.getPath().toString().equals(path)) {
+                return -1;
+            } else if (o2.getPath().toString().equals(path)) {
+                return 1;
+            }
+            return 0;
+        });
         return components;
     }
 
@@ -165,8 +191,7 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
             return false;
         }
         Language mainLanguage = languages.get(0);
-        return mainLanguage.canBeComponent() &&
-                !mainLanguage.getFrameworks().isEmpty();
+        return mainLanguage.canBeComponent();
     }
 
     /**
