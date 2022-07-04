@@ -116,7 +116,11 @@ func GetFilePathsFromRoot(root string) ([]string, error) {
 	errWalk := filepath.Walk(root,
 		func(path string, info os.FileInfo, err error) error {
 			if errorIgnoreFile == nil && ignoreFile.MatchesPath(path) {
-				return filepath.SkipDir
+				if info.IsDir() {
+					return filepath.SkipDir
+				} else {
+					return nil
+				}
 			}
 			if !info.IsDir() && isFileInRoot(root, path) {
 				files = append([]string{path}, files...)
