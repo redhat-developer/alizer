@@ -33,6 +33,18 @@ func TestComponentDetectionOnJavascript(t *testing.T) {
 	isComponentsInProject(t, "nodejs-ex", 1, "javascript", "nodejs-starter")
 }
 
+func TestComponentDetectionOnDotNet(t *testing.T) {
+	isComponentsInProject(t, "s2i-dotnetcore-ex", 1, "c#")
+}
+
+func TestComponentDetectionOnFSharp(t *testing.T) {
+	isComponentsInProject(t, "net-fsharp", 1, "f#")
+}
+
+func TestComponentDetectionOnVBNet(t *testing.T) {
+	isComponentsInProject(t, "net-vb", 1, "Visual Basic .NET")
+}
+
 func TestComponentDetectionOnDjango(t *testing.T) {
 	isComponentsInProject(t, "django", 1, "python", "django")
 }
