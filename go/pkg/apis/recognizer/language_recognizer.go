@@ -19,7 +19,7 @@ import (
 	"strings"
 
 	enricher "github.com/redhat-developer/alizer/go/pkg/apis/enricher"
-	"github.com/redhat-developer/alizer/go/pkg/apis/language"
+	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	langfile "github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
 	ignore "github.com/sabhiram/go-gitignore"
 )
@@ -29,13 +29,13 @@ type languageItem struct {
 	percentage int
 }
 
-func Analyze(path string) ([]language.Language, error) {
+func Analyze(path string) ([]model.Language, error) {
 	languagesFile := langfile.Get()
 	languagesDetected := make(map[string]languageItem)
 
 	paths, err := GetFilePathsFromRoot(path)
 	if err != nil {
-		return []language.Language{}, err
+		return []model.Language{}, err
 	}
 	extensionsGrouped := extractExtensions(paths)
 	extensionHasProgrammingLanguage := false
@@ -70,12 +70,12 @@ func Analyze(path string) ([]language.Language, error) {
 		}
 	}
 
-	var languagesFound []language.Language
+	var languagesFound []model.Language
 	for name, item := range languagesDetected {
 		tmpPercentage := float64(item.percentage) / float64(totalProgrammingOccurrences)
 		tmpPercentage = float64(int(tmpPercentage*10000)) / 10000
 		if tmpPercentage > 0.02 {
-			tmpLanguage := language.Language{
+			tmpLanguage := model.Language{
 				Name:              name,
 				Aliases:           item.item.Aliases,
 				UsageInPercentage: tmpPercentage * 100,

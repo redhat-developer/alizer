@@ -8,7 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
-package language
+package model
 
 type Language struct {
 	Name              string
@@ -17,4 +17,10 @@ type Language struct {
 	Frameworks        []string
 	Tools             []string
 	CanBeComponent    bool
+}
+
+type Component struct {
+	Name      string
+	Path      string
+	Languages []Language
 }

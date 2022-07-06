@@ -17,6 +17,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
 )
 
@@ -99,7 +100,7 @@ func TestComponentDetectionMultiProjects(t *testing.T) {
 	}
 }
 
-func getComponentsFromProject(t *testing.T, project string) []recognizer.Component {
+func getComponentsFromProject(t *testing.T, project string) []model.Component {
 	testingProjectPath := GetTestProjectPath(project)
 
 	components, err := recognizer.DetectComponents(testingProjectPath)
@@ -110,7 +111,7 @@ func getComponentsFromProject(t *testing.T, project string) []recognizer.Compone
 	return components
 }
 
-func getComponentsFromFiles(t *testing.T, files []string) []recognizer.Component {
+func getComponentsFromFiles(t *testing.T, files []string) []model.Component {
 	components, err := recognizer.DetectComponentsFromFilesList(files)
 	if err != nil {
 		t.Error(err)
