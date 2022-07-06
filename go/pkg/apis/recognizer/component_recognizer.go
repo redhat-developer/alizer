@@ -246,12 +246,14 @@ func detectComponentByAnalyzingConfigFile(file string, mainLang string) (model.C
 	if err != nil {
 		return model.Component{}, err
 	}
-	return model.Component{
+	component := model.Component{
 		Path: dir,
 		Languages: []model.Language{
 			lang,
 		},
-	}, nil
+	}
+	enrichComponent(&component)
+	return component, nil
 }
 
 func detectComponentUsingConfigFile(file string, languages []string) (model.Component, error) {
