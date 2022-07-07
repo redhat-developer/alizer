@@ -54,6 +54,7 @@ Alizer scans all files in the source tree to find out a configuration file. If f
 Once the first step ends up, if there are no other free subfolders (free = folders that do not belong to any component) the second step is skipped otherwise Alizer tries to search for a component written with a language which may not have a configuration file. In that subfolder a simple Language detection is performed and the first language is taken into account for further calculations. 
 
 The result is a list of components where each component consists of:
+- *name*: name of the component
 - *path*: root of the component 
 - *languages*: list of languages belonging to the component ordered by their relevance.
 
@@ -63,6 +64,7 @@ import "github.com/redhat-developer/alizer/pkg/apis/recognizer"
 components, err := recognizer.DetectComponents("./")
 ```
 
+For more info about name detection plase check the [name detection](docs/name_detection.md) doc.
 ### Devfile Detection
 
 It selects a devfile from a list of devfiles (from a devfile registry or other storage) based on the information found in the source tree. 
