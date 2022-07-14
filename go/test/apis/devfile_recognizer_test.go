@@ -13,7 +13,7 @@ package recognizer
 import (
 	"testing"
 
-	"github.com/redhat-developer/alizer/go/pkg/apis/language"
+	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
 )
 
@@ -34,7 +34,7 @@ func TestDetectDjangoDevfile(t *testing.T) {
 }
 
 func TestDetectDjangoDevfileUsingLanguages(t *testing.T) {
-	languages := []language.Language{
+	languages := []model.Language{
 		{
 			Name: "Python",
 			Aliases: []string{
@@ -62,15 +62,15 @@ func TestDetectDjangoDevfileUsingLanguages(t *testing.T) {
 }
 
 func TestDetectQuarkusDevfileUsingLanguages(t *testing.T) {
-	detectDevFileUsingLanguages(t, "quarkus", []language.Language{}, "java-quarkus")
+	detectDevFileUsingLanguages(t, "quarkus", []model.Language{}, "java-quarkus")
 }
 
 func TestDetectMicronautDevfileUsingLanguages(t *testing.T) {
-	detectDevFileUsingLanguages(t, "micronaut", []language.Language{}, "java-maven")
+	detectDevFileUsingLanguages(t, "micronaut", []model.Language{}, "java-maven")
 }
 
 func TestDetectNodeJSDevfileUsingLanguages(t *testing.T) {
-	detectDevFileUsingLanguages(t, "nodejs-ex", []language.Language{}, "nodejs")
+	detectDevFileUsingLanguages(t, "nodejs-ex", []model.Language{}, "nodejs")
 }
 
 func TestDetectGoDevfile(t *testing.T) {
@@ -85,7 +85,7 @@ func detectDevFile(t *testing.T, projectName string, devFileName string) {
 	detectDevFileInner(t, devFileName, detectDevFileFunc)
 }
 
-func detectDevFileUsingLanguages(t *testing.T, projectName string, languages []language.Language, devFileName string) {
+func detectDevFileUsingLanguages(t *testing.T, projectName string, languages []model.Language, devFileName string) {
 	if projectName != "" {
 		testingProjectPath := GetTestProjectPath(projectName)
 		var err error

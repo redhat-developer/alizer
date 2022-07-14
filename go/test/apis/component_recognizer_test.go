@@ -17,23 +17,40 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
 )
 
 func TestComponentDetectionOnMicronaut(t *testing.T) {
-	isComponentsInProject(t, "micronaut", 1, "java")
+	isComponentsInProject(t, "micronaut", 1, "java", "myMicronautProject")
 }
 
 func TestComponentDetectionOnQuarkus(t *testing.T) {
-	isComponentsInProject(t, "quarkus", 1, "java")
+	isComponentsInProject(t, "quarkus", 1, "java", "code-with-quarkus-maven")
 }
 
 func TestComponentDetectionOnJavascript(t *testing.T) {
-	isComponentsInProject(t, "nodejs-ex", 1, "javascript")
+	isComponentsInProject(t, "nodejs-ex", 1, "javascript", "nodejs-starter")
 }
 
 func TestComponentDetectionOnDjango(t *testing.T) {
-	isComponentsInProject(t, "django", 1, "python")
+	isComponentsInProject(t, "django", 1, "python", "django")
+}
+
+func TestComponentDetectionOnDotNet(t *testing.T) {
+	isComponentsInProject(t, "s2i-dotnetcore-ex", 1, "c#", "app")
+}
+
+func TestComponentDetectionOnFSharp(t *testing.T) {
+	isComponentsInProject(t, "net-fsharp", 1, "f#", "net-fsharp")
+}
+
+func TestComponentDetectionOnVBNet(t *testing.T) {
+	isComponentsInProject(t, "net-vb", 1, "Visual Basic .NET", "net-vb")
+}
+
+func TestComponentDetectionOnGoLang(t *testing.T) {
+	isComponentsInProject(t, "golang-gin-app", 1, "Go", "golang-gin-app")
 }
 
 func TestComponentDetectionNoResult(t *testing.T) {
@@ -44,7 +61,7 @@ func TestComponentDetectionNoResult(t *testing.T) {
 }
 
 func TestComponentDetectionOnDoubleComponents(t *testing.T) {
-	isComponentsInProject(t, "double-components", 2, "javascript")
+	isComponentsInProject(t, "double-components", 2, "javascript", "")
 }
 
 func TestComponentDetectionWithGitIgnoreRule(t *testing.T) {
@@ -99,7 +116,7 @@ func TestComponentDetectionMultiProjects(t *testing.T) {
 	}
 }
 
-func getComponentsFromProject(t *testing.T, project string) []recognizer.Component {
+func getComponentsFromProject(t *testing.T, project string) []model.Component {
 	testingProjectPath := GetTestProjectPath(project)
 
 	components, err := recognizer.DetectComponents(testingProjectPath)
@@ -110,7 +127,7 @@ func getComponentsFromProject(t *testing.T, project string) []recognizer.Compone
 	return components
 }
 
-func getComponentsFromFiles(t *testing.T, files []string) []recognizer.Component {
+func getComponentsFromFiles(t *testing.T, files []string) []model.Component {
 	components, err := recognizer.DetectComponentsFromFilesList(files)
 	if err != nil {
 		t.Error(err)
@@ -119,13 +136,19 @@ func getComponentsFromFiles(t *testing.T, files []string) []recognizer.Component
 	return components
 }
 
-func isComponentsInProject(t *testing.T, project string, expectedNumber int, expectedLanguage string) {
+func isComponentsInProject(t *testing.T, project string, expectedNumber int, expectedLanguage string, expectedProjectName string) {
 	components := getComponentsFromProject(t, project)
 	hasComponents := len(components) == expectedNumber
 	if hasComponents {
 		isExpectedComponent := strings.EqualFold(expectedLanguage, components[0].Languages[0].Name)
 		if !isExpectedComponent {
 			t.Errorf("Project does not use " + expectedLanguage + " language")
+		}
+		if expectedProjectName != "" {
+			isExpectedProjectName := strings.EqualFold(expectedProjectName, components[0].Name)
+			if !isExpectedProjectName {
+				t.Errorf("Main component has a different project name. Expected " + expectedProjectName + " but it was " + components[0].Name)
+			}
 		}
 	} else {
 		t.Errorf("Expected " + strconv.Itoa(expectedNumber) + " of components but it was " + strconv.Itoa(len(components)))
