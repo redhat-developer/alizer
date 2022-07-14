@@ -40,7 +40,7 @@ func TestDetectDjangoDevfileUsingLanguages(t *testing.T) {
 			Aliases: []string{
 				"python3",
 			},
-			UsageInPercentage: 88.23,
+			Weight: 88.23,
 			Frameworks: []string{
 				"Django",
 			},
@@ -52,10 +52,10 @@ func TestDetectDjangoDevfileUsingLanguages(t *testing.T) {
 			Aliases: []string{
 				"sh",
 			},
-			UsageInPercentage: 11.77,
-			Frameworks:        []string{},
-			Tools:             []string{},
-			CanBeComponent:    false,
+			Weight:         11.77,
+			Frameworks:     []string{},
+			Tools:          []string{},
+			CanBeComponent: false,
 		},
 	}
 	detectDevFileUsingLanguages(t, "", languages, "python-django")

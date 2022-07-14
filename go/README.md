@@ -24,7 +24,9 @@ The result is an ordered (sorted by usage) list of informations for each languag
 - *Aliases*: other names which identify the detected language
 - *Framework*: a list of detected frameworks (Quarkus, Flash,...) used by the application
 - *Tools*: a list of tools (Maven,...) used by the application
-- *UsageInPercentage*: a double value that represents the language weight compared to the others.
+- *Weight*: a double value that represents the language weight compared to the others.
+
+NOTE: the sum of all weights can be over 100 because a file may be associated to multiple languages and Alizer may not be able to detect it precisely. E.g. a SQL script could be associated to SPLPL, TSQL, PLSQL so Alizer will print out all 3 languages with the same weight.
 
 To analyze your source code with Alizer, just import it and use the recognizer:
 
