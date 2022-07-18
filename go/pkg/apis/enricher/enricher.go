@@ -217,7 +217,7 @@ func getComponentPortsFromDockerComposeFileBytes(bytes []byte, componentPath str
 		}
 		if build == "." || filepath.Join(basePath, build) == filepath.Clean(componentPath) {
 			portsField, hasPortsField := serviceField["ports"].([]interface{})
-			exposeField, hasExposeField := serviceField["expose"].([]string)
+			exposeField, hasExposeField := serviceField["expose"].([]interface{})
 			if hasPortsField {
 				re := regexp.MustCompile(`(\d+)\/*\w*$`) // ports syntax [HOST:]CONTAINER[/PROTOCOL] or map[string]interface
 				for _, portInterface := range portsField {
@@ -250,10 +250,12 @@ func getComponentPortsFromDockerComposeFileBytes(bytes []byte, componentPath str
 				}
 			}
 			if hasExposeField {
-				for _, portValue := range exposeField {
-					port, err := utils.GetValidPort(portValue)
-					if err == nil {
-						ports = append(ports, port)
+				for _, portInterface := range exposeField {
+					if portValue, ok := portInterface.(string); ok {
+						port, err := utils.GetValidPort(portValue)
+						if err == nil {
+							ports = append(ports, port)
+						}
 					}
 				}
 			}
