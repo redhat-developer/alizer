@@ -41,7 +41,7 @@ func (j JavaScriptEnricher) DoEnrichLanguage(language *model.Language, files *[]
 	}
 }
 
-func (j JavaScriptEnricher) DoEnrichComponent(component *model.Component) {
+func (j JavaScriptEnricher) DoEnrichComponent(component *model.Component, settings model.DetectionSettings) {
 	projectName := ""
 	packageJsonPath := filepath.Join(component.Path, "package.json")
 	if _, err := os.Stat(packageJsonPath); err == nil {
@@ -60,7 +60,7 @@ func (j JavaScriptEnricher) DoEnrichComponent(component *model.Component) {
 		component.Ports = ports
 		return
 	}
-	ports = GetPortsFromDockerComposeFile(component.Path)
+	ports = GetPortsFromDockerComposeFile(component.Path, settings)
 	if len(ports) > 0 {
 		component.Ports = ports
 		return

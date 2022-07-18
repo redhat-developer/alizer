@@ -35,7 +35,7 @@ func (j DotNetEnricher) DoEnrichLanguage(language *model.Language, files *[]stri
 	}
 }
 
-func (j DotNetEnricher) DoEnrichComponent(component *model.Component) {
+func (j DotNetEnricher) DoEnrichComponent(component *model.Component, settings model.DetectionSettings) {
 	projectName := GetDefaultProjectName(component.Path)
 	component.Name = projectName
 
@@ -44,7 +44,7 @@ func (j DotNetEnricher) DoEnrichComponent(component *model.Component) {
 		component.Ports = ports
 		return
 	}
-	ports = GetPortsFromDockerComposeFile(component.Path)
+	ports = GetPortsFromDockerComposeFile(component.Path, settings)
 	if len(ports) > 0 {
 		component.Ports = ports
 		return

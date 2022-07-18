@@ -12,6 +12,10 @@ package model
 
 import "regexp"
 
+type DetectionSettings struct {
+	BasePath string
+}
+
 type Language struct {
 	Name           string
 	Aliases        []string

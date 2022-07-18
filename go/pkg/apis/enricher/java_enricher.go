@@ -53,7 +53,7 @@ func (j JavaEnricher) DoEnrichLanguage(language *model.Language, files *[]string
 	}
 }
 
-func (j JavaEnricher) DoEnrichComponent(component *model.Component) {
+func (j JavaEnricher) DoEnrichComponent(component *model.Component, settings model.DetectionSettings) {
 	projectName := getProjectNameMaven(component.Path)
 	if projectName == "" {
 		projectName = getProjectNameGradle(component.Path)
@@ -68,7 +68,7 @@ func (j JavaEnricher) DoEnrichComponent(component *model.Component) {
 		component.Ports = ports
 		return
 	}
-	ports = GetPortsFromDockerComposeFile(component.Path)
+	ports = GetPortsFromDockerComposeFile(component.Path, settings)
 	if len(ports) > 0 {
 		component.Ports = ports
 		return

@@ -39,7 +39,7 @@ func (r ReactJsDetector) DoPortsDetection(component *model.Component) {
 		return
 	}
 	// check if port is set on .env file
-	port := getPortFromEnvFile(component.Path)
+	port := utils.GetValueFromEnvFile(component.Path, `PORT=(\d*)`)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 		return
@@ -52,25 +52,12 @@ func (r ReactJsDetector) DoPortsDetection(component *model.Component) {
 	}
 }
 
-func getPortFromEnvFile(root string) int {
-	envPath := filepath.Join(root, ".env")
-	bytes, err := os.ReadFile(envPath)
-	if err != nil {
-		return -1
-	}
-	return getReactPortSubmatch(string(bytes))
-}
-
 func getPortFromStartScript(root string) int {
 	packageJsonPath := filepath.Join(root, "package.json")
 	packageJson, err := utils.GetPackageJsonSchemaFromFile(packageJsonPath)
 	if err != nil {
 		return -1
 	}
-	return getReactPortSubmatch(packageJson.Scripts.Start)
-}
-
-func getReactPortSubmatch(text string) int {
 	re := regexp.MustCompile(`PORT=(\d*)`)
-	return utils.FindPortSubmatch(re, text, 1)
+	return utils.FindPortSubmatch(re, packageJson.Scripts.Start, 1)
 }

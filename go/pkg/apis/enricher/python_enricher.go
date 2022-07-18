@@ -33,7 +33,7 @@ func (p PythonEnricher) DoEnrichLanguage(language *model.Language, files *[]stri
 	detectPythonFrameworks(language, files)
 }
 
-func (j PythonEnricher) DoEnrichComponent(component *model.Component) {
+func (j PythonEnricher) DoEnrichComponent(component *model.Component, settings model.DetectionSettings) {
 	projectName := GetDefaultProjectName(component.Path)
 	component.Name = projectName
 
@@ -42,7 +42,7 @@ func (j PythonEnricher) DoEnrichComponent(component *model.Component) {
 		component.Ports = ports
 		return
 	}
-	ports = GetPortsFromDockerComposeFile(component.Path)
+	ports = GetPortsFromDockerComposeFile(component.Path, settings)
 	if len(ports) > 0 {
 		component.Ports = ports
 		return

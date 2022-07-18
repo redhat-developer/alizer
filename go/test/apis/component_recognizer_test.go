@@ -67,12 +67,15 @@ func TestComponentDetectionOnDoubleComponents(t *testing.T) {
 
 func TestComponentDetectionWithGitIgnoreRule(t *testing.T) {
 	testingProjectPath := GetTestProjectPath("component-wrapped-in-folder")
+	settings := model.DetectionSettings{
+		BasePath: testingProjectPath,
+	}
 	files, err := utils.GetFilePathsFromRoot(testingProjectPath)
 	if err != nil {
 		t.Error(err)
 	}
 
-	components := getComponentsFromFiles(t, files)
+	components := getComponentsFromFiles(t, files, settings)
 
 	if len(components) != 1 {
 		t.Errorf("Expected 1 components but found " + strconv.Itoa(len(components)))
@@ -88,7 +91,7 @@ func TestComponentDetectionWithGitIgnoreRule(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	componentsWithUpdatedGitIgnore := getComponentsFromFiles(t, files)
+	componentsWithUpdatedGitIgnore := getComponentsFromFiles(t, files, settings)
 	//delete gitignore file
 	os.Remove(gitIgnorePath)
 
@@ -138,8 +141,8 @@ func getComponentsFromProjectInner(t *testing.T, testingProjectPath string) []mo
 	return components
 }
 
-func getComponentsFromFiles(t *testing.T, files []string) []model.Component {
-	components, err := recognizer.DetectComponentsFromFilesList(files)
+func getComponentsFromFiles(t *testing.T, files []string, settings model.DetectionSettings) []model.Component {
+	components, err := recognizer.DetectComponentsFromFilesList(files, settings)
 	if err != nil {
 		t.Error(err)
 	}

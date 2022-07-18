@@ -303,3 +303,13 @@ func FindAllPortsSubmatch(re *regexp.Regexp, text string, group int) []int {
 	}
 	return ports
 }
+
+func GetValueFromEnvFile(root string, regex string) int {
+	envPath := filepath.Join(root, ".env")
+	bytes, err := os.ReadFile(envPath)
+	if err != nil {
+		return -1
+	}
+	re := regexp.MustCompile(regex)
+	return FindPortSubmatch(re, string(bytes), 1)
+}

@@ -13,8 +13,8 @@ If no port is found an empty list is returned.
 
 ### Port detection with a docker-compose file
 
-The port detection in a `docker-compose.[yml|yaml]` file targets the `expose` and `ports` fields of the `web` service, if any. 
-If no `web` service is found no port is detected.
+The port detection in a `[compose|docker-compose].[yml|yaml]` file targets the `expose` and `ports` fields of the service related to the component, if any. 
+To search for the specific component, Alizer look at the `build` field.
 
 Example of `expose` - the result is [3000,8000]
 ```
@@ -92,12 +92,27 @@ The known schema is:
 
 #### Quarkus 
 
-Alizer searches for the `application.properties` file in `src/main/resources` folder and verify if a port is set.
+Alizer follows the default behavior of Quarkus which reads configuration properties from multiple sources (by descending ordinal).
 
-The known schema is:
+1) It checks if the environment variable QUARKUS_HTTP_PORT is set
+2) It checks for the `QUARKUS_HTTP_PORT` within the `.env` file, if any, located in the root
+3) It searches for any `application.[properties|yaml|yml]` file in `src/main/resources` folder and verify if a port is set.
+
+The known schemas for application files are:
+
+For `.properties`
 ```
 ...
 quarkus.http.port=<port>
+...
+```
+
+For `.yaml|.yml`
+```yaml
+...
+quarkus
+  http
+    port=<port>
 ...
 ```
 
