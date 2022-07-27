@@ -83,5 +83,5 @@ jobs:
           go env -w GO111MODULE=auto
           cd go
           make init
-          go mod tidy -go=1.16 && go mod tidy -go=1.17
+          go mod tidy -compat=1.17
           go test -v test/apis/language_recognizer_test.go

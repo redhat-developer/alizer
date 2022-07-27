@@ -13,6 +13,7 @@ package enricher
 import (
 	"errors"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
@@ -41,6 +42,13 @@ func (s SpringDetector) DoFrameworkDetection(language *model.Language, config st
 }
 
 func (s SpringDetector) DoPortsDetection(component *model.Component) {
+	// check if port is set on env var
+	portValue := os.Getenv("SERVER_PORT")
+	if port, err := utils.GetValidPort(portValue); err == nil {
+		component.Ports = []int{port}
+		return
+	}
+
 	applicationFile := utils.GetAnyApplicationFilePath(component.Path, []model.ApplicationFileInfo{
 		{
 			Dir:  "src/main/resources",

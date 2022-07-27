@@ -11,6 +11,8 @@
 package enricher
 
 import (
+	"os"
+
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	utils "github.com/redhat-developer/alizer/go/pkg/utils"
 	"gopkg.in/yaml.v3"
@@ -37,6 +39,13 @@ func (m MicronautDetector) DoFrameworkDetection(language *model.Language, config
 }
 
 func (m MicronautDetector) DoPortsDetection(component *model.Component) {
+	// check if port is set on env var
+	portValue := os.Getenv("MICRONAUT_SERVER_PORT")
+	if port, err := utils.GetValidPort(portValue); err == nil {
+		component.Ports = []int{port}
+		return
+	}
+
 	bytes, err := utils.ReadAnyApplicationFile(component.Path, []model.ApplicationFileInfo{
 		{
 			Dir:  "src/main/resources",

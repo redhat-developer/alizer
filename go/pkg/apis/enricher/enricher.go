@@ -126,9 +126,9 @@ func GetDefaultProjectName(path string) string {
 func GetPortsFromDockerFile(root string) []int {
 	file, err := os.Open(filepath.Join(root, "Dockerfile"))
 	if err == nil {
+		defer file.Close()
 		return getPortsFromReader(file)
 	}
-	defer file.Close()
 	return []int{}
 }
 

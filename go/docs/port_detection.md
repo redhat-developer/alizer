@@ -5,8 +5,8 @@ Because of the different nature of each framework, Alizer tries to use customize
 Only ports with value > 0 and < 65535 are valid.
 
 The process consists of two steps:
-1) Alizer looks for a Dockerfile in the root folder and tries to extract ports from it; if it fails it proceeds with (2)
-2) Alizer searches for a docker-compose file in the root folder and tries to extract port of the web service from it; if it fails it proceeds with (3)
+1) Alizer looks for a Dockerfile in the root folder and tries to extract ports from it; if it fails or it does not find any port, it proceeds with (2)
+2) Alizer searches for a docker-compose file in the root folder and tries to extract port of the service from it; if it fails or it does not find any port, it proceeds with (3)
 3) If a framework has been detected during component detection, a customized detection is performed. Below a detailed overview of the different strategies for each supported framework.
 
 If no port is found an empty list is returned.
@@ -68,7 +68,7 @@ services:
 
 #### Micronaut
 
-Alizer searches for the `application.[yml|yaml]` file in `src/main/resources` folder and verify if a port is set.
+Alizer checks if the environment variable MICRONAUT_SERVER_PORT is set. If not or it does not contain a valid port value, it searches for the `application.[yml|yaml]` file in `src/main/resources` folder and verify if a port is set.
 
 The known schema is:
 ```
@@ -79,7 +79,7 @@ micronaut:
 
 #### OpenLiberty
 
-Alizer searches for the `server.xml` file and verify if a port is set.
+Alizer searches for the `server.xml` file within the root or `src/main/liberty/config` folder and verify if a port is set.
 
 The known schema is:
 ```
@@ -118,7 +118,7 @@ quarkus
 
 #### Springboot
 
-Alizer searches for the `application.[yml|yaml]` or `application.properties` file in `src/main/resources` folder and verify if a port is set.
+Alizer checks if the environment variable SERVER_PORT is set. If not or it does not contain a valid port value, it searches for the `application.[yml|yaml]` or `application.properties` file in `src/main/resources` folder and verify if a port is set.
 
 The known schema for `application.[yml|yaml]` is:
 ```

@@ -44,6 +44,10 @@ func (o OpenLibertyDetector) DoPortsDetection(component *model.Component) {
 			Dir:  "",
 			File: "server.xml",
 		},
+		{
+			Dir:  "src/main/liberty/config",
+			File: "server.xml",
+		},
 	})
 	if err != nil {
 		return
