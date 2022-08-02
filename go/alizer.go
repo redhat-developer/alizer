@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 
 	"github.com/redhat-developer/alizer/go/pkg/cli"
+	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 func main() {
@@ -23,7 +23,6 @@ func main() {
 	}
 
 	if err := alizerCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		utils.RedirectErrorToStdErrAndExit(err)
 	}
 }
