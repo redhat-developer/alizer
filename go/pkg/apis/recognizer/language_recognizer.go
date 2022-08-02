@@ -111,6 +111,10 @@ func extractExtensions(paths []string) map[string]int {
 }
 
 func GetFilePathsFromRoot(root string) ([]string, error) {
+	if _, err := os.Stat(root); err != nil {
+		return nil, err
+	}
+
 	var files []string
 	ignoreFile, errorIgnoreFile := getIgnoreFile(root)
 	errWalk := filepath.Walk(root,
