@@ -19,6 +19,8 @@ func main() {
 	if err := flag.CommandLine.Parse(args); err != nil {
 		if err == flag.ErrHelp {
 			os.Exit(0)
+		} else {
+			os.Exit(1)
 		}
 	}
 
