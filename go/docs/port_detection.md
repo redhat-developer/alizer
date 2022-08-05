@@ -1,13 +1,20 @@
 ## Port Detection in Alizer
 
 Port detection is one of the step included during component detection and it refers to the ports used by the component that should be opened in the container.
-Because of the different nature of each framework, Alizer tries to use customized ways to detect them, if necessary.
+Because of the different nature of frameworks supported, Alizer tries to use customized ways to detect ports from source code, if necessary.
 Only ports with value > 0 and < 65535 are valid.
 
-The process consists of two steps:
-1) Alizer looks for a Dockerfile in the root folder and tries to extract ports from it; if it fails or it does not find any port, it proceeds with (2)
-2) Alizer searches for a docker-compose file in the root folder and tries to extract port of the service from it; if it fails or it does not find any port, it proceeds with (3)
-3) If a framework has been detected during component detection, a customized detection is performed. Below a detailed overview of the different strategies for each supported framework.
+There are three detection strategies currently available:
+1) Docker file - Alizer looks for a Dockerfile in the root folder and tries to extract ports from it.
+2) Compose file - Alizer searches for a docker-compose file in the root folder and tries to extract port of the service from it
+3) Source - If a framework has been detected during component detection, a customized detection is performed. Below a detailed overview of the different strategies for each supported framework.
+
+By default, Alizer perform a docker, compose and source detection, in this order.
+If one or more ports are found in one step, the rest are skipped. (E.g - if a port is found in the docker file, Alizer will not search and analyze 
+any docker-compose file and the source code).
+
+It is also possible to customize the way Alizer searches for ports by defining the detection strategies to use and their order.
+For example, by using a source and docker strategies, Alizer analyzes the source code and then the docker file, if any. Or docker and compose, to avoid analyzing the source.
 
 If no port is found an empty list is returned.
 
