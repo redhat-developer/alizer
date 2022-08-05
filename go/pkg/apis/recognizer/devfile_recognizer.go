@@ -11,7 +11,11 @@
 package recognizer
 
 import (
+	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"net/http"
+	"regexp"
 	"strings"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
@@ -60,6 +64,72 @@ func SelectDevFileUsingLanguagesFromTypes(languages []model.Language, devFileTyp
 		}
 	}
 	return -1, errors.New("no valid devfile found by using those languages")
+}
+
+func SelectDevFileFromRegistry(path string, url string) (DevFileType, error) {
+	devFileTypes, err := downloadDevFileTypesFromRegistry(url)
+	if err != nil {
+		return DevFileType{}, err
+	}
+
+	index, err := SelectDevFileFromTypes(path, devFileTypes)
+	if err != nil {
+		return DevFileType{}, err
+	}
+	return devFileTypes[index], nil
+}
+
+func downloadDevFileTypesFromRegistry(url string) ([]DevFileType, error) {
+	url = adaptUrl(url)
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		// retry by appending index to url
+		url = appendIndexPath(url)
+		resp, err = http.Get(url)
+		if err != nil {
+			return []DevFileType{}, err
+		}
+	}
+	defer resp.Body.Close()
+
+	// Check server response
+	if resp.StatusCode != http.StatusOK {
+		return []DevFileType{}, errors.New("unable to fetch devfiles from the registry")
+	}
+
+	body, err2 := ioutil.ReadAll(resp.Body)
+	if err2 != nil {
+		return []DevFileType{}, errors.New("unable to fetch devfiles from the registry")
+	}
+
+	var devFileTypes []DevFileType
+	err = json.Unmarshal(body, &devFileTypes)
+	if err != nil {
+		return []DevFileType{}, errors.New("unable to fetch devfiles from the registry")
+	}
+
+	return devFileTypes, nil
+}
+
+func appendIndexPath(url string) string {
+	if strings.HasSuffix(url, "/") {
+		return url + "index"
+	}
+	return url + "/index"
+}
+
+func adaptUrl(url string) string {
+	re := regexp.MustCompile(`^https://github.com/(.*)/blob/(.*)$`)
+	url = re.ReplaceAllString(url, `https://raw.githubusercontent.com/$1/$2`)
+
+	re = regexp.MustCompile(`^https://gitlab.com/(.*)/-/blob/(.*)$`)
+	url = re.ReplaceAllString(url, `https://gitlab.com/$1/-/raw/$2`)
+
+	re = regexp.MustCompile(`^https://bitbucket.org/(.*)/src/(.*)$`)
+	url = re.ReplaceAllString(url, `https://bitbucket.org/$1/raw/$2`)
+
+	return url
 }
 
 func selectDevFileByLanguage(language model.Language, devFileTypes []DevFileType) (int, error) {
