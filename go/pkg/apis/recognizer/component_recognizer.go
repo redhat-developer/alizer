@@ -41,7 +41,7 @@ func DetectComponentsInRootWithPathAndPortStartegy(path string, portDetectionStr
 func DetectComponentsWithPathAndPortStartegy(path string, portDetectionStrategy []model.PortDetectionAlgorithm) ([]model.Component, error) {
 	return DetectComponentsWithSettings(model.DetectionSettings{
 		BasePath:              path,
-		PortDetectionStrategy: []model.PortDetectionAlgorithm{model.DockerFile, model.Compose, model.Source},
+		PortDetectionStrategy: portDetectionStrategy,
 	})
 }
 
