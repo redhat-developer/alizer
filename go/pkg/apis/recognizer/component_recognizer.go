@@ -24,14 +24,24 @@ import (
 )
 
 func DetectComponentsInRoot(path string) ([]model.Component, error) {
-	return DetectComponentsInRootWithSettings(model.DetectionSettings{
-		BasePath: path,
-	})
+	return DetectComponentsInRootWithPathAndPortStartegy(path, []model.PortDetectionAlgorithm{model.DockerFile, model.Compose, model.Source})
 }
 
 func DetectComponents(path string) ([]model.Component, error) {
+	return DetectComponentsWithPathAndPortStartegy(path, []model.PortDetectionAlgorithm{model.DockerFile, model.Compose, model.Source})
+}
+
+func DetectComponentsInRootWithPathAndPortStartegy(path string, portDetectionStrategy []model.PortDetectionAlgorithm) ([]model.Component, error) {
+	return DetectComponentsInRootWithSettings(model.DetectionSettings{
+		BasePath:              path,
+		PortDetectionStrategy: portDetectionStrategy,
+	})
+}
+
+func DetectComponentsWithPathAndPortStartegy(path string, portDetectionStrategy []model.PortDetectionAlgorithm) ([]model.Component, error) {
 	return DetectComponentsWithSettings(model.DetectionSettings{
-		BasePath: path,
+		BasePath:              path,
+		PortDetectionStrategy: []model.PortDetectionAlgorithm{model.DockerFile, model.Compose, model.Source},
 	})
 }
 

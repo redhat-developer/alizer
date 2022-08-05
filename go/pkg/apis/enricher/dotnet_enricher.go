@@ -39,15 +39,26 @@ func (j DotNetEnricher) DoEnrichComponent(component *model.Component, settings m
 	projectName := GetDefaultProjectName(component.Path)
 	component.Name = projectName
 
-	ports := GetPortsFromDockerFile(component.Path)
-	if len(ports) > 0 {
-		component.Ports = ports
-		return
-	}
-	ports = GetPortsFromDockerComposeFile(component.Path, settings)
-	if len(ports) > 0 {
-		component.Ports = ports
-		return
+	for _, algorithm := range settings.PortDetectionStrategy {
+		ports := []int{}
+		switch algorithm {
+		case model.DockerFile:
+			{
+				ports = GetPortsFromDockerFile(component.Path)
+				break
+			}
+		case model.Compose:
+			{
+				ports = GetPortsFromDockerComposeFile(component.Path, settings)
+				break
+			}
+		}
+		if len(ports) > 0 {
+			component.Ports = ports
+		}
+		if len(component.Ports) > 0 {
+			return
+		}
 	}
 }
 

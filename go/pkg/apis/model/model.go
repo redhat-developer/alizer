@@ -12,8 +12,17 @@ package model
 
 import "regexp"
 
+type PortDetectionAlgorithm int
+
+const (
+	DockerFile PortDetectionAlgorithm = 0
+	Compose    PortDetectionAlgorithm = 1
+	Source     PortDetectionAlgorithm = 2
+)
+
 type DetectionSettings struct {
-	BasePath string
+	BasePath              string
+	PortDetectionStrategy []PortDetectionAlgorithm
 }
 
 type Language struct {

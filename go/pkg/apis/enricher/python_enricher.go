@@ -37,21 +37,35 @@ func (j PythonEnricher) DoEnrichComponent(component *model.Component, settings m
 	projectName := GetDefaultProjectName(component.Path)
 	component.Name = projectName
 
-	ports := GetPortsFromDockerFile(component.Path)
-	if len(ports) > 0 {
-		component.Ports = ports
-		return
-	}
-	ports = GetPortsFromDockerComposeFile(component.Path, settings)
-	if len(ports) > 0 {
-		component.Ports = ports
-		return
-	}
-	for _, detector := range getPythonFrameworkDetectors() {
-		for _, framework := range component.Languages[0].Frameworks {
-			if utils.Contains(detector.GetSupportedFrameworks(), framework) {
-				detector.DoPortsDetection(component)
+	for _, algorithm := range settings.PortDetectionStrategy {
+		ports := []int{}
+		switch algorithm {
+		case model.DockerFile:
+			{
+				ports = GetPortsFromDockerFile(component.Path)
+				break
 			}
+		case model.Compose:
+			{
+				ports = GetPortsFromDockerComposeFile(component.Path, settings)
+				break
+			}
+		case model.Source:
+			{
+				for _, detector := range getPythonFrameworkDetectors() {
+					for _, framework := range component.Languages[0].Frameworks {
+						if utils.Contains(detector.GetSupportedFrameworks(), framework) {
+							detector.DoPortsDetection(component)
+						}
+					}
+				}
+			}
+		}
+		if len(ports) > 0 {
+			component.Ports = ports
+		}
+		if len(component.Ports) > 0 {
+			return
 		}
 	}
 }
