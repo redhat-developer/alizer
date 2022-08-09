@@ -38,7 +38,7 @@ languages, err := recognizer.Analyze("./")
 
 ### Component Detection
 
-It detects all components which are found in the source tree. The concept of component is taken from Odo and its definition can be read on [odo.dev](https://odo.dev/docs/getting-started/basics/#component).
+It detects all components which are found in the source tree. The concept of component is taken from Odo and its definition can be read on [odo.dev](https://odo.dev/docs/overview/basics#component).
 
 Component detection is only enabled for a subset of programming languages
 - Java
