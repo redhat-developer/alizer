@@ -32,7 +32,9 @@ type QuarkusHttp struct {
 }
 
 type QuarkusHttpPort struct {
-	Port int `yaml:"port,omitempty"`
+	Port             int    `yaml:"port,omitempty"`
+	InsecureRequests string `yaml:"insecure-requests,omitempty"`
+	SSLPort          int    `yaml:"ssl-port,omitempty"`
 }
 
 func (q QuarkusDetector) GetSupportedFrameworks() []string {
@@ -47,15 +49,25 @@ func (q QuarkusDetector) DoFrameworkDetection(language *model.Language, config s
 
 func (q QuarkusDetector) DoPortsDetection(component *model.Component) {
 	// check if port is set on env var
-	portValue := os.Getenv("QUARKUS_HTTP_PORT")
-	if port, err := utils.GetValidPort(portValue); err == nil {
-		component.Ports = []int{port}
+	insecureRequestEnabled := os.Getenv("QUARKUS_HTTP_INSECURE_REQUESTS")
+	envs := []string{"QUARKUS_HTTP_SSL_PORT"}
+	if insecureRequestEnabled != "disabled" {
+		envs = append(envs, "QUARKUS_HTTP_PORT")
+	}
+	ports := utils.GetValidPortsFromEnvs(envs)
+	if len(ports) > 0 {
+		component.Ports = ports
 		return
 	}
 	// check if port is set on .env file
-	port := utils.GetValueFromEnvFile(component.Path, `QUARKUS_HTTP_PORT=(\d*)`)
-	if utils.IsValidPort(port) {
-		component.Ports = []int{port}
+	insecureRequestEnabled = utils.GetStringValueFromEnvFile(component.Path, `QUARKUS_HTTP_INSECURE_REQUESTS=(\w*)`)
+	regexes := []string{`QUARKUS_HTTP_SSL_PORT=(\d*)`}
+	if insecureRequestEnabled != "disabled" {
+		regexes = append(regexes, `QUARKUS_HTTP_PORT=(\d*)`)
+	}
+	ports = utils.GetPortValuesFromEnvFile(component.Path, regexes)
+	if len(ports) > 0 {
+		component.Ports = ports
 		return
 	}
 
@@ -79,38 +91,58 @@ func (q QuarkusDetector) DoPortsDetection(component *model.Component) {
 
 	var err error
 	if filepath.Ext(applicationFile) == ".yml" || filepath.Ext(applicationFile) == ".yaml" {
-		port, err = getServerPortFromQuarkusApplicationYamlFile(applicationFile)
+		ports, err = getServerPortsFromQuarkusApplicationYamlFile(applicationFile)
 	} else {
-		port, err = getServerPortFromQuarkusPropertiesFile(applicationFile)
+		ports, err = getServerPortsFromQuarkusPropertiesFile(applicationFile)
 	}
 	if err != nil {
 		return
 	}
-	component.Ports = []int{port}
+	component.Ports = ports
 }
 
-func getServerPortFromQuarkusPropertiesFile(file string) (int, error) {
+func getServerPortsFromQuarkusPropertiesFile(file string) ([]int, error) {
+	ports := []int{}
 	props, err := utils.ConvertPropertiesFileAsPathToMap(file)
 	if err != nil {
-		return -1, err
+		return ports, err
 	}
-	if portValue, exists := props["quarkus.http.port"]; exists {
-		if port, err := utils.GetValidPort(portValue); err == nil {
-			return port, nil
+	if portSSLValue, exists := props["quarkus.http.ssl-port"]; exists {
+		if port, err := utils.GetValidPort(portSSLValue); err == nil {
+			ports = append(ports, port)
 		}
 	}
-	return -1, errors.New("no port found")
+	if insecureValue, exists := props["quarkus.http.insecure-requests"]; !exists || insecureValue != "disabled" {
+		if portValue, exists := props["quarkus.http.port"]; exists {
+			if port, err := utils.GetValidPort(portValue); err == nil {
+				ports = append(ports, port)
+			}
+		}
+	}
+	if len(ports) > 0 {
+		return ports, nil
+	}
+	return []int{}, errors.New("no port found")
 }
 
-func getServerPortFromQuarkusApplicationYamlFile(file string) (int, error) {
+func getServerPortsFromQuarkusApplicationYamlFile(file string) ([]int, error) {
 	yamlFile, err := ioutil.ReadFile(file)
 	if err != nil {
-		return -1, err
+		return []int{}, err
 	}
 	var data QuarkusApplicationYaml
 	yaml.Unmarshal(yamlFile, &data)
-	if data.Quarkus.Http.Port > 0 {
-		return data.Quarkus.Http.Port, nil
+	ports := []int{}
+	if data.Quarkus.Http.SSLPort > 0 {
+		ports = append(ports, data.Quarkus.Http.SSLPort)
 	}
-	return -1, errors.New("no port found")
+	if data.Quarkus.Http.InsecureRequests != "disabled" {
+		if data.Quarkus.Http.Port > 0 {
+			ports = append(ports, data.Quarkus.Http.Port)
+		}
+	}
+	if len(ports) > 0 {
+		return ports, nil
+	}
+	return []int{}, errors.New("no port found")
 }

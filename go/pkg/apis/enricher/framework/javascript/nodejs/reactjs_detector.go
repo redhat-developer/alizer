@@ -39,7 +39,7 @@ func (r ReactJsDetector) DoPortsDetection(component *model.Component) {
 		return
 	}
 	// check if port is set on .env file
-	port := utils.GetValueFromEnvFile(component.Path, `PORT=(\d*)`)
+	port := utils.GetPortValueFromEnvFile(component.Path, `PORT=(\d*)`)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 		return

@@ -230,6 +230,17 @@ func ConvertPropertiesFileToMap(fileInBytes []byte) (map[string]string, error) {
 	return config, nil
 }
 
+func GetValidPortsFromEnvs(envs []string) []int {
+	validPorts := []int{}
+	for _, env := range envs {
+		envValue := os.Getenv(env)
+		if port, err := GetValidPort(envValue); err == nil {
+			validPorts = append(validPorts, port)
+		}
+	}
+	return validPorts
+}
+
 func GetValidPorts(ports []string) []int {
 	validPorts := []int{}
 	for _, portValue := range ports {
@@ -304,12 +315,50 @@ func FindAllPortsSubmatch(re *regexp.Regexp, text string, group int) []int {
 	return ports
 }
 
-func GetValueFromEnvFile(root string, regex string) int {
+func GetPortValueFromEnvFile(root string, regex string) int {
+	ports := GetPortValuesFromEnvFile(root, []string{regex})
+	if len(ports) > 0 {
+		return ports[0]
+	}
+	return -1
+}
+
+func GetPortValuesFromEnvFile(root string, regexes []string) []int {
+	ports := []int{}
+	text, err := getEnvFileContent(root)
+	if err != nil {
+		return ports
+	}
+	for _, regex := range regexes {
+		re := regexp.MustCompile(regex)
+		port := FindPortSubmatch(re, text, 1)
+		if port != -1 {
+			ports = append(ports, port)
+		}
+	}
+	return ports
+}
+
+func GetStringValueFromEnvFile(root string, regex string) string {
+	text, err := getEnvFileContent(root)
+	if err != nil {
+		return ""
+	}
+	re := regexp.MustCompile(regex)
+	if text != "" {
+		matches := re.FindStringSubmatch(text)
+		if len(matches) > 1 {
+			return matches[1]
+		}
+	}
+	return ""
+}
+
+func getEnvFileContent(root string) (string, error) {
 	envPath := filepath.Join(root, ".env")
 	bytes, err := os.ReadFile(envPath)
 	if err != nil {
-		return -1
+		return "", err
 	}
-	re := regexp.MustCompile(regex)
-	return FindPortSubmatch(re, string(bytes), 1)
+	return string(bytes), nil
 }
