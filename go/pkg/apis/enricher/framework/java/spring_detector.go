@@ -13,7 +13,6 @@ package enricher
 import (
 	"errors"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
@@ -24,11 +23,12 @@ import (
 type SpringDetector struct{}
 
 type ApplicationProsServer struct {
-	Server Server `yaml:"server,omitempty"`
-}
-
-type Server struct {
-	Port int `yaml:"port,omitempty"`
+	Server struct {
+		Port int `yaml:"port,omitempty"`
+		Http struct {
+			Port int `yaml:"port,omitempty"`
+		} `yaml:"http,omitempty"`
+	} `yaml:"server,omitempty"`
 }
 
 func (s SpringDetector) GetSupportedFrameworks() []string {
@@ -43,9 +43,9 @@ func (s SpringDetector) DoFrameworkDetection(language *model.Language, config st
 
 func (s SpringDetector) DoPortsDetection(component *model.Component) {
 	// check if port is set on env var
-	portValue := os.Getenv("SERVER_PORT")
-	if port, err := utils.GetValidPort(portValue); err == nil {
-		component.Ports = []int{port}
+	ports := getSpringPortsFromEnvs()
+	if len(ports) > 0 {
+		component.Ports = ports
 		return
 	}
 
@@ -67,41 +67,71 @@ func (s SpringDetector) DoPortsDetection(component *model.Component) {
 		return
 	}
 	var err error
-	var port int
 	if filepath.Ext(applicationFile) == ".yml" || filepath.Ext(applicationFile) == ".yaml" {
-		port, err = getServerPortFromYamlFile(applicationFile)
+		ports, err = getServerPortsFromYamlFile(applicationFile)
 	} else {
-		port, err = getServerPortFromPropertiesFile(applicationFile)
+		ports, err = getServerPortsFromPropertiesFile(applicationFile)
 	}
 	if err != nil {
 		return
 	}
-	component.Ports = []int{port}
+	component.Ports = ports
 
 }
 
-func getServerPortFromPropertiesFile(file string) (int, error) {
+func getSpringPortsFromEnvs() []int {
+	return utils.GetValidPortsFromEnvs([]string{"SERVER_PORT", "SERVER_HTTP_PORT"})
+}
+
+func getServerPortsFromPropertiesFile(file string) ([]int, error) {
 	props, err := utils.ConvertPropertiesFileAsPathToMap(file)
 	if err != nil {
-		return -1, err
+		return []int{}, err
 	}
-	if portValue, exists := props["server.port"]; exists {
-		if port, err := utils.GetValidPort(portValue); err == nil {
-			return port, nil
-		}
+
+	ports := getPortsFromMap(props, []string{"server.port", "server.http.port"})
+	if len(ports) > 0 {
+		return ports, nil
 	}
-	return -1, errors.New("no port found")
+	return []int{}, errors.New("no port found")
 }
 
-func getServerPortFromYamlFile(file string) (int, error) {
+func getPortsFromMap(props map[string]string, keys []string) []int {
+	ports := []int{}
+	for _, key := range keys {
+		port := getPortFromMap(props, key)
+		if port != -1 {
+			ports = append(ports, port)
+		}
+	}
+	return ports
+}
+
+func getPortFromMap(props map[string]string, key string) int {
+	if portValue, exists := props[key]; exists {
+		if port, err := utils.GetValidPort(portValue); err == nil {
+			return port
+		}
+	}
+	return -1
+}
+
+func getServerPortsFromYamlFile(file string) ([]int, error) {
 	yamlFile, err := ioutil.ReadFile(file)
 	if err != nil {
-		return -1, err
+		return []int{}, err
 	}
 	var data ApplicationProsServer
 	yaml.Unmarshal(yamlFile, &data)
+	ports := []int{}
 	if data.Server.Port > 0 {
-		return data.Server.Port, nil
+		ports = append(ports, data.Server.Port)
 	}
-	return -1, errors.New("no port found")
+	if data.Server.Http.Port > 0 {
+		ports = append(ports, data.Server.Http.Port)
+	}
+	if len(ports) > 0 {
+		return ports, nil
+	}
+	return []int{}, errors.New("no port found")
 }

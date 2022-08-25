@@ -49,18 +49,13 @@ func (q QuarkusDetector) DoFrameworkDetection(language *model.Language, config s
 
 func (q QuarkusDetector) DoPortsDetection(component *model.Component) {
 	// check if port is set on env var
-	insecureRequestEnabled := os.Getenv("QUARKUS_HTTP_INSECURE_REQUESTS")
-	envs := []string{"QUARKUS_HTTP_SSL_PORT"}
-	if insecureRequestEnabled != "disabled" {
-		envs = append(envs, "QUARKUS_HTTP_PORT")
-	}
-	ports := utils.GetValidPortsFromEnvs(envs)
+	ports := getQuarkusPortsFromEnvs()
 	if len(ports) > 0 {
 		component.Ports = ports
 		return
 	}
 	// check if port is set on .env file
-	insecureRequestEnabled = utils.GetStringValueFromEnvFile(component.Path, `QUARKUS_HTTP_INSECURE_REQUESTS=(\w*)`)
+	insecureRequestEnabled := utils.GetStringValueFromEnvFile(component.Path, `QUARKUS_HTTP_INSECURE_REQUESTS=(\w*)`)
 	regexes := []string{`QUARKUS_HTTP_SSL_PORT=(\d*)`}
 	if insecureRequestEnabled != "disabled" {
 		regexes = append(regexes, `QUARKUS_HTTP_PORT=(\d*)`)
@@ -99,6 +94,15 @@ func (q QuarkusDetector) DoPortsDetection(component *model.Component) {
 		return
 	}
 	component.Ports = ports
+}
+
+func getQuarkusPortsFromEnvs() []int {
+	insecureRequestEnabled := os.Getenv("QUARKUS_HTTP_INSECURE_REQUESTS")
+	envs := []string{"QUARKUS_HTTP_SSL_PORT"}
+	if insecureRequestEnabled != "disabled" {
+		envs = append(envs, "QUARKUS_HTTP_PORT")
+	}
+	return utils.GetValidPortsFromEnvs(envs)
 }
 
 func getServerPortsFromQuarkusPropertiesFile(file string) ([]int, error) {

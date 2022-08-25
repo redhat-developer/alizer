@@ -75,13 +75,16 @@ services:
 
 #### Micronaut
 
-Alizer checks if the environment variable MICRONAUT_SERVER_PORT is set. If not or it does not contain a valid port value, it searches for the `application.[yml|yaml]` file in `src/main/resources` folder and verify if a port is set.
+Alizer checks if the environment variable MICRONAUT_SERVER_SSL_ENABLED is set to true. If so, both MICRONAUT_SERVER_SSL_PORT and MICRONAUT_SERVER_PORT are checked (if false, only the MICRONAUT_SERVER_PORT is used for verification). If they are not set or they do not contain valid port values, Alizer searches for the `application.[yml|yaml]` file in `src/main/resources` folder and verify if one or more ports are set.
 
 The known schema is:
 ```
 micronaut:
     server:
         port: <port>
+        ssl:
+            enabled: <true|false>
+            port: <port>
 ```
 
 #### OpenLiberty
@@ -101,8 +104,10 @@ The known schema is:
 
 Alizer follows the default behavior of Quarkus which reads configuration properties from multiple sources (by descending ordinal).
 
-1) It checks if the environment variable QUARKUS_HTTP_PORT is set
-2) It checks for the `QUARKUS_HTTP_PORT` within the `.env` file, if any, located in the root
+N.B: If insecure requests are disabled only the HTTP SSL port will be detected
+
+1) It checks if the environment variable `QUARKUS_HTTP_SSL_PORT`, `QUARKUS_HTTP_INSECURE_REQUESTS` and `QUARKUS_HTTP_PORT` are set
+2) It checks for `QUARKUS_HTTP_SSL_PORT`, `QUARKUS_HTTP_INSECURE_REQUESTS` and `QUARKUS_HTTP_PORT` within the `.env` file, if any, located in the root
 3) It searches for any `application.[properties|yaml|yml]` file in `src/main/resources` folder and verify if a port is set.
 
 The known schemas for application files are:
@@ -111,6 +116,8 @@ For `.properties`
 ```
 ...
 quarkus.http.port=<port>
+quarkus.http.insecure-requests=<enabled|redirect|disabled>
+quarkus.http.ssl-port=<port>
 ...
 ```
 
@@ -120,22 +127,27 @@ For `.yaml|.yml`
 quarkus
   http
     port=<port>
+    insecure-requests=<enabled|redirect|disabled>
+    ssl-port=<port>
 ...
 ```
 
 #### Springboot
 
-Alizer checks if the environment variable SERVER_PORT is set. If not or it does not contain a valid port value, it searches for the `application.[yml|yaml]` or `application.properties` file in `src/main/resources` folder and verify if a port is set.
+Alizer checks if the environment variable SERVER_PORT or SERVER_HTTP_PORT are set. If not or they do not contain valid port values, it searches for the `application.[yml|yaml]` or `application.properties` file in `src/main/resources` folder and verify if a port is set.
 
 The known schema for `application.[yml|yaml]` is:
 ```
 server:
     port: <port>
+    http:
+        port <port>
 ```
 
 and the schema for `application.properties`
 ```
 server.port=<port>
+server.http.port=<port>
 ```
 
 #### Vertx
