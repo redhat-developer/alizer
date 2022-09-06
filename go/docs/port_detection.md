@@ -28,6 +28,7 @@ Example of `expose` - the result is [3000,8000]
 services:
   web:
     ...
+    build: .
     expose:
       - "3000"
       - "8000"
@@ -42,11 +43,12 @@ Example of short syntax `ports` (`[HOST:]CONTAINER[/PROTOCOL]`) - the result is 
 services:
   web:
     ...
-  ports:
-    - "3000"                             # container port (3000), assigned to random host port
-    - "8000:8000"                        # container port (8000), assigned to given host port (8000)
-    - "127.0.0.1:8002:8002"              # container port (8002), assigned to given host port (8002) and bind to 127.0.0.1
-    - "6060:6060/udp"                    # container port (6060) restricted to UDP protocol, assigned to given host (6060)
+    build: .
+    ports:
+      - "3000"                             # container port (3000), assigned to random host port
+      - "8000:8000"                        # container port (8000), assigned to given host port (8000)
+      - "127.0.0.1:8002:8002"              # container port (8002), assigned to given host port (8002) and bind to 127.0.0.1
+      - "6060:6060/udp"                    # container port (6060) restricted to UDP protocol, assigned to given host (6060)
   myapp2:
     ...
     expose:
@@ -58,12 +60,13 @@ Example of long syntax `ports` - the result is [6060]
 services:
   web:
     ...
-  ports:
-    - target: 6060
-      host_ip: 127.0.0.1
-      published: 6060
-      protocol: udp
-      mode: host
+    build: .
+    ports:
+      - target: 6060
+        host_ip: 127.0.0.1
+        published: 6060
+        protocol: udp
+        mode: host
   myapp2:
     ...
     expose:
