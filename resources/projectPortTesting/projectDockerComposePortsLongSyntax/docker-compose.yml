@@ -1,0 +1,23 @@
+version: '3'
+services:
+  db: 
+    image: postgres
+    restart: always
+    volumes:
+      - ../../tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: pswhere
+  web:
+    build: .
+    command: npm run dev
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - target: 6060
+        host_ip: 127.0.0.1
+        published: 6060
+        protocol: udp
+        mode: host
+    depends_on:
+     - db 

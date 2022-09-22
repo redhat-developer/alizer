@@ -1,0 +1,181 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: vertx-cute-name-service
+  annotations:
+    description: This template creates a Vert.x application exposing a cute name service
+    tags: instant-app
+parameters:
+- name: SOURCE_REPOSITORY_URL
+  description: The source URL for the application
+  displayName: Source URL
+  required: true
+- name: SOURCE_REPOSITORY_REF
+  description: The branch name for the application
+  displayName: Source Branch
+  value: master
+  required: true
+- name: SOURCE_REPOSITORY_DIR
+  description: The location within the source repo of the application
+  displayName: Source Directory
+  value: .
+  required: true
+- name: GITHUB_WEBHOOK_SECRET
+  description: A secret string used to configure the GitHub webhook.
+  displayName: GitHub Webhook Secret
+  required: true
+  from: '[a-zA-Z0-9]{40}'
+  generate: expression
+
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: cute-name-service
+    labels:
+      example: vertx-cache-example
+  spec: {}
+
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: runtime-name-service
+    labels:
+      example: cute-name-service
+  spec:
+    tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift
+
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: cute-name-service
+    labels:
+      example: cute-name-service
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: cute-name-service:latest
+    source:
+      git:
+        uri: ${SOURCE_REPOSITORY_URL}
+        ref: ${SOURCE_REPOSITORY_REF}
+      #contextDir: ${SOURCE_REPOSITORY_DIR}
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: runtime-name-service:latest
+        incremental: true
+        env:
+        - name: MAVEN_ARGS_APPEND
+          value: "-pl ${SOURCE_REPOSITORY_DIR}"
+        - name: ARTIFACT_DIR
+          value: "${SOURCE_REPOSITORY_DIR}/target"
+      type: Source
+    triggers:
+    - github:
+        secret: ${GITHUB_WEBHOOK_SECRET}
+      type: GitHub
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9779"
+    labels:
+      app: cute-name-service
+      group: io.openshift.example
+    name: cute-name-service
+  spec:
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: cute-name-service
+      group: io.openshift.example
+
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: cute-name-service
+      group: io.openshift.example
+    name: cute-name-service
+  spec:
+    replicas: 1
+    selector:
+      app: cute-name-service
+      group: io.openshift.example
+    template:
+      metadata:
+        labels:
+          app: cute-name-service
+          group: io.openshift.example
+      spec:
+        containers:
+        - env:
+          - name: KUBERNETES_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          image: cute-name-service:latest
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+          name: vertx
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9779
+            name: prometheus
+            protocol: TCP
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - vertx
+        from:
+          kind: ImageStreamTag
+          name: cute-name-service:latest
+
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    labels:
+      app: cute-name-service
+      group: io.openshift.example
+    name: cute-name-service
+  spec:
+    port:
+      targetPort: 8080
+    to:
+      kind: Service
+      name: cute-name-service

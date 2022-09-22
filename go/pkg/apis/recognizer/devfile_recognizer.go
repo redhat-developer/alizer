@@ -21,14 +21,7 @@ import (
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 )
 
-type DevFileType struct {
-	Name        string
-	Language    string
-	ProjectType string
-	Tags        []string
-}
-
-func SelectDevFileFromTypes(path string, devFileTypes []DevFileType) (int, error) {
+func SelectDevFileFromTypes(path string, devFileTypes []model.DevFileType) (int, error) {
 	components, _ := DetectComponentsInRoot(path)
 	if len(components) > 0 {
 		devfile, err := selectDevFileByLanguage(components[0].Languages[0], devFileTypes)
@@ -56,7 +49,7 @@ func SelectDevFileFromTypes(path string, devFileTypes []DevFileType) (int, error
 	return devfile, nil
 }
 
-func SelectDevFileUsingLanguagesFromTypes(languages []model.Language, devFileTypes []DevFileType) (int, error) {
+func SelectDevFileUsingLanguagesFromTypes(languages []model.Language, devFileTypes []model.DevFileType) (int, error) {
 	for _, language := range languages {
 		devfile, err := selectDevFileByLanguage(language, devFileTypes)
 		if err == nil {
@@ -66,20 +59,20 @@ func SelectDevFileUsingLanguagesFromTypes(languages []model.Language, devFileTyp
 	return -1, errors.New("no valid devfile found by using those languages")
 }
 
-func SelectDevFileFromRegistry(path string, url string) (DevFileType, error) {
+func SelectDevFileFromRegistry(path string, url string) (model.DevFileType, error) {
 	devFileTypes, err := downloadDevFileTypesFromRegistry(url)
 	if err != nil {
-		return DevFileType{}, err
+		return model.DevFileType{}, err
 	}
 
 	index, err := SelectDevFileFromTypes(path, devFileTypes)
 	if err != nil {
-		return DevFileType{}, err
+		return model.DevFileType{}, err
 	}
 	return devFileTypes[index], nil
 }
 
-func downloadDevFileTypesFromRegistry(url string) ([]DevFileType, error) {
+func downloadDevFileTypesFromRegistry(url string) ([]model.DevFileType, error) {
 	url = adaptUrl(url)
 	// Get the data
 	resp, err := http.Get(url)
@@ -88,25 +81,25 @@ func downloadDevFileTypesFromRegistry(url string) ([]DevFileType, error) {
 		url = appendIndexPath(url)
 		resp, err = http.Get(url)
 		if err != nil {
-			return []DevFileType{}, err
+			return []model.DevFileType{}, err
 		}
 	}
 	defer resp.Body.Close()
 
 	// Check server response
 	if resp.StatusCode != http.StatusOK {
-		return []DevFileType{}, errors.New("unable to fetch devfiles from the registry")
+		return []model.DevFileType{}, errors.New("unable to fetch devfiles from the registry")
 	}
 
 	body, err2 := ioutil.ReadAll(resp.Body)
 	if err2 != nil {
-		return []DevFileType{}, errors.New("unable to fetch devfiles from the registry")
+		return []model.DevFileType{}, errors.New("unable to fetch devfiles from the registry")
 	}
 
-	var devFileTypes []DevFileType
+	var devFileTypes []model.DevFileType
 	err = json.Unmarshal(body, &devFileTypes)
 	if err != nil {
-		return []DevFileType{}, errors.New("unable to fetch devfiles from the registry")
+		return []model.DevFileType{}, errors.New("unable to fetch devfiles from the registry")
 	}
 
 	return devFileTypes, nil
@@ -132,7 +125,7 @@ func adaptUrl(url string) string {
 	return url
 }
 
-func selectDevFileByLanguage(language model.Language, devFileTypes []DevFileType) (int, error) {
+func selectDevFileByLanguage(language model.Language, devFileTypes []model.DevFileType) (int, error) {
 	scoreTarget := 0
 	devfileTarget := -1
 	FRAMEWORK_WEIGHT := 10
