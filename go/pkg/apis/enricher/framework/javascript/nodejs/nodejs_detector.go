@@ -11,9 +11,22 @@
 package enricher
 
 import (
+	"path/filepath"
+	"regexp"
+
 	utils "github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 func hasFramework(configFile string, tag string) bool {
 	return utils.IsTagInPackageJsonFile(configFile, tag)
+}
+
+func getPortFromStartScript(root string, regex string) int {
+	packageJsonPath := filepath.Join(root, "package.json")
+	packageJson, err := utils.GetPackageJsonSchemaFromFile(packageJsonPath)
+	if err != nil {
+		return -1
+	}
+	re := regexp.MustCompile(regex)
+	return utils.FindPortSubmatch(re, packageJson.Scripts.Start, 1)
 }
