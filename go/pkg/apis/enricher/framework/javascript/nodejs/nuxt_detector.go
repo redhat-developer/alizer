@@ -23,7 +23,7 @@ func (n NuxtDetector) GetSupportedFrameworks() []string {
 
 func (n NuxtDetector) DoFrameworkDetection(language *model.Language, config string) {
 	if hasFramework(config, "nuxt") {
-		language.Frameworks = append(language.Frameworks, "Nuxt")
+		language.Frameworks = append(language.Frameworks, "Nuxt", "Nuxt.js")
 	}
 }
 

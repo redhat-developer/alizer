@@ -62,6 +62,10 @@ func TestComponentDetectionOnNextJs(t *testing.T) {
 	isComponentsInProject(t, "nextjs-app", 1, "typescript", "nextjs-app")
 }
 
+func TestComponentDetectionOnNuxtJs(t *testing.T) {
+	isComponentsInProject(t, "nuxt-app", 1, "typescript", "nuxt-app")
+}
+
 func TestComponentDetectionNoResult(t *testing.T) {
 	components := getComponentsFromProject(t, "simple")
 	if len(components) > 0 {
@@ -264,6 +268,10 @@ func TestPortDetectionAngularPortInStartScript(t *testing.T) {
 
 func TestPortDetectionNextJsPortInStartScript(t *testing.T) {
 	testPortDetectionInProject(t, "projectNextjs", []int{8610})
+}
+
+func TestPortDetectionNuxtJsPortInStartScript(t *testing.T) {
+	testPortDetectionInProject(t, "projectNuxt", []int{8820})
 }
 
 func testPortDetectionInProject(t *testing.T, project string, ports []int) {

@@ -85,6 +85,10 @@ func TestDetectNextJsDevfile(t *testing.T) {
 	detectDevFile(t, "nextjs-app", "Next.js")
 }
 
+func TestDetectNuxtJsDevfile(t *testing.T) {
+	detectDevFile(t, "nuxt-app", "nodejs-nuxtjs")
+}
+
 func detectDevFile(t *testing.T, projectName string, devFileName string) {
 	detectDevFileFunc := func(devFileTypes []model.DevFileType) (int, error) {
 		testingProjectPath := GetTestProjectPath(projectName)
@@ -215,6 +219,15 @@ func getDevFileTypes() []model.DevFileType {
 			Tags: []string{
 				"Node.js",
 				"Next.js",
+			},
+		},
+		{
+			Name:        "nodejs-nuxtjs",
+			Language:    "TypeScript",
+			ProjectType: "Nuxt.js",
+			Tags: []string{
+				"Node.js",
+				"Nuxt.js",
 			},
 		},
 	}
