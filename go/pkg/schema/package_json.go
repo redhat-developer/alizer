@@ -17,5 +17,6 @@ type PackageJson struct {
 }
 
 type Script struct {
+	Dev   string `json:"dev"`
 	Start string `json:"start"`
 }

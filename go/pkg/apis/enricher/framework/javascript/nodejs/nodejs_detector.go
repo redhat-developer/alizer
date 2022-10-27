@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"regexp"
 
+	"github.com/redhat-developer/alizer/go/pkg/schema"
 	utils "github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
@@ -22,11 +23,24 @@ func hasFramework(configFile string, tag string) bool {
 }
 
 func getPortFromStartScript(root string, regex string) int {
-	packageJsonPath := filepath.Join(root, "package.json")
-	packageJson, err := utils.GetPackageJsonSchemaFromFile(packageJsonPath)
+	packageJson, err := getValueFromPackageJson(root)
 	if err != nil {
 		return -1
 	}
 	re := regexp.MustCompile(regex)
 	return utils.FindPortSubmatch(re, packageJson.Scripts.Start, 1)
+}
+
+func getPortFromDevScript(root string, regex string) int {
+	packageJson, err := getValueFromPackageJson(root)
+	if err != nil {
+		return -1
+	}
+	re := regexp.MustCompile(regex)
+	return utils.FindPortSubmatch(re, packageJson.Scripts.Dev, 1)
+}
+
+func getValueFromPackageJson(root string) (schema.PackageJson, error) {
+	packageJsonPath := filepath.Join(root, "package.json")
+	return utils.GetPackageJsonSchemaFromFile(packageJsonPath)
 }

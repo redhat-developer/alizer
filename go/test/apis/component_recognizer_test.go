@@ -66,6 +66,10 @@ func TestComponentDetectionOnNuxtJs(t *testing.T) {
 	isComponentsInProject(t, "nuxt-app", 1, "typescript", "nuxt-app")
 }
 
+func TestComponentDetectionOnSvelteJs(t *testing.T) {
+	isComponentsInProject(t, "svelte-app", 1, "javascript", "svelte-app")
+}
+
 func TestComponentDetectionNoResult(t *testing.T) {
 	components := getComponentsFromProject(t, "simple")
 	if len(components) > 0 {
@@ -272,6 +276,10 @@ func TestPortDetectionNextJsPortInStartScript(t *testing.T) {
 
 func TestPortDetectionNuxtJsPortInStartScript(t *testing.T) {
 	testPortDetectionInProject(t, "projectNuxt", []int{8820})
+}
+
+func TestPortDetectionSvelteJsPortInStartScript(t *testing.T) {
+	testPortDetectionInProject(t, "projectSvelte", []int{8282})
 }
 
 func testPortDetectionInProject(t *testing.T, project string, ports []int) {
