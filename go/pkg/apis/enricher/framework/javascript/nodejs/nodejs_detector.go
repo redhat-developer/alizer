@@ -39,7 +39,7 @@ func getPortFromDevScript(root string, regexes []string) int {
 }
 
 func getPortFromScript(root string, getScript packageScriptFunc, regexes []string) int {
-	packageJson, err := getValueFromPackageJson(root)
+	packageJson, err := getPackageJson(root)
 	if err != nil {
 		return -1
 	}
@@ -55,7 +55,7 @@ func getPortFromScript(root string, getScript packageScriptFunc, regexes []strin
 	return -1
 }
 
-func getValueFromPackageJson(root string) (schema.PackageJson, error) {
+func getPackageJson(root string) (schema.PackageJson, error) {
 	packageJsonPath := filepath.Join(root, "package.json")
 	return utils.GetPackageJsonSchemaFromFile(packageJsonPath)
 }
