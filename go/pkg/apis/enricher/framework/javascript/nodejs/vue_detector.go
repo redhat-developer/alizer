@@ -28,14 +28,15 @@ func (v VueDetector) DoFrameworkDetection(language *model.Language, config strin
 }
 
 func (v VueDetector) DoPortsDetection(component *model.Component) {
-	// check if port is set in start script in package.json
-	port := getPortFromStartScript(component.Path, `--port (\d*)`)
+	regexes := []string{`--port (\d*)`, `PORT=(\d*)`}
+	// check if --port or PORT is set in start script in package.json
+	port := getPortFromStartScript(component.Path, regexes)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 	}
 
-	// check if PORT is set in start script in package.json
-	port = getPortFromStartScript(component.Path, `PORT=(\d*)`)
+	// check if --port or PORT is set in dev script in package.json
+	port = getPortFromDevScript(component.Path, regexes)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 	}

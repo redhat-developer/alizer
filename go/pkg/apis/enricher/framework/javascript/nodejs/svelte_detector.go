@@ -29,13 +29,7 @@ func (n SvelteDetector) DoFrameworkDetection(language *model.Language, config st
 
 func (n SvelteDetector) DoPortsDetection(component *model.Component) {
 	// check if port is set in start script in package.json
-	port := getPortFromDevScript(component.Path, `--port (\d*)`)
-	if utils.IsValidPort(port) {
-		component.Ports = []int{port}
-	}
-
-	// check if PORT is set in start script in package.json
-	port = getPortFromDevScript(component.Path, `PORT=(\d*)`)
+	port := getPortFromDevScript(component.Path, []string{`--port (\d*)`, `PORT=(\d*)`})
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 	}

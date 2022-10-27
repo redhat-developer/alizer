@@ -89,6 +89,10 @@ func TestDetectNuxtJsDevfile(t *testing.T) {
 	detectDevFile(t, "nuxt-app", "nodejs-nuxtjs")
 }
 
+func TestDetectVueDevfile(t *testing.T) {
+	detectDevFile(t, "vue-app", "nodejs-vue")
+}
+
 func detectDevFile(t *testing.T, projectName string, devFileName string) {
 	detectDevFileFunc := func(devFileTypes []model.DevFileType) (int, error) {
 		testingProjectPath := GetTestProjectPath(projectName)
@@ -228,6 +232,15 @@ func getDevFileTypes() []model.DevFileType {
 			Tags: []string{
 				"Node.js",
 				"Nuxt.js",
+			},
+		},
+		{
+			Name:        "nodejs-vue",
+			Language:    "TypeScript",
+			ProjectType: "Vue",
+			Tags: []string{
+				"Node.js",
+				"Vue",
 			},
 		},
 	}

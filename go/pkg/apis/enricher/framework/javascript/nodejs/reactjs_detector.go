@@ -43,7 +43,7 @@ func (r ReactJsDetector) DoPortsDetection(component *model.Component) {
 		return
 	}
 	// check if port is set in start script in package.json
-	port = getPortFromStartScript(component.Path, `PORT=(\d*)`)
+	port = getPortFromStartScript(component.Path, []string{`PORT=(\d*)`})
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 		return

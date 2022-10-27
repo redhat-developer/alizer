@@ -18,26 +18,41 @@ import (
 	utils "github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
+type packageScriptFunc func(schema.PackageJson) string
+
 func hasFramework(configFile string, tag string) bool {
 	return utils.IsTagInPackageJsonFile(configFile, tag)
 }
 
-func getPortFromStartScript(root string, regex string) int {
-	packageJson, err := getValueFromPackageJson(root)
-	if err != nil {
-		return -1
+func getPortFromStartScript(root string, regexes []string) int {
+	getStartScript := func(packageJson schema.PackageJson) string {
+		return packageJson.Scripts.Start
 	}
-	re := regexp.MustCompile(regex)
-	return utils.FindPortSubmatch(re, packageJson.Scripts.Start, 1)
+	return getPortFromScript(root, getStartScript, regexes)
 }
 
-func getPortFromDevScript(root string, regex string) int {
+func getPortFromDevScript(root string, regexes []string) int {
+	getDevScript := func(packageJson schema.PackageJson) string {
+		return packageJson.Scripts.Dev
+	}
+	return getPortFromScript(root, getDevScript, regexes)
+}
+
+func getPortFromScript(root string, getScript packageScriptFunc, regexes []string) int {
 	packageJson, err := getValueFromPackageJson(root)
 	if err != nil {
 		return -1
 	}
-	re := regexp.MustCompile(regex)
-	return utils.FindPortSubmatch(re, packageJson.Scripts.Dev, 1)
+
+	for _, regex := range regexes {
+		re := regexp.MustCompile(regex)
+		port := utils.FindPortSubmatch(re, getScript(packageJson), 1)
+		if port != -1 {
+			return port
+		}
+	}
+
+	return -1
 }
 
 func getValueFromPackageJson(root string) (schema.PackageJson, error) {

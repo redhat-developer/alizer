@@ -28,14 +28,15 @@ func (n NuxtDetector) DoFrameworkDetection(language *model.Language, config stri
 }
 
 func (n NuxtDetector) DoPortsDetection(component *model.Component) {
+	regexes := []string{`--port=(\d*)`}
 	// check if port is set in start script in package.json
-	port := getPortFromStartScript(component.Path, `--port=(\d*)`)
+	port := getPortFromStartScript(component.Path, regexes)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 	}
 
 	// check if port is set in dev script in package.json
-	port = getPortFromDevScript(component.Path, `--port=(\d*)`)
+	port = getPortFromDevScript(component.Path, regexes)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 	}

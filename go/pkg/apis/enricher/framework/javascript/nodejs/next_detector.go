@@ -28,14 +28,15 @@ func (n NextDetector) DoFrameworkDetection(language *model.Language, config stri
 }
 
 func (n NextDetector) DoPortsDetection(component *model.Component) {
+	regexes := []string{`-p (\d*)`}
 	// check if port is set in start script in package.json
-	port := getPortFromStartScript(component.Path, `-p (\d*)`)
+	port := getPortFromStartScript(component.Path, regexes)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 	}
 
 	// check if port is set in start script in package.json
-	port = getPortFromDevScript(component.Path, `-p (\d*)`)
+	port = getPortFromDevScript(component.Path, regexes)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 	}

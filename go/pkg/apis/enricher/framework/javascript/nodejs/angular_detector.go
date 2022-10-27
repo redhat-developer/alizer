@@ -78,7 +78,7 @@ func (a AngularDetector) DoPortsDetection(component *model.Component) {
 	}
 
 	// check if port is set in start script in package.json
-	port := getPortFromStartScript(component.Path, `--port (\d*)`)
+	port := getPortFromStartScript(component.Path, []string{`--port (\d*)`})
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 		return

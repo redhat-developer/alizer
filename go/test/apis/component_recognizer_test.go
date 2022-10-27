@@ -70,6 +70,10 @@ func TestComponentDetectionOnSvelteJs(t *testing.T) {
 	isComponentsInProject(t, "svelte-app", 1, "javascript", "svelte-app")
 }
 
+func TestComponentDetectionOnVue(t *testing.T) {
+	isComponentsInProject(t, "vue-app", 1, "typescript", "vue-app")
+}
+
 func TestComponentDetectionNoResult(t *testing.T) {
 	components := getComponentsFromProject(t, "simple")
 	if len(components) > 0 {
@@ -130,7 +134,7 @@ func updateContent(filePath string, data []byte) error {
 
 func TestComponentDetectionMultiProjects(t *testing.T) {
 	components := getComponentsFromProject(t, "")
-	nComps := 14
+	nComps := 18
 	if len(components) != nComps {
 		t.Errorf("Expected " + strconv.Itoa(nComps) + " components but found " + strconv.Itoa(len(components)))
 	}
@@ -280,6 +284,10 @@ func TestPortDetectionNuxtJsPortInStartScript(t *testing.T) {
 
 func TestPortDetectionSvelteJsPortInStartScript(t *testing.T) {
 	testPortDetectionInProject(t, "projectSvelte", []int{8282})
+}
+
+func TestPortDetectionVuePortInStartScript(t *testing.T) {
+	testPortDetectionInProject(t, "projectVue", []int{8282})
 }
 
 func testPortDetectionInProject(t *testing.T, project string, ports []int) {
