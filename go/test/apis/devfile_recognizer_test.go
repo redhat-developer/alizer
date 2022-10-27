@@ -81,6 +81,10 @@ func TestDetectAngularDevfile(t *testing.T) {
 	detectDevFile(t, "angularjs", "Angular")
 }
 
+func TestDetectNextJsDevfile(t *testing.T) {
+	detectDevFile(t, "nextjs-app", "Next.js")
+}
+
 func detectDevFile(t *testing.T, projectName string, devFileName string) {
 	detectDevFileFunc := func(devFileTypes []model.DevFileType) (int, error) {
 		testingProjectPath := GetTestProjectPath(projectName)
@@ -202,6 +206,15 @@ func getDevFileTypes() []model.DevFileType {
 			Tags: []string{
 				"NodeJS",
 				"Angular",
+			},
+		},
+		{
+			Name:        "Next.js",
+			Language:    "TypeScript",
+			ProjectType: "Next.js",
+			Tags: []string{
+				"Node.js",
+				"Next.js",
 			},
 		},
 	}

@@ -23,7 +23,7 @@ func (n NextDetector) GetSupportedFrameworks() []string {
 
 func (n NextDetector) DoFrameworkDetection(language *model.Language, config string) {
 	if hasFramework(config, "next") {
-		language.Frameworks = append(language.Frameworks, "Next")
+		language.Frameworks = append(language.Frameworks, "Next", "Next.js")
 	}
 }
 
