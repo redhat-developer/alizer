@@ -33,4 +33,10 @@ func (n NuxtDetector) DoPortsDetection(component *model.Component) {
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 	}
+
+	// check if port is set in dev script in package.json
+	port = getPortFromDevScript(component.Path, `--port=(\d*)`)
+	if utils.IsValidPort(port) {
+		component.Ports = []int{port}
+	}
 }
