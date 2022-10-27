@@ -36,6 +36,12 @@ Rust:
   configuration_files:
     - "Cargo.toml"
   component: true
+TypeScript:
+  exclude_folders:
+    - "node_modules"
+  configuration_files:
+    - "package.json"
+  component: true
 Visual Basic .NET:
   aliases:
     - "dotnet"

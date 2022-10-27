@@ -77,6 +77,10 @@ func TestDetectGoDevfile(t *testing.T) {
 	detectDevFile(t, "golang-gin-app", "go")
 }
 
+func TestDetectAngularDevfile(t *testing.T) {
+	detectDevFile(t, "angularjs", "Angular")
+}
+
 func detectDevFile(t *testing.T, projectName string, devFileName string) {
 	detectDevFileFunc := func(devFileTypes []model.DevFileType) (int, error) {
 		testingProjectPath := GetTestProjectPath(projectName)
@@ -189,6 +193,15 @@ func getDevFileTypes() []model.DevFileType {
 			ProjectType: "go",
 			Tags: []string{
 				"go",
+			},
+		},
+		{
+			Name:        "Angular",
+			Language:    "TypeScript",
+			ProjectType: "Angular",
+			Tags: []string{
+				"NodeJS",
+				"Angular",
 			},
 		},
 	}

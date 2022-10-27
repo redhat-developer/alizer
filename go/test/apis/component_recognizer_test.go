@@ -54,6 +54,10 @@ func TestComponentDetectionOnGoLang(t *testing.T) {
 	isComponentsInProject(t, "golang-gin-app", 1, "Go", "golang-gin-app")
 }
 
+func TestComponentDetectionOnAngular(t *testing.T) {
+	isComponentsInProject(t, "angularjs", 1, "typescript", "angularjs")
+}
+
 func TestComponentDetectionNoResult(t *testing.T) {
 	components := getComponentsFromProject(t, "simple")
 	if len(components) > 0 {
@@ -114,7 +118,7 @@ func updateContent(filePath string, data []byte) error {
 
 func TestComponentDetectionMultiProjects(t *testing.T) {
 	components := getComponentsFromProject(t, "")
-	nComps := 13
+	nComps := 14
 	if len(components) != nComps {
 		t.Errorf("Expected " + strconv.Itoa(nComps) + " components but found " + strconv.Itoa(len(components)))
 	}
@@ -248,6 +252,10 @@ func TestPortDetectionGoFiber(t *testing.T) {
 
 func TestPortDetectionGoMux(t *testing.T) {
 	testPortDetectionInProject(t, "projectGoMux", []int{8000})
+}
+
+func TestPortDetectionAngularPortInStartScript(t *testing.T) {
+	testPortDetectionInProject(t, "projectAngularjs", []int{8780})
 }
 
 func testPortDetectionInProject(t *testing.T, project string, ports []int) {
