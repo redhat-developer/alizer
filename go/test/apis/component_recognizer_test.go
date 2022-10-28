@@ -278,8 +278,8 @@ func TestPortDetectionNextJsPortInStartScript(t *testing.T) {
 	testPortDetectionInProject(t, "projectNextjs", []int{8610})
 }
 
-func TestPortDetectionNuxtJsPortInStartScript(t *testing.T) {
-	testPortDetectionInProject(t, "projectNuxt", []int{8820})
+func TestPortDetectionNuxtJsPortInConfigFile(t *testing.T) {
+	testPortDetectionInProject(t, "projectNuxt", []int{8787})
 }
 
 func TestPortDetectionSvelteJsPortInStartScript(t *testing.T) {

@@ -11,6 +11,8 @@
 package enricher
 
 import (
+	"regexp"
+
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
@@ -33,11 +35,26 @@ func (n NuxtDetector) DoPortsDetection(component *model.Component) {
 	port := getPortFromStartScript(component.Path, regexes)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
+		return
 	}
 
 	// check if port is set in dev script in package.json
 	port = getPortFromDevScript(component.Path, regexes)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
+		return
 	}
+
+	//check inside the nuxt.config.js file
+	bytes, err := utils.ReadAnyApplicationFile(component.Path, []model.ApplicationFileInfo{
+		{
+			Dir:  "",
+			File: "nuxt.config.js",
+		},
+	})
+	if err != nil {
+		return
+	}
+	re := regexp.MustCompile(`port:\s*(\d+)*`)
+	component.Ports = utils.FindAllPortsSubmatch(re, string(bytes), 1)
 }

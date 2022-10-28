@@ -33,11 +33,13 @@ func (n NextDetector) DoPortsDetection(component *model.Component) {
 	port := getPortFromStartScript(component.Path, regexes)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
+		return
 	}
 
 	// check if port is set in start script in package.json
 	port = getPortFromDevScript(component.Path, regexes)
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
+		return
 	}
 }

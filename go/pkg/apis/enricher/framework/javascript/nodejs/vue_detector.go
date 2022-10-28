@@ -11,6 +11,8 @@
 package enricher
 
 import (
+	"regexp"
+
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
@@ -47,4 +49,17 @@ func (v VueDetector) DoPortsDetection(component *model.Component) {
 		component.Ports = []int{port}
 		return
 	}
+
+	//check inside the vue.config.js file
+	bytes, err := utils.ReadAnyApplicationFile(component.Path, []model.ApplicationFileInfo{
+		{
+			Dir:  "",
+			File: "vue.config.js",
+		},
+	})
+	if err != nil {
+		return
+	}
+	re := regexp.MustCompile(`port:\s*(\d+)*`)
+	component.Ports = utils.FindAllPortsSubmatch(re, string(bytes), 1)
 }
