@@ -73,8 +73,13 @@ file is in the project. If so, Alizer assumes it is a NodeJs project.
 
 At this point, it reads its content looking for dependencies to discover frameworks. Currently, it recognizes:
 
+- Angular
 - ExpressJs
+- Next
+- Nuxt
 - ReactJS
+- Svelte
+- Vue
 
 ```
 { 

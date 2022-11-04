@@ -77,6 +77,22 @@ func TestDetectGoDevfile(t *testing.T) {
 	detectDevFile(t, "golang-gin-app", "go")
 }
 
+func TestDetectAngularDevfile(t *testing.T) {
+	detectDevFile(t, "angularjs", "Angular")
+}
+
+func TestDetectNextJsDevfile(t *testing.T) {
+	detectDevFile(t, "nextjs-app", "Next.js")
+}
+
+func TestDetectNuxtJsDevfile(t *testing.T) {
+	detectDevFile(t, "nuxt-app", "nodejs-nuxtjs")
+}
+
+func TestDetectVueDevfile(t *testing.T) {
+	detectDevFile(t, "vue-app", "nodejs-vue")
+}
+
 func detectDevFile(t *testing.T, projectName string, devFileName string) {
 	detectDevFileFunc := func(devFileTypes []model.DevFileType) (int, error) {
 		testingProjectPath := GetTestProjectPath(projectName)
@@ -189,6 +205,42 @@ func getDevFileTypes() []model.DevFileType {
 			ProjectType: "go",
 			Tags: []string{
 				"go",
+			},
+		},
+		{
+			Name:        "Angular",
+			Language:    "TypeScript",
+			ProjectType: "Angular",
+			Tags: []string{
+				"NodeJS",
+				"Angular",
+			},
+		},
+		{
+			Name:        "Next.js",
+			Language:    "TypeScript",
+			ProjectType: "Next.js",
+			Tags: []string{
+				"Node.js",
+				"Next.js",
+			},
+		},
+		{
+			Name:        "nodejs-nuxtjs",
+			Language:    "TypeScript",
+			ProjectType: "Nuxt.js",
+			Tags: []string{
+				"Node.js",
+				"Nuxt.js",
+			},
+		},
+		{
+			Name:        "nodejs-vue",
+			Language:    "TypeScript",
+			ProjectType: "Vue",
+			Tags: []string{
+				"Node.js",
+				"Vue",
 			},
 		},
 	}

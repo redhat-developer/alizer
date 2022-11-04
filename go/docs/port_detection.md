@@ -169,6 +169,41 @@ Alizer searches for any `json` file in `src/main/conf` folder and verify if a po
 
 ### Javascript Frameworks
 
+### Angular
+
+Alizer uses three ways to detect ports configuration in an Angular project
+1) It checks if the file `angular.json` exists in the root and analyze it to see if a port is set, using the following schema
+```
+{
+  ...
+   "projects": {
+    "project-name": {
+      ...
+      "architect": {
+        "serve": {
+          "options": {
+            "host": "...",
+            "port": "...",
+  ...
+}
+```
+N.B: `project-name` is the actual app name retrieved within the `package.json`
+
+2) It checks if the `start` npm script sets a `port` (e.g. `"start": ".... --port <port>"`)
+3) It checks if the file `angular-cli.json` exists in the root and analyze it to see if a port is set, using the following schema
+```
+{
+  ...
+  "defaults": {
+    "serve": {
+      "host": "...",
+      "port": "...",
+    }
+  }
+  ...
+}
+```
+
 #### Express
 
 Alizer searches for function `listen` calls as Express uses it to define `port` and `host` to be used use. 
@@ -199,12 +234,44 @@ app.listen(8080, () => {
 })
 ```
 
+### Next
+
+Alizer searches for any port set within the start and dev scripts when dealing with a Next project
+1) It checks if the `start` npm script sets a `port` (e.g. `"start": ".... -p <port>"`)
+2) It checks if the `dev` npm script sets a `port` (e.g. `"dev": ".... -p <port>"`)
+
+### Nuxt
+
+In a Nuxt project, port detection works by analyzing the `package.json` and the `nuxt.config.js` files
+1) It checks if the `start` npm script sets a `port` (e.g. `"start": ".... --port=<port>"`)
+2) It checks if the `dev` npm script sets a `port` (e.g. `"dev": ".... --port=<port>"`)
+3) It checks if the file `nuxt.config.js` exists in the root and analyze it to see if a port is set (e.g `port: <port>`)
+
 #### React
 
 Alizer follows the general rules by React. The strategy used consists of 3 steps:
 1) It checks if the environment variable PORT is set
 2) It checks for the `port` within the `.env` file, if any, located in the root
 3) It checks if the `start` npm script sets a `port` (e.g. `"start": "PORT=<port> react-scripts start"`)
+
+### Svelte
+
+Alizer searches for any port configured within the `dev` npm script (e.g. `"dev": ".... --port <port>"` or `"dev": ".... PORT=<port>"`)
+
+### Vue
+
+Alizer uses four ways to detect ports configuration in a Vue project
+1) It checks if the `start` npm script sets a `port` (e.g. `"start": ".... --port <port>"` or `"start": ".... PORT=<port>"`)
+1) It checks if the `dev` npm script sets a `port` (e.g. `"dev": ".... --port <port>"` or `"dev": ".... PORT=<port>"`)
+2) It checks if the port is configured within the `.env` file, if any, located in the root
+3) It checks if the file `vue.config.js` exists in the root and analyze it to see if a port is set, using the following schema
+```
+exports = {
+  ...
+  port: <port>
+  ...
+}  
+```
 
 ### Python Frameworks
 

@@ -42,8 +42,8 @@ public class RegistryProxyTest {
         Assertions.assertEquals("Quarkus Java", devfile.getDisplayName());
         Assertions.assertFalse(devfile.getDescription().isEmpty());
         assertFalse(devfile.getTags().isEmpty());
-        assertEquals("quarkus", devfile.getProjectType());
-        assertEquals("java", devfile.getLanguage());
+        assertEquals("quarkus", devfile.getProjectType().toLowerCase());
+        assertEquals("java", devfile.getLanguage().toLowerCase());
         assertFalse(devfile.getLinks().isEmpty());
         assertTrue(devfile.getLinks().containsKey("self"));
         assertFalse(devfile.getResources().isEmpty());
@@ -68,8 +68,8 @@ public class RegistryProxyTest {
         Assertions.assertEquals("Quarkus Java", devfile.getDisplayName());
         Assertions.assertFalse(devfile.getDescription().isEmpty());
         assertFalse(devfile.getTags().isEmpty());
-        assertEquals("quarkus", devfile.getProjectType());
-        assertEquals("java", devfile.getLanguage());
+        assertEquals("quarkus", devfile.getProjectType().toLowerCase());
+        assertEquals("java", devfile.getLanguage().toLowerCase());
         assertFalse(devfile.getLinks().isEmpty());
         assertTrue(devfile.getLinks().containsKey("self"));
         assertTrue(devfile.getResources().isEmpty());

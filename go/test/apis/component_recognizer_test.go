@@ -54,6 +54,26 @@ func TestComponentDetectionOnGoLang(t *testing.T) {
 	isComponentsInProject(t, "golang-gin-app", 1, "Go", "golang-gin-app")
 }
 
+func TestComponentDetectionOnAngular(t *testing.T) {
+	isComponentsInProject(t, "angularjs", 1, "typescript", "angularjs")
+}
+
+func TestComponentDetectionOnNextJs(t *testing.T) {
+	isComponentsInProject(t, "nextjs-app", 1, "typescript", "nextjs-app")
+}
+
+func TestComponentDetectionOnNuxtJs(t *testing.T) {
+	isComponentsInProject(t, "nuxt-app", 1, "typescript", "nuxt-app")
+}
+
+func TestComponentDetectionOnSvelteJs(t *testing.T) {
+	isComponentsInProject(t, "svelte-app", 1, "javascript", "svelte-app")
+}
+
+func TestComponentDetectionOnVue(t *testing.T) {
+	isComponentsInProject(t, "vue-app", 1, "typescript", "vue-app")
+}
+
 func TestComponentDetectionNoResult(t *testing.T) {
 	components := getComponentsFromProject(t, "simple")
 	if len(components) > 0 {
@@ -114,7 +134,7 @@ func updateContent(filePath string, data []byte) error {
 
 func TestComponentDetectionMultiProjects(t *testing.T) {
 	components := getComponentsFromProject(t, "")
-	nComps := 13
+	nComps := 18
 	if len(components) != nComps {
 		t.Errorf("Expected " + strconv.Itoa(nComps) + " components but found " + strconv.Itoa(len(components)))
 	}
@@ -248,6 +268,26 @@ func TestPortDetectionGoFiber(t *testing.T) {
 
 func TestPortDetectionGoMux(t *testing.T) {
 	testPortDetectionInProject(t, "projectGoMux", []int{8000})
+}
+
+func TestPortDetectionAngularPortInStartScript(t *testing.T) {
+	testPortDetectionInProject(t, "projectAngularjs", []int{8780})
+}
+
+func TestPortDetectionNextJsPortInStartScript(t *testing.T) {
+	testPortDetectionInProject(t, "projectNextjs", []int{8610})
+}
+
+func TestPortDetectionNuxtJsPortInConfigFile(t *testing.T) {
+	testPortDetectionInProject(t, "projectNuxt", []int{8787})
+}
+
+func TestPortDetectionSvelteJsPortInStartScript(t *testing.T) {
+	testPortDetectionInProject(t, "projectSvelte", []int{8282})
+}
+
+func TestPortDetectionVuePortInStartScript(t *testing.T) {
+	testPortDetectionInProject(t, "projectVue", []int{8282})
 }
 
 func testPortDetectionInProject(t *testing.T, project string, ports []int) {

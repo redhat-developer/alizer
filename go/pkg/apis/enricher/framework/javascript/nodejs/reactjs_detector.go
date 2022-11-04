@@ -12,8 +12,6 @@ package enricher
 
 import (
 	"os"
-	"path/filepath"
-	"regexp"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/utils"
@@ -45,19 +43,9 @@ func (r ReactJsDetector) DoPortsDetection(component *model.Component) {
 		return
 	}
 	// check if port is set in start script in package.json
-	port = getPortFromStartScript(component.Path)
+	port = getPortFromStartScript(component.Path, []string{`PORT=(\d*)`})
 	if utils.IsValidPort(port) {
 		component.Ports = []int{port}
 		return
 	}
-}
-
-func getPortFromStartScript(root string) int {
-	packageJsonPath := filepath.Join(root, "package.json")
-	packageJson, err := utils.GetPackageJsonSchemaFromFile(packageJsonPath)
-	if err != nil {
-		return -1
-	}
-	re := regexp.MustCompile(`PORT=(\d*)`)
-	return utils.FindPortSubmatch(re, packageJson.Scripts.Start, 1)
 }

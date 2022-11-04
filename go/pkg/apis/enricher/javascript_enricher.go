@@ -23,8 +23,13 @@ type JavaScriptEnricher struct{}
 
 func getJavaScriptFrameworkDetectors() []FrameworkDetectorWithConfigFile {
 	return []FrameworkDetectorWithConfigFile{
+		&framework.AngularDetector{},
 		&framework.ExpressDetector{},
+		&framework.NextDetector{},
+		&framework.NuxtDetector{},
 		&framework.ReactJsDetector{},
+		&framework.SvelteDetector{},
+		&framework.VueDetector{},
 	}
 }
 
