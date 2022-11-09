@@ -1,0 +1,42 @@
+{
+    "https://github.com/lstocchi/translate-example-func.git": {
+        "branch": "main",
+        "commit": "7faf51a95f588b32d8367aa48f61d55397ff6229",
+        "components": [
+            {
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    }        
+                ],
+                "name": "event-handler"
+            },
+            {
+                "name": "viewer",
+                "languages": [
+                    {
+                        "name": "Go",
+                        "frameworks": [],
+                        "tools": [
+                            "1.14"
+                        ]
+                    },
+                    {
+                        "name": "Modula-2",
+                        "frameworks": [],
+                        "tools": []
+                    },
+                    {
+                        "name": "AMPL",
+                        "frameworks": [],
+                        "tools": []
+                    }        
+                ]
+            }
+        ]
+    }
+}
