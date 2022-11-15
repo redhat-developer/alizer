@@ -2,14 +2,14 @@
 
 As you may guess, testing Alizer is a very tough task as it can be run on any project out there and being sure that the detection works fine with every combination of languages/frameworks/tools/project structure is almost impossible.
 
-To simplify it, we implemented a system to allow to add any GitHub repository as target to test Alizer detection without writing any new code. 
+To simplify it, we implemented a system to allow to add any git repository as target to test Alizer detection without writing any new code. 
 The file `git_test.json` contains a list of all repositories and the outcome that Alizer should detect when running on those repos.
 When a new repo is considered a valid candidate to test Alizer it can be added to `git_test.json` without editing any code.
 
 The Json schema used is 
 
 ```
-    <repository-url>: { // the url of a github repository
+    <repository-url>: { // the url of a git repository
         "commit": <commit-id>, // we use commit id instead of a branch name as this could lead to unstable results if the branch is updated over time
         "components": [ // all components that Alizer should detect
             {
