@@ -70,6 +70,7 @@ components, err := recognizer.DetectComponents("./")
 Port detection is a long and consuming job and because of the different algorithms used for each different framework it deserves its own section. For more info check [port detection](docs/port_detection.md)
 
 For more info about name detection plase check the [name detection](docs/name_detection.md) doc.
+
 ### Devfile Detection
 
 It selects a devfile from a list of devfiles (from a devfile registry or other storage) based on the information found in the source tree. 

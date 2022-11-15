@@ -64,7 +64,7 @@ func assertComponentsBelongToGitProject(t *testing.T, gitProjectPath string, exp
 			if !assertExpectedPortsAreFound(expectedComponents[cont].Ports, components[cont].Ports) {
 				expectedPretty := printPrettyStruct(expectedComponents[cont].Ports)
 				foundPretty := printPrettyStruct(components[cont].Ports)
-				t.Errorf("Languages found are different from those expected.\nExpected: %s\nFound: %s ", expectedPretty, foundPretty)
+				t.Errorf("Ports found are different from those expected.\nExpected: %s\nFound: %s ", expectedPretty, foundPretty)
 			}
 			cont++
 		}
