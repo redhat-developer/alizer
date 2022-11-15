@@ -172,6 +172,10 @@ func getComponentsFromFiles(t *testing.T, files []string, settings model.Detecti
 
 func isComponentsInProject(t *testing.T, project string, expectedNumber int, expectedLanguage string, expectedProjectName string) {
 	components := getComponentsFromProject(t, project)
+	verifyComponents(t, components, expectedNumber, expectedLanguage, expectedProjectName)
+}
+
+func verifyComponents(t *testing.T, components []model.Component, expectedNumber int, expectedLanguage string, expectedProjectName string) {
 	hasComponents := len(components) == expectedNumber
 	if hasComponents {
 		isExpectedComponent := strings.EqualFold(expectedLanguage, components[0].Languages[0].Name)
