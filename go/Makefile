@@ -10,7 +10,7 @@ else
 endif
 
 init: copy build
-initWin: copyWin build
+initWin: copyWin buildWin
 
 copy: 
 	mkdir -p $(DEST_DIR); for u in $(LANG_FILES); do $(CP) $$u $(DEST_DIR); done
@@ -21,4 +21,7 @@ copyWin:
 	$(CP) $(CUSTOM_LANG_FILE) $(DEST_DIR)
 
 build:
-	go build ./...
+	go build -o alizer
+
+buildWin:
+	go build -o alizer.exe
