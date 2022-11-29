@@ -465,5 +465,24 @@
                 ]
             }
         ]
+    },
+    "https://github.com/xesina/golang-echo-realworld-example-app.git": {
+        "commit": "e578590b51e93440c5bdfdb5a98578679c0ee383",
+        "components": [
+            {
+                "name": "ignore",
+                "languages": [
+                    {
+                        "name": "Go",
+                        "frameworks": [
+                            "Echo"
+                        ],
+                        "tools": [
+                            "1.18"
+                        ]
+                    }
+                ]
+            }
+        ]
     }
 }

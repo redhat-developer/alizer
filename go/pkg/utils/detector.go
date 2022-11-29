@@ -169,7 +169,8 @@ func GetFilePathsFromRoot(root string) ([]string, error) {
 	ignoreFile, errorIgnoreFile := getIgnoreFile(root)
 	errWalk := filepath.Walk(root,
 		func(path string, info os.FileInfo, err error) error {
-			if errorIgnoreFile == nil && ignoreFile.MatchesPath(path) {
+			relativePath := strings.Replace(path, root, "", 1)
+			if errorIgnoreFile == nil && ignoreFile.MatchesPath(relativePath) {
 				if info.IsDir() {
 					return filepath.SkipDir
 				} else {
