@@ -11,9 +11,10 @@
 package schema
 
 type PackageJson struct {
-	Name         string            `json:"name"`
-	Dependencies map[string]string `json:"dependencies"`
-	Scripts      Script            `json:"scripts"`
+	Name             string            `json:"name"`
+	Dependencies     map[string]string `json:"dependencies"`
+	PeerDependencies map[string]string `json:"peerDependencies"`
+	Scripts          Script            `json:"scripts"`
 }
 
 type Script struct {

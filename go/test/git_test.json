@@ -37,5 +37,433 @@
                 ]
             }
         ]
+    },
+    "https://github.com/beego/beego-example.git": {
+        "commit": "9729063b688570f8d472c4755744197c0bcd833d",
+        "components": [
+            {
+                "name": "ignore",
+                "languages": [
+                    {
+                        "name": "Go",
+                        "frameworks": [
+                            "Beego"
+                        ],
+                        "tools": [
+                            "1.14"
+                        ]
+                    }  
+                ]
+            }
+        ]
+    },
+    "https://github.com/fasthttpd/fasthttpd.git": {
+        "commit": "8bdd9754732a8e4310e2fd2e7a78290ff755268f",
+        "components": [
+            {
+                "name": "ignore",
+                "languages": [
+                    {
+                        "name": "Go",
+                        "frameworks": [
+                            "FastHttp"
+                        ],
+                        "tools": [
+                            "1.18"
+                        ]
+                    },
+                    {
+                        "name": "Smarty",
+                        "frameworks": [],
+                        "tools": []
+                    },
+                    {
+                        "name": "Shell",
+                        "frameworks": [],
+                        "tools": []
+                    }  
+                ]
+            }
+        ]
+    },
+    "https://github.com/go-rel/gin-example.git": {
+        "commit": "814838563761efa05ed1ef38d87e1f28319d2d79",
+        "components": [
+            {
+                "name": "ignore",
+                "languages": [
+                    {
+                        "name": "Go",
+                        "frameworks": [
+                            "Gin"
+                        ],
+                        "tools": [
+                            "1.19"
+                        ]
+                    },
+                    {
+                        "name": "Assembly",
+                        "frameworks": [],
+                        "tools": []
+                    }
+                ],
+                "ports": [
+                    8080
+                ]
+            }
+        ]
+    },
+    "https://github.com/gofiber/recipes.git": {
+        "commit": "7a04f52833b70b97251d8a37893d2e0c599a8c15",
+        "directory": "fiber-grpc",
+        "components": [
+            {
+                "name": "ignore",
+                "languages": [
+                    {
+                        "name": "Go",
+                        "frameworks": [
+                            "GoFiber"
+                        ],
+                        "tools": [
+                            "1.15"
+                        ]
+                    }
+                ],
+                "ports": [
+                    3000
+                ]
+            }
+        ]
+    },
+    "https://github.com/TomFern/go-mux-api.git": {
+        "commit": "bbb41d97b831037182984428df5b65a99d4405b3",
+        "components": [
+            {
+                "name": "ignore",
+                "languages": [
+                    {
+                        "name": "Go",
+                        "frameworks": [
+                            "Mux"
+                        ],
+                        "tools": [
+                            "1.16"
+                        ]
+                    }
+                ],
+                "ports": [
+                    8000
+                ]
+            }
+        ]
+    },
+    "https://github.com/micronaut-projects/micronaut-comparisons.git": {
+        "commit": "def71de96edce0d0d7a8c6af3955f60dac1a9ecf",
+        "directory": "jhipster-sample-app-micronaut",
+        "components": [
+            {
+                "name": "jhipster-sample-application",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Micronaut"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    },
+                    {
+                        "name": "TypeScript",
+                        "frameworks": [
+                            "Angular"
+                        ],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/OpenLiberty/sample-getting-started.git": {
+        "commit": "962c0f29e85a2bb4ae457ba55f70b95a4c096691",
+        "components": [
+            {
+                "name": "io.openliberty.sample.getting.started",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "OpenLiberty"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/quarkusio/quarkus-quickstarts.git": {
+        "commit": "181d6ade669ba4edf9ce743bb296e6ff8e9c6cda",
+        "directory": "mailer-quickstart",
+        "components": [
+            {
+                "name": "mailer-quickstart",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Quarkus"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/spring-projects/spring-petclinic.git": {
+        "commit": "9ecdc1111e3da388a750ace41a125287d9620534",
+        "components": [
+            {
+                "name": "spring-petclinic",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Gradle"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/vert-x3/vertx-guide-for-java-devs.git": {
+        "commit": "846b56a5b6187d5368ded6a9bfda73f4549e8b57",
+        "directory": "step-1",
+        "components": [
+            {
+                "name": "wiki-step-1",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Vertx"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/Ismaestro/angular-example-app.git": {
+        "commit": "d222814f083870ba29ad9a92f926e6c44c22fb23",
+        "components": [
+            {
+                "name": "angular-example-app",
+                "languages": [
+                    {
+                        "name": "TypeScript",
+                        "frameworks": [
+                            "Angular"
+                        ],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    },
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Angular"
+                        ],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "@ismaestro/ngx-example-library",
+                "languages": [
+                    {
+                        "name": "TypeScript",
+                        "frameworks": [
+                            "Angular"
+                        ],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    },
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Angular"
+                        ],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/madhums/node-express-mongoose-demo.git": {
+        "commit": "73d224c0bc7183308d0bdd6d606dcc87f9987aac",
+        "components": [
+            {
+                "name": "nodejs-express-mongoose-demo",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/vercel/example-integration.git": {
+        "commit": "c331a42059cf1e3f786308c85f61222a818004d3",
+        "components": [
+            {
+                "name": "vercel-example-integration",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Next"
+                        ],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/nuxt/example-auth0.git": {
+        "commit": "765b8584d4d08f1908974d464de33bf59ea3bb08",
+        "components": [
+            {
+                "name": "nuxt-auth0",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Nuxt"
+                        ],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/raminr77/react_sample.git": {
+        "commit": "fac5061cbe9cc5f7393d701bf44128fddbf12dd0",
+        "components": [
+            {
+                "name": "react_sample",
+                "languages": [
+                    {
+                        "name": "TypeScript",
+                        "frameworks": [
+                            "React"
+                        ],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/hmmhmmhm/svelte-template.git": {
+        "commit": "7a279d4434d75c8aadb6f1396d072612385e4d36",
+        "components": [
+            {
+                "name": "svelte-template",
+                "languages": [
+                    {
+                        "name": "TypeScript",
+                        "frameworks": [
+                            "Express",
+                            "Svelte"
+                        ],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/gothinkster/vue-realworld-example-app.git": {
+        "commit": "3df3773b6be7181aadb513572458fba049fe66f9",
+        "components": [
+            {
+                "name": "realworld-vue",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Vue"
+                        ],
+                        "tools": [
+                            "NodeJs"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/sclorg/django-ex.git": {
+        "commit": "310d5bdb70f4e83a3d7c5ee9d6b06caa8d427cd6",
+        "components": [
+            {
+                "name": "ignore",
+                "languages": [
+                    {
+                        "name": "Python",
+                        "frameworks": [
+                            "Django"
+                        ],
+                        "tools": []
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/dotnet/mbmlbook.git": {
+        "commit": "4a8f76a3605b28406670db0684f14d1f521f291d",
+        "directory": "src/MBMLViews",
+        "components": [
+            {
+                "name": "MBMLViews",
+                "languages": [
+                    {
+                        "name": "C#",
+                        "frameworks": [
+                            "net461"
+                        ],
+                        "tools": []
+                    }
+                ]
+            }
+        ]
     }
 }

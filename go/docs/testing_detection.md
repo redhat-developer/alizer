@@ -11,9 +11,10 @@ The Json schema used is
 ```
     <repository-url>: { // the url of a git repository
         "commit": <commit-id>, // we use commit id instead of a branch name as this could lead to unstable results if the branch is updated over time
+        "directory": <directory>, // the directory to target when performing the test. If not specified, the detection will start from the root 
         "components": [ // all components that Alizer should detect
             {
-                "name": <component-name>, // the name of the component/project detected
+                "name": <component-name>, // the name of the component/project detected. Use ignore as name if you don't want to test it  
                 "languages": [
                     {
                         "name": <language-name>, // language used to develop this component. The list of languages known by Alizer is limited to those documented.
@@ -29,6 +30,8 @@ The Json schema used is
 ``` 
 
 *Note:* the `commit-id` value must contains the full commit id. By using the short/truncated one may lead to execution errors.
+*Note:* the `name` detected during the testing could have an unexpected value. For languages like golang or python that do not have any project name listed in 
+their configuration files, the project name is equal to the root directory name. In these cases you can skip the name check by using `ignore` as the component name.
 
 Below a real example
 

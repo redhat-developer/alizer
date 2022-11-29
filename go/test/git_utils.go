@@ -34,6 +34,7 @@ type GitTestProperties struct {
 	Branch     string                `json:"branch"`
 	Commit     string                `json:"commit"`
 	Components []ComponentProperties `json:"components"`
+	Directory  string                `json:"directory"`
 }
 
 type GitTests map[string]GitTestProperties

@@ -89,6 +89,11 @@ func IsTagInPomXMLFile(pomFilePath string, tag string) (bool, error) {
 			return true, nil
 		}
 	}
+	for _, plugin := range pom.Build.Plugins.Plugin {
+		if strings.Contains(plugin.GroupId, tag) {
+			return true, nil
+		}
+	}
 	return false, nil
 }
 
@@ -113,6 +118,13 @@ func IsTagInPackageJsonFile(file string, tag string) bool {
 	}
 	if packageJson.Dependencies != nil {
 		for dependency := range packageJson.Dependencies {
+			if strings.Contains(dependency, tag) {
+				return true
+			}
+		}
+	}
+	if packageJson.PeerDependencies != nil {
+		for dependency := range packageJson.PeerDependencies {
 			if strings.Contains(dependency, tag) {
 				return true
 			}

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
@@ -28,11 +29,12 @@ func TestExternalRepos(t *testing.T) {
 
 	// loop over all repositories and verify expected results are correct
 	for repo, properties := range data {
-		dir, err := test.CheckoutCommit(repo, properties.Commit)
-		defer os.RemoveAll(dir)
+		root, err := test.CheckoutCommit(repo, properties.Commit)
+		defer os.RemoveAll(root)
 		if err != nil {
 			t.Errorf("Unable to download git repo %s", err.Error())
 		} else {
+			dir := filepath.Join(root, properties.Directory)
 			assertComponentsBelongToGitProject(t, dir, properties.Components)
 		}
 	}
@@ -53,7 +55,7 @@ func assertComponentsBelongToGitProject(t *testing.T, gitProjectPath string, exp
 
 		cont := 0
 		for cont < len(components) {
-			if !strings.EqualFold(components[cont].Name, expectedComponents[cont].Name) {
+			if expectedComponents[cont].Name != "ignore" && !strings.EqualFold(components[cont].Name, expectedComponents[cont].Name) {
 				t.Errorf("Expected to find component %s but it was found %s", expectedComponents[cont].Name, components[cont].Name)
 			}
 			if !assertExpectedLangsAreFound(expectedComponents[cont].Languages, components[cont].Languages) {
