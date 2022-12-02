@@ -1,6 +1,7 @@
 C#:
   aliases:
     - "dotnet"
+    - ".NET"
   configuration_files:
     - ".*\\.\\w+proj"
     - "appsettings.json"
@@ -8,6 +9,7 @@ C#:
 F#:
   aliases:
     - "dotnet"
+    - ".NET"
   configuration_files:
     - ".*\\.\\w+proj"
     - "appsettings.json"
@@ -45,6 +47,7 @@ TypeScript:
 Visual Basic .NET:
   aliases:
     - "dotnet"
+    - ".NET"
   configuration_files:
     - ".*\\.\\w+proj"
     - "appsettings.json"
