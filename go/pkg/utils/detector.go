@@ -89,6 +89,11 @@ func IsTagInPomXMLFile(pomFilePath string, tag string) (bool, error) {
 			return true, nil
 		}
 	}
+	for _, plugin := range pom.Build.Plugins.Plugin {
+		if strings.Contains(plugin.GroupId, tag) {
+			return true, nil
+		}
+	}
 	return false, nil
 }
 
@@ -113,6 +118,13 @@ func IsTagInPackageJsonFile(file string, tag string) bool {
 	}
 	if packageJson.Dependencies != nil {
 		for dependency := range packageJson.Dependencies {
+			if strings.Contains(dependency, tag) {
+				return true
+			}
+		}
+	}
+	if packageJson.PeerDependencies != nil {
+		for dependency := range packageJson.PeerDependencies {
 			if strings.Contains(dependency, tag) {
 				return true
 			}
@@ -157,7 +169,8 @@ func GetFilePathsFromRoot(root string) ([]string, error) {
 	ignoreFile, errorIgnoreFile := getIgnoreFile(root)
 	errWalk := filepath.Walk(root,
 		func(path string, info os.FileInfo, err error) error {
-			if errorIgnoreFile == nil && ignoreFile.MatchesPath(path) {
+			relativePath := strings.Replace(path, root, "", 1)
+			if errorIgnoreFile == nil && ignoreFile.MatchesPath(relativePath) {
 				if info.IsDir() {
 					return filepath.SkipDir
 				} else {

@@ -37,7 +37,7 @@ func (e ExpressDetector) DoPortsDetection(component *model.Component) {
 		return
 	}
 
-	re := regexp.MustCompile(`.listen\([^,)]*`)
+	re := regexp.MustCompile(`\.listen\([^,)]*`)
 	ports := []int{}
 	for _, file := range files {
 		bytes, err := os.ReadFile(file)
