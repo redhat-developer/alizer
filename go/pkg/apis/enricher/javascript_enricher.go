@@ -41,7 +41,7 @@ func (j JavaScriptEnricher) DoEnrichLanguage(language *model.Language, files *[]
 	packageJson := utils.GetFile(files, "package.json")
 
 	if packageJson != "" {
-		language.Tools = []string{"NodeJs"}
+		language.Tools = []string{"NodeJs", "Node.js"}
 		detectJavaScriptFrameworks(language, packageJson)
 	}
 }
