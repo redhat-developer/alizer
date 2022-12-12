@@ -20,6 +20,7 @@ import (
 	"strings"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
+	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 func SelectDevFileFromTypes(path string, devFileTypes []model.DevFileType) (int, error) {
@@ -139,21 +140,20 @@ func adaptUrl(url string) string {
 func selectDevFileByLanguage(language model.Language, devFileTypes []model.DevFileType) (int, error) {
 	scoreTarget := 0
 	devfileTarget := -1
-	FRAMEWORK_WEIGHT := 10
-	TOOL_WEIGHT := 5
+
 	for index, devFile := range devFileTypes {
 		score := 0
 		if strings.EqualFold(devFile.Language, language.Name) || matches(language.Aliases, devFile.Language) {
 			score++
 			if matches(language.Frameworks, devFile.ProjectType) {
-				score += FRAMEWORK_WEIGHT
+				score += utils.FRAMEWORK_WEIGHT
 			}
 			for _, tag := range devFile.Tags {
 				if matches(language.Frameworks, tag) {
-					score += FRAMEWORK_WEIGHT
+					score += utils.FRAMEWORK_WEIGHT
 				}
 				if matches(language.Tools, tag) {
-					score += TOOL_WEIGHT
+					score += utils.TOOL_WEIGHT
 				}
 			}
 		}

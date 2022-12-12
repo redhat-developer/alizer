@@ -31,6 +31,8 @@ import (
 
 const FROM_PORT = 0
 const TO_PORT = 65535
+const FRAMEWORK_WEIGHT = 10
+const TOOL_WEIGHT = 5
 
 func GetFilesByRegex(filePaths *[]string, regexFile string) []string {
 	matchedPaths := []string{}
