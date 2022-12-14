@@ -23,61 +23,99 @@ import (
 	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
-func SelectDevFileFromTypes(path string, devFileTypes []model.DevFileType) (int, error) {
-	ctx := context.Background()
-	return selectDevFileFromTypes(path, devFileTypes, &ctx)
-}
-
-func selectDevFileFromTypes(path string, devFileTypes []model.DevFileType, ctx *context.Context) (int, error) {
+func SelectDevFilesFromTypes(path string, devFileTypes []model.DevFileType, ctx *context.Context) ([]int, error) {
+	devFilesIndexes := []int{}
 	components, _ := DetectComponentsInRoot(path)
-	if len(components) > 0 {
-		devfile, err := selectDevFileByLanguage(components[0].Languages[0], devFileTypes)
+	for _, component := range components {
+		devFiles, err := selectDevFilesByLanguage(component.Languages[0], devFileTypes)
 		if err == nil {
-			return devfile, nil
+			devFilesIndexes = append(devFilesIndexes, devFiles...)
 		}
+	}
+	if len(devFilesIndexes) > 0 {
+		return devFilesIndexes, nil
 	}
 
 	components, _ = DetectComponents(path)
-	if len(components) > 0 {
-		devfile, err := selectDevFileByLanguage(components[0].Languages[0], devFileTypes)
+	for _, component := range components {
+		devFiles, err := selectDevFilesByLanguage(component.Languages[0], devFileTypes)
 		if err == nil {
-			return devfile, nil
+			devFilesIndexes = append(devFilesIndexes, devFiles...)
 		}
+	}
+	if len(devFilesIndexes) > 0 {
+		return devFilesIndexes, nil
 	}
 
 	languages, err := analyze(path, ctx)
 	if err != nil {
-		return -1, err
+		return []int{}, err
 	}
 	devfile, err := SelectDevFileUsingLanguagesFromTypes(languages, devFileTypes)
 	if err != nil {
-		return -1, errors.New("No valid devfile found for project in " + path)
+		return []int{}, errors.New("No valid devfile found for project in " + path)
 	}
-	return devfile, nil
+	return []int{devfile}, nil
+}
+
+func SelectDevFileFromTypes(path string, devFileTypes []model.DevFileType) (int, error) {
+	ctx := context.Background()
+	devfiles, err := SelectDevFilesFromTypes(path, devFileTypes, &ctx)
+	if err != nil {
+		return -1, err
+	}
+	return devfiles[0], nil
+}
+
+func SelectDevFilesUsingLanguagesFromTypes(languages []model.Language, devFileTypes []model.DevFileType) ([]int, error) {
+	devFilesIndexes := []int{}
+	for _, language := range languages {
+		devFiles, err := selectDevFilesByLanguage(language, devFileTypes)
+		if err == nil {
+			devFilesIndexes = append(devFilesIndexes, devFiles...)
+		}
+	}
+	if len(devFilesIndexes) > 0 {
+		return devFilesIndexes, nil
+	}
+	return []int{}, errors.New("no valid devfile found by using those languages")
 }
 
 func SelectDevFileUsingLanguagesFromTypes(languages []model.Language, devFileTypes []model.DevFileType) (int, error) {
-	for _, language := range languages {
-		devfile, err := selectDevFileByLanguage(language, devFileTypes)
-		if err == nil {
-			return devfile, nil
-		}
+	devFilesIndexes, err := SelectDevFilesUsingLanguagesFromTypes(languages, devFileTypes)
+	if err != nil {
+		return -1, err
 	}
-	return -1, errors.New("no valid devfile found by using those languages")
+	return devFilesIndexes[0], nil
+}
+
+func SelectDevFilesFromRegistry(path string, url string) ([]model.DevFileType, error) {
+	ctx := context.Background()
+	devFileTypesFromRegistry, err := downloadDevFileTypesFromRegistry(url)
+	if err != nil {
+		return []model.DevFileType{}, err
+	}
+
+	indexes, err := SelectDevFilesFromTypes(path, devFileTypesFromRegistry, &ctx)
+	if err != nil {
+		return []model.DevFileType{}, err
+	}
+
+	devFileTypes := []model.DevFileType{}
+	for _, index := range indexes {
+		devFileTypes = append(devFileTypes, devFileTypesFromRegistry[index])
+	}
+
+	return devFileTypes, nil
 }
 
 func SelectDevFileFromRegistry(path string, url string) (model.DevFileType, error) {
-	ctx := context.Background()
-	return selectDevFileFromRegistry(path, url, &ctx)
-}
-
-func selectDevFileFromRegistry(path string, url string, ctx *context.Context) (model.DevFileType, error) {
 	devFileTypes, err := downloadDevFileTypesFromRegistry(url)
 	if err != nil {
 		return model.DevFileType{}, err
 	}
 
-	index, err := selectDevFileFromTypes(path, devFileTypes, ctx)
+	index, err := SelectDevFileFromTypes(path, devFileTypes)
 	if err != nil {
 		return model.DevFileType{}, err
 	}
@@ -137,9 +175,9 @@ func adaptUrl(url string) string {
 	return url
 }
 
-func selectDevFileByLanguage(language model.Language, devFileTypes []model.DevFileType) (int, error) {
+func selectDevFilesByLanguage(language model.Language, devFileTypes []model.DevFileType) ([]int, error) {
+	devFileIndexes := []int{}
 	scoreTarget := 0
-	devfileTarget := -1
 
 	for index, devFile := range devFileTypes {
 		score := 0
@@ -157,16 +195,18 @@ func selectDevFileByLanguage(language model.Language, devFileTypes []model.DevFi
 				}
 			}
 		}
-		if score > scoreTarget {
+		if score == scoreTarget {
+			devFileIndexes = append(devFileIndexes, index)
+		} else if score > scoreTarget {
 			scoreTarget = score
-			devfileTarget = index
+			devFileIndexes = []int{index}
 		}
 	}
 
 	if scoreTarget == 0 {
-		return devfileTarget, errors.New("No valid devfile found for current language " + language.Name)
+		return devFileIndexes, errors.New("No valid devfile found for current language " + language.Name)
 	}
-	return devfileTarget, nil
+	return devFileIndexes, nil
 }
 
 func matches(values []string, valueToFind string) bool {

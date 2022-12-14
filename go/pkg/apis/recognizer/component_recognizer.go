@@ -244,22 +244,6 @@ func appendIfMissing(components []model.Component, component model.Component) []
 	return append(components, component)
 }
 
-func hasHigherPriorityThanExisting(existing model.Component, component model.Component) bool {
-	return getComponentPriorityScore(component) > getComponentPriorityScore(existing)
-}
-
-func getComponentPriorityScore(component model.Component) int {
-	score := 1
-	mainLanguage := component.Languages[0]
-	if len(mainLanguage.Frameworks) > 0 {
-		score += utils.FRAMEWORK_WEIGHT
-	}
-	if len(mainLanguage.Tools) > 0 {
-		score += utils.TOOL_WEIGHT
-	}
-	return score
-}
-
 func getLanguagesByConfigurationFile(configurationPerLanguage map[string][]string, file string) ([]string, error) {
 	for regex, languages := range configurationPerLanguage {
 		if match, _ := regexp.MatchString(regex, file); match {

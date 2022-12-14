@@ -131,11 +131,9 @@ func IsTagInPackageJsonFile(file string, tag string) bool {
 }
 
 func isTagInDependencies(deps map[string]string, tag string) bool {
-	if deps != nil {
-		for dependency := range deps {
-			if strings.Contains(dependency, tag) {
-				return true
-			}
+	for dependency := range deps {
+		if strings.Contains(dependency, tag) {
+			return true
 		}
 	}
 	return false
