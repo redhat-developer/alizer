@@ -24,25 +24,7 @@ import (
 )
 
 func SelectDevFilesFromTypes(path string, devFileTypes []model.DevFileType, ctx *context.Context) ([]int, error) {
-	devFilesIndexes := []int{}
-	components, _ := DetectComponentsInRoot(path)
-	for _, component := range components {
-		devFiles, err := selectDevFilesByLanguage(component.Languages[0], devFileTypes)
-		if err == nil {
-			devFilesIndexes = append(devFilesIndexes, devFiles...)
-		}
-	}
-	if len(devFilesIndexes) > 0 {
-		return devFilesIndexes, nil
-	}
-
-	components, _ = DetectComponents(path)
-	for _, component := range components {
-		devFiles, err := selectDevFilesByLanguage(component.Languages[0], devFileTypes)
-		if err == nil {
-			devFilesIndexes = append(devFilesIndexes, devFiles...)
-		}
-	}
+	devFilesIndexes := selectDevFilesFromComponentsDetectedInPath(path, devFileTypes)
 	if len(devFilesIndexes) > 0 {
 		return devFilesIndexes, nil
 	}
@@ -56,6 +38,28 @@ func SelectDevFilesFromTypes(path string, devFileTypes []model.DevFileType, ctx 
 		return []int{}, errors.New("No valid devfile found for project in " + path)
 	}
 	return []int{devfile}, nil
+}
+
+func selectDevFilesFromComponentsDetectedInPath(path string, devFileTypes []model.DevFileType) []int {
+	components, _ := DetectComponentsInRoot(path)
+	devFilesIndexes := selectDevFilesFromComponents(components, devFileTypes)
+	if len(devFilesIndexes) > 0 {
+		return devFilesIndexes
+	}
+
+	components, _ = DetectComponents(path)
+	return selectDevFilesFromComponents(components, devFileTypes)
+}
+
+func selectDevFilesFromComponents(components []model.Component, devFileTypes []model.DevFileType) []int {
+	devFilesIndexes := []int{}
+	for _, component := range components {
+		devFiles, err := selectDevFilesByLanguage(component.Languages[0], devFileTypes)
+		if err == nil {
+			devFilesIndexes = append(devFilesIndexes, devFiles...)
+		}
+	}
+	return devFilesIndexes
 }
 
 func SelectDevFileFromTypes(path string, devFileTypes []model.DevFileType) (int, error) {

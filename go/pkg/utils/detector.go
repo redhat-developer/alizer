@@ -31,7 +31,6 @@ import (
 
 const FROM_PORT = 0
 const TO_PORT = 65535
-const PROJECT_TYPE_WEIGHT = 15
 const FRAMEWORK_WEIGHT = 10
 const TOOL_WEIGHT = 5
 
