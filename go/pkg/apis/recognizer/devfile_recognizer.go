@@ -175,45 +175,78 @@ func adaptUrl(url string) string {
 	return url
 }
 
+/*
+	To detect the devfiles that fit the most with a project, alizer performs a search in two steps looping through all devfiles available.
+	When a framework is detected, this is stored in a map but still not saved. A check is made eventually as there could be that a future or
+	previous devfile is more appropriate based on other infos (e.g. the tool -> quarkus gradle vs quarkus maven)
+	If no framework is detected, the devfiles are picked based on their score (language +1, tool +5). The largest score wins.
+
+	At the end, if some framework is supported by some devfile, they are returned. Otherwise Alizer was not able to find any
+	specific devfile for the frameworks detected and returned the devfiles which got the largest score.
+*/
 func selectDevFilesByLanguage(language model.Language, devFileTypes []model.DevFileType) ([]int, error) {
 	devFileIndexes := []int{}
+	frameworkPerDevFile := make(map[string]model.DevFileScore)
 	scoreTarget := 0
 
 	for index, devFile := range devFileTypes {
 		score := 0
-		if strings.EqualFold(devFile.Language, language.Name) || matches(language.Aliases, devFile.Language) {
+		frameworkPerDevfileTmp := make(map[string]interface{})
+		if strings.EqualFold(devFile.Language, language.Name) || matches(language.Aliases, devFile.Language) != "" {
 			score++
-			if matches(language.Frameworks, devFile.ProjectType) {
+			if frw := matches(language.Frameworks, devFile.ProjectType); frw != "" {
+				frameworkPerDevfileTmp[frw] = nil
 				score += utils.FRAMEWORK_WEIGHT
 			}
 			for _, tag := range devFile.Tags {
-				if matches(language.Frameworks, tag) {
+				if frw := matches(language.Frameworks, tag); frw != "" {
+					frameworkPerDevfileTmp[frw] = nil
 					score += utils.FRAMEWORK_WEIGHT
 				}
-				if matches(language.Tools, tag) {
+				if matches(language.Tools, tag) != "" {
 					score += utils.TOOL_WEIGHT
 				}
 			}
-		}
-		if score == scoreTarget {
-			devFileIndexes = append(devFileIndexes, index)
-		} else if score > scoreTarget {
-			scoreTarget = score
-			devFileIndexes = []int{index}
+
+			for framework := range frameworkPerDevfileTmp {
+				devFileObj := frameworkPerDevFile[framework]
+				if score > devFileObj.Score {
+					frameworkPerDevFile[framework] = model.DevFileScore{
+						DevFileIndex: index,
+						Score:        score,
+					}
+				}
+			}
+
+			if len(frameworkPerDevFile) == 0 {
+				if score == scoreTarget {
+					devFileIndexes = append(devFileIndexes, index)
+				} else if score > scoreTarget {
+					scoreTarget = score
+					devFileIndexes = []int{index}
+				}
+			}
 		}
 	}
 
-	if scoreTarget == 0 {
+	if len(frameworkPerDevFile) > 0 {
+		devFileIndexes = []int{}
+		for _, val := range frameworkPerDevFile {
+			devFileIndexes = append(devFileIndexes, val.DevFileIndex)
+		}
+	}
+
+	if len(devFileIndexes) == 0 {
 		return devFileIndexes, errors.New("No valid devfile found for current language " + language.Name)
 	}
 	return devFileIndexes, nil
 }
 
-func matches(values []string, valueToFind string) bool {
+func matches(values []string, valueToFind string) string {
 	for _, value := range values {
 		if strings.EqualFold(value, valueToFind) {
-			return true
+			return value
 		}
 	}
-	return false
+	return ""
 }

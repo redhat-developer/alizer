@@ -27,6 +27,8 @@ Java:
     - "build.gradle"
   component: true
 JavaScript:
+  aliases:
+    - "TypeScript"
   exclude_folders:
     - "node_modules"
   configuration_files:
@@ -39,6 +41,8 @@ Rust:
     - "Cargo.toml"
   component: true
 TypeScript:
+  aliases:
+    - "JavaScript"
   exclude_folders:
     - "node_modules"
   configuration_files:
