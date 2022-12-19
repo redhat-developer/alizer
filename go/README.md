@@ -52,7 +52,10 @@ and it consists of two steps:
 1) Detect languages which have a configuration file such as Java (`pom.xml`, `build.gradle`)
 2) Detect languages which may not have a configuration file such as Python
 
-Alizer scans all files in the source tree to find out a configuration file. If found and the language detected is enabled (belong to the list above) a component is said to be found starting from that path. Only one component per path is possible. This step gets repeated for all configuration files present in the source tree which live into different paths.
+Alizer scans all files in the source tree to find out a configuration file. If found and the language associated to it (e.g pom.xml -> JAVA) is enabled (belong to the list above) a component is said to be found starting from that path. This step gets repeated for all configuration files present in the source tree.
+
+To speed up the detection only the language associated to the configuration file is analyzed. If a configuration file can be associated to multiple languages (e.g. `.proj` can be part of either a C# or F# or VB.NET project) then a deep analysis is made.
+
 Once the first step ends up, if there are no other free subfolders (free = folders that do not belong to any component) the second step is skipped otherwise Alizer tries to search for a component written with a language which may not have a configuration file. In that subfolder a simple Language detection is performed and the first language is taken into account for further calculations. 
 
 The result is a list of components where each component consists of:
