@@ -215,35 +215,46 @@ func DetectComponentsFromFilesList(files []string, settings model.DetectionSetti
 	return components
 }
 
-// todo maybe it's better to remove
 func narrowLanguagesList(languages []string, file string) []string {
 	if len(languages) == 1 {
 		return languages
 	}
 
 	dir, _ := utils.NormalizeSplit(file)
-	narrowedLanguages := []string{}
-	for _, language := range languages {
-		if strings.EqualFold(language, "javascript") {
-			if _, err := os.Stat(filepath.Join(dir, "jsconfig.json")); !os.IsNotExist(err) {
-				narrowedLanguages = append(narrowedLanguages, language)
-			}
-		} else if strings.EqualFold(language, "typescript") {
-			if _, err := os.Stat(filepath.Join(dir, "tsconfig.json")); !os.IsNotExist(err) {
-				narrowedLanguages = append(narrowedLanguages, language)
+	langSize := len(languages) - 1
+	for index, language := range languages {
+		if !isLanguageValid(language, dir) {
+			if langSize == index {
+				languages = languages[:index]
+			} else {
+				languages = append(languages[:index], languages[index+1:]...)
 			}
 		}
 	}
 
-	if len(narrowedLanguages) == 0 {
-		return languages
+	return languages
+}
+
+func isLanguageValid(language string, dirPath string) bool {
+	configFile := ""
+	if strings.EqualFold(language, "javascript") {
+		configFile = "jsconfig.json"
+	} else if strings.EqualFold(language, "typescript") {
+		configFile = "tsconfig.json"
 	}
-	return narrowedLanguages
+
+	if configFile == "" {
+		return true
+	}
+	if _, err := os.Stat(filepath.Join(dirPath, configFile)); os.IsNotExist(err) {
+		return false
+	}
+	return true
 }
 
 func appendIfMissing(components []model.Component, component model.Component) []model.Component {
-	for _, comp := range components {
-		if strings.EqualFold(comp.Path, component.Path) {
+	for _, existing := range components {
+		if strings.EqualFold(existing.Path, component.Path) && strings.EqualFold(existing.Languages[0].Name, component.Languages[0].Name) {
 			return components
 		}
 	}
