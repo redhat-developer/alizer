@@ -29,7 +29,7 @@ func Analyze(path string) ([]model.Language, error) {
 	languagesFile := langfile.Get()
 	languagesDetected := make(map[string]languageItem)
 
-	paths, err := utils.GetFilePathsFromRoot(path)
+	paths, err := utils.GetCachedFilePathsFromRoot(path)
 	if err != nil {
 		return []model.Language{}, err
 	}
@@ -91,6 +91,25 @@ func Analyze(path string) ([]model.Language, error) {
 	})
 
 	return languagesFound, nil
+}
+
+func AnalyzeFile(configFile string, targetLanguage string) (model.Language, error) {
+	lang, err := langfile.Get().GetLanguageByName(targetLanguage)
+	if err != nil {
+		return model.Language{}, err
+	}
+	tmpLanguage := model.Language{
+		Name:           lang.Name,
+		Aliases:        lang.Aliases,
+		Frameworks:     []string{},
+		Tools:          []string{},
+		Weight:         100,
+		CanBeComponent: true}
+	langEnricher := enricher.GetEnricherByLanguage(targetLanguage)
+	if langEnricher != nil {
+		langEnricher.DoEnrichLanguage(&tmpLanguage, &[]string{configFile})
+	}
+	return tmpLanguage, nil
 }
 
 func extractExtensions(paths []string) map[string]int {

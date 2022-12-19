@@ -173,7 +173,7 @@ func GetPortsFromDockerComposeFile(componentPath string, settings model.Detectio
 }
 
 func getDockerComposeFileBytes(root string) ([]byte, error) {
-	return utils.ReadAnyApplicationFile(root, []model.ApplicationFileInfo{
+	return utils.ReadAnyApplicationFileExactMatch(root, []model.ApplicationFileInfo{
 		{
 			Dir:  "",
 			File: "docker-compose.yml",

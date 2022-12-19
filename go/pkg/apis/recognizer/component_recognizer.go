@@ -13,6 +13,7 @@ package recognizer
 import (
 	"errors"
 	"io/fs"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -46,32 +47,21 @@ func DetectComponentsWithPathAndPortStartegy(path string, portDetectionStrategy 
 }
 
 func DetectComponentsInRootWithSettings(settings model.DetectionSettings) ([]model.Component, error) {
-	files, err := utils.GetFilePathsFromRoot(settings.BasePath)
+	files, err := utils.GetFilePathsInRoot(settings.BasePath)
 	if err != nil {
 		return []model.Component{}, err
 	}
-	components, err := DetectComponentsFromFilesList(files, settings)
-	if err != nil {
-		return []model.Component{}, err
-	}
-
-	// it may happen that a language has no a specific configuration file (e.g opposite to JAVA -> pom.xml and Nodejs -> package.json)
-	// we then rely on the language recognizer
-	directoriesNotBelongingToExistingComponent := getDirectoriesWithoutConfigFile(settings.BasePath, components)
-	components = append(components, getComponentsWithoutConfigFile(directoriesNotBelongingToExistingComponent, settings)...)
+	components := DetectComponentsFromFilesList(files, settings)
 
 	return components, nil
 }
 
 func DetectComponentsWithSettings(settings model.DetectionSettings) ([]model.Component, error) {
-	files, err := utils.GetFilePathsFromRoot(settings.BasePath)
+	files, err := utils.GetCachedFilePathsFromRoot(settings.BasePath)
 	if err != nil {
 		return []model.Component{}, err
 	}
-	components, err := DetectComponentsFromFilesList(files, settings)
-	if err != nil {
-		return []model.Component{}, err
-	}
+	components := DetectComponentsFromFilesList(files, settings)
 
 	// it may happen that a language has no a specific configuration file (e.g opposite to JAVA -> pom.xml and Nodejs -> package.json)
 	// we then rely on the language recognizer
@@ -92,8 +82,8 @@ func DetectComponentsWithSettings(settings model.DetectionSettings) ([]model.Com
 func getComponentsWithoutConfigFile(directories []string, settings model.DetectionSettings) []model.Component {
 	var components []model.Component
 	for _, dir := range directories {
-		component, _ := detectComponent(dir, []string{}, settings)
-		if component.Path != "" && isLangForNoConfigComponent(component.Languages) {
+		component, _ := detectComponentByFolderAnalysis(dir, []string{}, settings)
+		if component.Path != "" && isLangForNoConfigComponent(component.Languages[0]) {
 			components = append(components, component)
 		}
 	}
@@ -107,12 +97,8 @@ func getComponentsWithoutConfigFile(directories []string, settings model.Detecti
 	Returns:
 		bool: true if language does not require any config file
 */
-func isLangForNoConfigComponent(languages []model.Language) bool {
-	if len(languages) == 0 {
-		return false
-	}
-
-	lang, err := langfiles.Get().GetLanguageByNameOrAlias(languages[0].Name)
+func isLangForNoConfigComponent(language model.Language) bool {
+	lang, err := langfiles.Get().GetLanguageByNameOrAlias(language.Name)
 	if err != nil {
 		return false
 	}
@@ -209,29 +195,50 @@ func isFirstPathParentOfSecond(firstPath string, secondPath string) bool {
 	Returns:
 		list of components detected or err if any error occurs
 */
-func DetectComponentsFromFilesList(files []string, settings model.DetectionSettings) ([]model.Component, error) {
+func DetectComponentsFromFilesList(files []string, settings model.DetectionSettings) []model.Component {
 	configurationPerLanguage := langfiles.Get().GetConfigurationPerLanguageMapping()
 	var components []model.Component
 	for _, file := range files {
-		dir, fileName := filepath.Split(file)
-		if dir == "" {
-			dir = "./"
-		}
-		languages, err := getLanguagesByConfigurationFile(configurationPerLanguage, fileName)
+		languages, err := getLanguagesByConfigurationFile(configurationPerLanguage, file)
 		if err != nil {
 			continue
 		}
-		for _, language := range languages {
-			if isConfigurationValid(language, file) {
-				component, _ := detectComponent(dir, languages, settings)
-				if component.Path != "" {
-					components = appendIfMissing(components, component)
-					break
-				}
+		// check if possible to pick only one lang (e.g tsconfig.json or jsconfig.json)
+		languages = narrowLanguagesList(languages, file)
+
+		component, err := detectComponentUsingConfigFile(file, languages, settings)
+		if err != nil {
+			continue
+		}
+		components = appendIfMissing(components, component)
+	}
+	return components
+}
+
+// todo maybe it's better to remove
+func narrowLanguagesList(languages []string, file string) []string {
+	if len(languages) == 1 {
+		return languages
+	}
+
+	dir, _ := utils.NormalizeSplit(file)
+	narrowedLanguages := []string{}
+	for _, language := range languages {
+		if strings.EqualFold(language, "javascript") {
+			if _, err := os.Stat(filepath.Join(dir, "jsconfig.json")); !os.IsNotExist(err) {
+				narrowedLanguages = append(narrowedLanguages, language)
+			}
+		} else if strings.EqualFold(language, "typescript") {
+			if _, err := os.Stat(filepath.Join(dir, "tsconfig.json")); !os.IsNotExist(err) {
+				narrowedLanguages = append(narrowedLanguages, language)
 			}
 		}
 	}
-	return components, nil
+
+	if len(narrowedLanguages) == 0 {
+		return languages
+	}
+	return narrowedLanguages
 }
 
 func appendIfMissing(components []model.Component, component model.Component) []model.Component {
@@ -263,7 +270,7 @@ func getLanguagesByConfigurationFile(configurationPerLanguage map[string][]strin
 	Returns:
 		component detected or error if any error occurs
 */
-func detectComponent(root string, configLanguages []string, settings model.DetectionSettings) (model.Component, error) {
+func detectComponentByFolderAnalysis(root string, configLanguages []string, settings model.DetectionSettings) (model.Component, error) {
 	languages, err := Analyze(root)
 	if err != nil {
 		return model.Component{}, err
@@ -280,8 +287,41 @@ func detectComponent(root string, configLanguages []string, settings model.Detec
 		}
 	}
 
-	return model.Component{}, nil
+	return model.Component{}, errors.New("no component detected")
 
+}
+
+func detectComponentByAnalyzingConfigFile(file string, mainLang string, settings model.DetectionSettings) (model.Component, error) {
+	if !isConfigurationValid(mainLang, file) {
+		return model.Component{}, errors.New("language not valid for component detection")
+	}
+	dir, _ := utils.NormalizeSplit(file)
+	lang, err := AnalyzeFile(file, mainLang)
+	if err != nil {
+		return model.Component{}, err
+	}
+	component := model.Component{
+		Path: dir,
+		Languages: []model.Language{
+			lang,
+		},
+	}
+	enrichComponent(&component, settings)
+	return component, nil
+}
+
+func detectComponentUsingConfigFile(file string, languages []string, settings model.DetectionSettings) (model.Component, error) {
+	if len(languages) == 1 {
+		return detectComponentByAnalyzingConfigFile(file, languages[0], settings)
+	} else {
+		dir, _ := utils.NormalizeSplit(file)
+		for _, language := range languages {
+			if isConfigurationValid(language, file) {
+				return detectComponentByFolderAnalysis(dir, languages, settings)
+			}
+		}
+	}
+	return model.Component{}, errors.New("no component detected")
 }
 
 func enrichComponent(component *model.Component, settings model.DetectionSettings) {

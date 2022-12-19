@@ -32,7 +32,7 @@ func (g GoFiberDetector) DoFrameworkDetection(language *model.Language, goMod *m
 }
 
 func (g GoFiberDetector) DoPortsDetection(component *model.Component) {
-	files, err := utils.GetFilePathsFromRoot(component.Path)
+	files, err := utils.GetCachedFilePathsFromRoot(component.Path)
 	if err != nil {
 		return
 	}

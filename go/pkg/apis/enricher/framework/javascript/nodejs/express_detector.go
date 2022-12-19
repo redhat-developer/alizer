@@ -32,7 +32,7 @@ func (e ExpressDetector) DoFrameworkDetection(language *model.Language, config s
 }
 
 func (e ExpressDetector) DoPortsDetection(component *model.Component) {
-	files, err := utils.GetFilePathsFromRoot(component.Path)
+	files, err := utils.GetCachedFilePathsFromRoot(component.Path)
 	if err != nil {
 		return
 	}

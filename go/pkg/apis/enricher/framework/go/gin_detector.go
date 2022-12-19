@@ -32,7 +32,7 @@ func (g GinDetector) DoFrameworkDetection(language *model.Language, goMod *modfi
 }
 
 func (g GinDetector) DoPortsDetection(component *model.Component) {
-	files, err := utils.GetFilePathsFromRoot(component.Path)
+	files, err := utils.GetCachedFilePathsFromRoot(component.Path)
 	if err != nil {
 		return
 	}

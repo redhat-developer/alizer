@@ -67,10 +67,7 @@ Please note that the devfile object that is returned by the method is one of the
 
 Alizer is also able to detect components. The concept of component is taken from Odo and its definition can be read on [odo.dev](https://odo.dev/docs/getting-started/basics/#component).
 
-The detection of a component is based on two rules. It is discovered if and only if:
-
-1) The main language of the component source is one of those that supports component detection (Java, Python, Javascript, Go)
-2) The source has at least one framework
+The detection of a component is based on only one rule. It is discovered if and only if the main language of the component source is one of those that supports component detection (Java, Python, Javascript, Go, ...)
 
 The result is a list of components where each component consists of:
 - *path*: root of the component 

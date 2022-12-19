@@ -276,7 +276,7 @@ func IsValidPort(port int) bool {
 }
 
 func GetAnyApplicationFilePath(root string, propsFiles []model.ApplicationFileInfo) string {
-	files, err := GetFilePathsFromRoot(root)
+	files, err := GetCachedFilePathsFromRoot(root)
 	if err != nil {
 		return ""
 	}
@@ -292,8 +292,32 @@ func GetAnyApplicationFilePath(root string, propsFiles []model.ApplicationFileIn
 	return ""
 }
 
+func GetAnyApplicationFilePathExactMatch(root string, propsFiles []model.ApplicationFileInfo) string {
+	for _, propsFile := range propsFiles {
+		fileToBeFound := filepath.Join(root, propsFile.Dir, propsFile.File)
+		if _, err := os.Stat(fileToBeFound); !os.IsNotExist(err) {
+			return fileToBeFound
+		}
+	}
+
+	return ""
+}
+
 func ReadAnyApplicationFile(root string, propsFiles []model.ApplicationFileInfo) ([]byte, error) {
-	path := GetAnyApplicationFilePath(root, propsFiles)
+	return readAnyApplicationFile(root, propsFiles, false)
+}
+
+func ReadAnyApplicationFileExactMatch(root string, propsFiles []model.ApplicationFileInfo) ([]byte, error) {
+	return readAnyApplicationFile(root, propsFiles, true)
+}
+
+func readAnyApplicationFile(root string, propsFiles []model.ApplicationFileInfo, exactMatch bool) ([]byte, error) {
+	var path string
+	if exactMatch {
+		path = GetAnyApplicationFilePathExactMatch(root, propsFiles)
+	} else {
+		path = GetAnyApplicationFilePath(root, propsFiles)
+	}
 	if path != "" {
 		return ioutil.ReadFile(path)
 	}
@@ -374,4 +398,12 @@ func getEnvFileContent(root string) (string, error) {
 		return "", err
 	}
 	return string(bytes), nil
+}
+
+func NormalizeSplit(file string) (string, string) {
+	dir, fileName := filepath.Split(file)
+	if dir == "" {
+		dir = "./"
+	}
+	return dir, fileName
 }

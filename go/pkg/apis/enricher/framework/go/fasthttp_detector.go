@@ -32,7 +32,7 @@ func (f FastHttpDetector) DoFrameworkDetection(language *model.Language, goMod *
 }
 
 func (f FastHttpDetector) DoPortsDetection(component *model.Component) {
-	files, err := utils.GetFilePathsFromRoot(component.Path)
+	files, err := utils.GetCachedFilePathsFromRoot(component.Path)
 	if err != nil {
 		return
 	}
