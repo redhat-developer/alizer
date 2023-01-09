@@ -484,5 +484,73 @@
                 ]
             }
         ]
+    },
+    "https://github.com/JoranBergfeld/webshop.git": {
+        "commit": "7cbd9ddd2207dd712369e44da56699c9393765c8",
+        "components": [
+            {
+                "name": "webshop",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "order-app",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ],
+                "ports": [
+                    "15000"
+                ]
+            },
+            {
+                "name": "payment-app",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ],
+                "ports": [
+                    "15001"
+                ]
+            },
+            {
+                "name": "stock-app",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ],
+                "ports": [
+                    "15002"
+                ]
+            }
+        ]
     }
 }
