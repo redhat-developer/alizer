@@ -551,6 +551,62 @@
                     "15002"
                 ]
             }
-        ]
+        ],
+        "https://github.com/bezkoder/spring-boot-data-jpa-mysql.git": {
+            "commit": "75d0e3b13635a9a7a5e5a1c6b02c04366476227a",
+            "components": [
+                {
+                    "name": "spring-boot-data-jpa",
+                    "languages": [
+                        {
+                            "name": "Java",
+                            "frameworks": [
+                                "Spring"
+                            ],
+                            "tools": [
+                                "Maven"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "https://github.com/kylebuch8/urgent-care-finder-v2.git": {
+            "commit": "c9a32ce6f53bec3b915991bb4fe95ffd7bce8e2b",
+            "components": [
+                {
+                    "name": "nextjs",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [
+                                "Next",
+                                "Next.js",
+                                "React"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "https://github.com/rh-aiservices-bu/object-detection-rest.git": {
+            "commit": "cd9b8b573518c3080e3ce60f61255b9e9e164f6e",
+            "components": [
+                {
+                    "name": "object-detection-rest",
+                    "languages": [
+                        {
+                            "name": "Python",
+                            "frameworks": [],
+                            "tools": []
+                        }
+                    ]
+                }
+            ]
+        }
     }
 }
