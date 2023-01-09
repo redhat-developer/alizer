@@ -607,6 +607,78 @@
                     ]
                 }
             ]
+        },
+        "https://github.com/gothinkster/spring-boot-realworld-example-app.git": {
+            "commit": "ee17e31aafe733d98c4853c8b9a74d7f2f6c924a",
+            "components": [
+                {
+                    "name": "spring-boot-realworld-example-app",
+                    "languages": [
+                        {
+                            "name": "Java",
+                            "frameworks": [
+                                "Spring"
+                            ],
+                            "tools": [
+                                "Gradle"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "https://github.com/spring-guides/gs-batch-processing.git": {
+            "commit": "19b0881fe060f15553d50aaef18a372735f2253d",
+            "components": [
+                {
+                    "name": "batch-processing-complete",
+                    "languages": [
+                        {
+                            "name": "Java",
+                            "frameworks": [
+                                "Spring"
+                            ],
+                            "tools": [
+                                "Gradle"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "batch-processing-initial",
+                    "languages": [
+                        {
+                            "name": "Java",
+                            "frameworks": [
+                                "Spring"
+                            ],
+                            "tools": [
+                                "Gradle"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "https://github.com/patternfly/patternfly-react-seed.git": {
+            "commit": "62e92b78a64c93f3fa8c059e7482aaa3192e681d",
+            "components": [
+                {
+                    "name": "patternfly-seed",
+                    "languages": [
+                        {
+                            "name": "TypeScript",
+                            "frameworks": [
+                                "React"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     }
 }
