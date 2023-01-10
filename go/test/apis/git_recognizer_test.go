@@ -29,16 +29,23 @@ func TestExternalRepos(t *testing.T) {
 
 	// loop over all repositories and verify expected results are correct
 	for repo, properties := range data {
-		root, err := test.CheckoutCommit(repo, properties.Commit)
-		defer os.RemoveAll(root)
+		err := checkoutAndTest(t, repo, properties)
 		if err != nil {
 			t.Errorf("Unable to download git repo %s", err.Error())
-		} else {
-			dir := filepath.Join(root, properties.Directory)
-			assertComponentsBelongToGitProject(t, dir, properties.Components)
 		}
 	}
 
+}
+func checkoutAndTest(t *testing.T, repo string, properties test.GitTestProperties) error {
+	root, err := test.CheckoutCommit(repo, properties.Commit)
+	defer os.RemoveAll(root)
+	if err != nil {
+		return err
+	} else {
+		dir := filepath.Join(root, properties.Directory)
+		assertComponentsBelongToGitProject(t, dir, properties.Components)
+	}
+	return nil
 }
 
 func assertComponentsBelongToGitProject(t *testing.T, gitProjectPath string, expectedComponents []test.ComponentProperties) {
