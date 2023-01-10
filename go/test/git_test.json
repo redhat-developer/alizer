@@ -679,6 +679,370 @@
                     ]
                 }
             ]
+        },
+        "https://github.com/bucharest-gold/s2i-nodejs.git": {
+            "commit": "c7f990e02a14560b756187dd8ad21d6eb74246d9",
+            "components": [
+                {
+                    "name": "s2i-nodejs",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "https://github.com/nodeshift-starters/opossum-examples.git": {
+            "commit": "821451be248a78dbd58a21f2f2e661ab332bf7ed",
+            "components": [
+                {
+                    "name": "angular",
+                    "languages": [
+                        {
+                            "name": "TypeScript",
+                            "frameworks": [
+                                "Angular"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "opossum-angular",
+                    "languages": [
+                        {
+                            "name": "TypeScript",
+                            "frameworks": [
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ],
+                    "ports": [
+                        "3000"
+                    ]
+                },
+                {
+                    "name": "ember-opossum",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "opossum-browser-example",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "database-timeout",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ],
+                    "ports": [
+                        "3000"
+                    ]
+                },
+                {
+                    "name": "multiple-express",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ],
+                    "ports": [
+                        "8080"
+                    ]
+                },
+                {
+                    "name": "typescript-example",
+                    "languages": [
+                        {
+                            "name": "TypeScript",
+                            "frameworks": [ ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "express-prometheus-minishift",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "opossum-react-client",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [
+                                "React"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ],
+                    "ports": [
+                        "8080"
+                    ]
+                },
+                {
+                    "name": "opossum-react",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ],
+                    "ports": [
+                        "3000"
+                    ]
+                },
+                {
+                    "name": "opossum-browser-example",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "svelte-app",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Svelte"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "opossum-svelte",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ],
+                    "ports": [
+                        "3000"
+                    ]
+                },
+                {
+                    "name": "opossum-vue-client",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Vue"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "opossum-vue",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ],
+                    "ports": [
+                        "3000"
+                    ]
+                }
+            ]
+        },
+        "https://github.com/nodeshift-starters/nodejs-rest-http.git": {
+            "commit": "7b16266ce25bf4392c8f9a3a13f8fff76890ed05",
+            "components": [
+                {
+                    "name": "nodejs-rest-http",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "https://github.com/nodeshift-starters/nodejs-circuit-breaker.git": {
+            "commit": "1879d4d716487890ecb6f98bf50aa44b8cc6f4c8",
+            "components": [
+                {
+                    "name": "nodejs-circuit-breaker-greeting",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "nodejs-circuit-breaker-name",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "https://github.com/nodeshift-starters/reactive-example.git": {
+            "commit": "86d452aaa1170a710b33227965b0828f6c5d78af",
+            "components": [
+                {
+                    "name": "consumer-backend",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "frontend",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "producer-backend",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     }
 }
