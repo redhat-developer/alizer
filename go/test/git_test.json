@@ -1145,6 +1145,96 @@
                     ]
                 }
             ]
+        },
+        "https://github.com/nodeshift-starters/nodejs-configmap.git": {
+            "commit": "9710d7a74d995de3322e378d43528706c5d5f085",
+            "components": [
+                {
+                    "name": "nodejs-configmap",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "https://github.com/nodeshift-starters/nodejs-messaging-work-queue.git": {
+            "commit": "5b95d6fc6c004a205cb2e966a4f78da736dfb44e",
+            "components": [
+                {
+                    "name": "nodejs-messaging-work-queue-frontend",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "nodejs-messaging-work-queue-worker",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "https://github.com/nodeshift-starters/nodejs-cache.git": {
+            "commit": "8059b4520e07d3ffaec5c3759b918d86c8b574de",
+            "components": [
+                {
+                    "name": "nodejs-cache-cute-name",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "nodejs-cache-greeting",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     }
 }
