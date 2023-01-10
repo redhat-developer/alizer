@@ -1043,6 +1043,108 @@
                     ]
                 }
             ]
+        },
+        "https://github.com/nodeshift-starters/nodejs-health-check.git": {
+            "commit": "8748b233c56b0f85a6a5e9a66a1caa60fb8cb3d1",
+            "components": [
+                {
+                    "name": "nodejs-health-check",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Express"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "https://github.com/burrsutter/todo-apps.git": {
+            "commit": "9d03c47a15f9e4a651eac20b48cd8c6143d34815",
+            "directory": "quarkus-todo",
+            "components": [
+                {
+                    "name": "quarkus-todo",
+                    "languages": [
+                        {
+                            "name": "Java",
+                            "frameworks": [ 
+                                "Quarkus"
+                            ],
+                            "tools": [
+                                "Maven"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "resources",
+                    "languages": [
+                        {
+                            "name": "JavaScript",
+                            "frameworks": [ 
+                                "Vue"
+                            ],
+                            "tools": [
+                                "NodeJs",
+                                "Node.js"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "https://github.com/marcnuri-demo/jkube-remote-dev.git": {
+            "commit": "c56bb2124732180a5c5cc37217d1a07cd4119e4c",
+            "components": [
+                {
+                    "name": "mail",
+                    "languages": [
+                        {
+                            "name": "Java",
+                            "frameworks": [ 
+                                "Micronaut"
+                            ],
+                            "tools": [
+                                "Maven"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "northwind",
+                    "languages": [
+                        {
+                            "name": "Java",
+                            "frameworks": [ 
+                                "Quarkus"
+                            ],
+                            "tools": [
+                                "Maven"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "order-faker",
+                    "languages": [
+                        {
+                            "name": "Java",
+                            "frameworks": [ 
+                                "Spring"
+                            ],
+                            "tools": [
+                                "Maven"
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     }
 }

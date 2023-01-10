@@ -143,8 +143,8 @@ func isParentModuleMaven(configPath string) bool {
 		return false
 	}
 
-	hasTag, _ := utils.IsTagInPomXMLFile(configPath, "modules")
-	return hasTag
+	pomContent, _ := utils.GetPomFileContent(configPath)
+	return pomContent.Modules.Module != ""
 }
 
 func detectJavaFrameworks(language *model.Language, configFile string) {
