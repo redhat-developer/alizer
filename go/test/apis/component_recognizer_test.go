@@ -209,6 +209,10 @@ func TestPortDetectionWithDockerFile(t *testing.T) {
 	testPortDetectionInProject(t, "projectDockerFile", []int{8085})
 }
 
+func TestPortDetectionWithContainerFile(t *testing.T) {
+	testPortDetectionInProject(t, "projectContainerFile", []int{8085})
+}
+
 func TestPortDetectionJavaMicronaut(t *testing.T) {
 	testPortDetectionInProject(t, "projectMicronaut", []int{4444})
 }

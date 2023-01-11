@@ -5,7 +5,7 @@ Because of the different nature of frameworks supported, Alizer tries to use cus
 Only ports with value > 0 and < 65535 are valid.
 
 There are three detection strategies currently available:
-1) Docker file - Alizer looks for a Dockerfile in the root folder and tries to extract ports from it.
+1) Docker file - Alizer looks for a Dockerfile, or Containerfile, in the root folder and tries to extract ports from it.
 2) Compose file - Alizer searches for a docker-compose file in the root folder and tries to extract port of the service from it
 3) Source - If a framework has been detected during component detection, a customized detection is performed. Below a detailed overview of the different strategies for each supported framework.
 
