@@ -10,7 +10,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/pkg/errors"
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
+	"github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
 	"github.com/redhat-developer/alizer/go/pkg/utils"
 	"github.com/redhat-developer/alizer/go/test"
 )
@@ -27,16 +29,45 @@ func TestExternalRepos(t *testing.T) {
 		t.Fatal("Unable to fetch git repositories file to run tests to")
 	}
 
+	resChan := make(chan resultTest)
 	// loop over all repositories and verify expected results are correct
 	for repo, properties := range data {
-		err := checkoutAndTest(t, repo, properties)
-		if err != nil {
-			t.Errorf("Unable to download git repo %s", err.Error())
-		}
+		checkoutAndTest(resChan, repo, properties)
 	}
 
+	for i := 1; i <= len(data); i++ {
+		result := <-resChan
+		os.RemoveAll(result.root)
+		for _, err := range result.errors {
+			t.Error(err)
+		}
+	}
 }
-func checkoutAndTest(t *testing.T, repo string, properties test.GitTestProperties) error {
+
+type resultTest struct {
+	root   string
+	errors []error
+}
+
+func checkoutAndTest(resChan chan resultTest, repo string, properties test.GitTestProperties) {
+	go func() {
+		root, err := test.CheckoutCommit(repo, properties.Commit)
+		var errs []error
+		if err != nil {
+			errs = []error{err}
+		} else {
+			dir := filepath.Join(root, properties.Directory)
+			errs = assertComponentsBelongToGitProject(dir, properties.Components)
+		}
+		resChan <- resultTest{
+			root:   root,
+			errors: errs,
+		}
+	}()
+
+}
+
+/*func checkoutAndTest(t *testing.T, repo string, properties test.GitTestProperties) error {
 	root, err := test.CheckoutCommit(repo, properties.Commit)
 	defer os.RemoveAll(root)
 	if err != nil {
@@ -46,10 +77,14 @@ func checkoutAndTest(t *testing.T, repo string, properties test.GitTestPropertie
 		assertComponentsBelongToGitProject(t, dir, properties.Components)
 	}
 	return nil
-}
+}*/
 
-func assertComponentsBelongToGitProject(t *testing.T, gitProjectPath string, expectedComponents []test.ComponentProperties) {
-	components := getComponentsFromProjectInner(t, gitProjectPath)
+func assertComponentsBelongToGitProject(gitProjectPath string, expectedComponents []test.ComponentProperties) []error {
+	components, err := recognizer.DetectComponents(gitProjectPath)
+	if err != nil {
+		return []error{err}
+	}
+	errs := []error{}
 	assertNumberOfComponents := len(components) == len(expectedComponents)
 	if assertNumberOfComponents {
 		// sort both slices by component name
@@ -63,23 +98,24 @@ func assertComponentsBelongToGitProject(t *testing.T, gitProjectPath string, exp
 		cont := 0
 		for cont < len(components) {
 			if expectedComponents[cont].Name != "ignore" && !strings.EqualFold(components[cont].Name, expectedComponents[cont].Name) {
-				t.Errorf("Expected to find component %s but it was found %s", expectedComponents[cont].Name, components[cont].Name)
+				errs = append(errs, errors.Errorf("Expected to find component %s but it was found %s", expectedComponents[cont].Name, components[cont].Name))
 			}
 			if !assertExpectedLangsAreFound(expectedComponents[cont].Languages, components[cont].Languages) {
 				expectedPretty := printPrettyStruct(expectedComponents[cont].Languages)
 				foundPretty := printPrettyStruct(components[cont].Languages)
-				t.Errorf("Languages found are different from those expected.\nExpected: %s\nFound: %s ", expectedPretty, foundPretty)
+				errs = append(errs, errors.Errorf("Languages found are different from those expected.\nExpected: %s\nFound: %s ", expectedPretty, foundPretty))
 			}
 			if !assertExpectedPortsAreFound(expectedComponents[cont].Ports, components[cont].Ports) {
 				expectedPretty := printPrettyStruct(expectedComponents[cont].Ports)
 				foundPretty := printPrettyStruct(components[cont].Ports)
-				t.Errorf("Ports found are different from those expected.\nExpected: %s\nFound: %s ", expectedPretty, foundPretty)
+				errs = append(errs, errors.Errorf("Ports found are different from those expected.\nExpected: %s\nFound: %s ", expectedPretty, foundPretty))
 			}
 			cont++
 		}
 	} else {
-		t.Errorf("Expected " + strconv.Itoa(len(expectedComponents)) + " components but they were " + strconv.Itoa(len(components)))
+		errs = append(errs, errors.Errorf("Expected "+strconv.Itoa(len(expectedComponents))+" components but they were "+strconv.Itoa(len(components))))
 	}
+	return errs
 }
 
 func printPrettyStruct(v interface{}) string {
