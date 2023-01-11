@@ -67,18 +67,6 @@ func checkoutAndTest(resChan chan resultTest, repo string, properties test.GitTe
 
 }
 
-/*func checkoutAndTest(t *testing.T, repo string, properties test.GitTestProperties) error {
-	root, err := test.CheckoutCommit(repo, properties.Commit)
-	defer os.RemoveAll(root)
-	if err != nil {
-		return err
-	} else {
-		dir := filepath.Join(root, properties.Directory)
-		assertComponentsBelongToGitProject(t, dir, properties.Components)
-	}
-	return nil
-}*/
-
 func assertComponentsBelongToGitProject(gitProjectPath string, expectedComponents []test.ComponentProperties) []error {
 	components, err := recognizer.DetectComponents(gitProjectPath)
 	if err != nil {
