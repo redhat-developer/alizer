@@ -11,6 +11,7 @@
 package enricher
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 
@@ -58,7 +59,7 @@ func (j JavaScriptEnricher) DoEnrichLanguage(language *model.Language, files *[]
 	}
 }
 
-func (j JavaScriptEnricher) DoEnrichComponent(component *model.Component, settings model.DetectionSettings) {
+func (j JavaScriptEnricher) DoEnrichComponent(component *model.Component, settings model.DetectionSettings, ctx *context.Context) {
 	projectName := ""
 	packageJsonPath := filepath.Join(component.Path, "package.json")
 	if _, err := os.Stat(packageJsonPath); err == nil {
@@ -90,7 +91,7 @@ func (j JavaScriptEnricher) DoEnrichComponent(component *model.Component, settin
 				for _, detector := range getJavaScriptFrameworkDetectors() {
 					for _, framework := range component.Languages[0].Frameworks {
 						if utils.Contains(detector.GetSupportedFrameworks(), framework) {
-							detector.DoPortsDetection(component)
+							detector.DoPortsDetection(component, ctx)
 						}
 					}
 				}

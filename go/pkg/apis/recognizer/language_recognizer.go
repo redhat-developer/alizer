@@ -11,6 +11,7 @@
 package recognizer
 
 import (
+	"context"
 	"path/filepath"
 	"sort"
 
@@ -26,10 +27,15 @@ type languageItem struct {
 }
 
 func Analyze(path string) ([]model.Language, error) {
+	ctx := context.Background()
+	return analyze(path, &ctx)
+}
+
+func analyze(path string, ctx *context.Context) ([]model.Language, error) {
 	languagesFile := langfile.Get()
 	languagesDetected := make(map[string]languageItem)
 
-	paths, err := utils.GetCachedFilePathsFromRoot(path)
+	paths, err := utils.GetCachedFilePathsFromRoot(path, ctx)
 	if err != nil {
 		return []model.Language{}, err
 	}

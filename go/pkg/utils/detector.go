@@ -13,6 +13,7 @@ package utils
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"encoding/xml"
 	"errors"
@@ -275,8 +276,8 @@ func IsValidPort(port int) bool {
 	return port > FROM_PORT && port < TO_PORT
 }
 
-func GetAnyApplicationFilePath(root string, propsFiles []model.ApplicationFileInfo) string {
-	files, err := GetCachedFilePathsFromRoot(root)
+func GetAnyApplicationFilePath(root string, propsFiles []model.ApplicationFileInfo, ctx *context.Context) string {
+	files, err := GetCachedFilePathsFromRoot(root, ctx)
 	if err != nil {
 		return ""
 	}
@@ -303,20 +304,20 @@ func GetAnyApplicationFilePathExactMatch(root string, propsFiles []model.Applica
 	return ""
 }
 
-func ReadAnyApplicationFile(root string, propsFiles []model.ApplicationFileInfo) ([]byte, error) {
-	return readAnyApplicationFile(root, propsFiles, false)
+func ReadAnyApplicationFile(root string, propsFiles []model.ApplicationFileInfo, ctx *context.Context) ([]byte, error) {
+	return readAnyApplicationFile(root, propsFiles, false, ctx)
 }
 
 func ReadAnyApplicationFileExactMatch(root string, propsFiles []model.ApplicationFileInfo) ([]byte, error) {
-	return readAnyApplicationFile(root, propsFiles, true)
+	return readAnyApplicationFile(root, propsFiles, true, nil)
 }
 
-func readAnyApplicationFile(root string, propsFiles []model.ApplicationFileInfo, exactMatch bool) ([]byte, error) {
+func readAnyApplicationFile(root string, propsFiles []model.ApplicationFileInfo, exactMatch bool, ctx *context.Context) ([]byte, error) {
 	var path string
 	if exactMatch {
 		path = GetAnyApplicationFilePathExactMatch(root, propsFiles)
 	} else {
-		path = GetAnyApplicationFilePath(root, propsFiles)
+		path = GetAnyApplicationFilePath(root, propsFiles, ctx)
 	}
 	if path != "" {
 		return ioutil.ReadFile(path)
