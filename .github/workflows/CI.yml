@@ -84,4 +84,4 @@ jobs:
           cd go
           make init
           go mod tidy -compat=1.17
-          go test -v test/apis/language_recognizer_test.go
+          go test ./...

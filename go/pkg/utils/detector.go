@@ -116,15 +116,20 @@ func IsTagInPackageJsonFile(file string, tag string) bool {
 	if err != nil {
 		return false
 	}
-	if packageJson.Dependencies != nil {
-		for dependency := range packageJson.Dependencies {
-			if strings.Contains(dependency, tag) {
-				return true
-			}
-		}
+
+	hasDependency := isTagInDependencies(packageJson.Dependencies, tag)
+	if !hasDependency {
+		hasDependency = isTagInDependencies(packageJson.DevDependencies, tag)
 	}
-	if packageJson.PeerDependencies != nil {
-		for dependency := range packageJson.PeerDependencies {
+	if !hasDependency {
+		hasDependency = isTagInDependencies(packageJson.PeerDependencies, tag)
+	}
+	return hasDependency
+}
+
+func isTagInDependencies(deps map[string]string, tag string) bool {
+	if deps != nil {
+		for dependency := range deps {
 			if strings.Contains(dependency, tag) {
 				return true
 			}
