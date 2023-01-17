@@ -11,6 +11,7 @@
 package enricher
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -29,20 +30,20 @@ import (
 type Enricher interface {
 	GetSupportedLanguages() []string
 	DoEnrichLanguage(language *model.Language, files *[]string)
-	DoEnrichComponent(component *model.Component, settings model.DetectionSettings)
+	DoEnrichComponent(component *model.Component, settings model.DetectionSettings, ctx *context.Context)
 	IsConfigValidForComponentDetection(language string, configFile string) bool
 }
 
 type FrameworkDetectorWithConfigFile interface {
 	GetSupportedFrameworks() []string
 	DoFrameworkDetection(language *model.Language, config string)
-	DoPortsDetection(component *model.Component)
+	DoPortsDetection(component *model.Component, ctx *context.Context)
 }
 
 type FrameworkDetectorWithoutConfigFile interface {
 	GetSupportedFrameworks() []string
 	DoFrameworkDetection(language *model.Language, files *[]string)
-	DoPortsDetection(component *model.Component)
+	DoPortsDetection(component *model.Component, ctx *context.Context)
 }
 
 /*
@@ -176,7 +177,7 @@ func GetPortsFromDockerComposeFile(componentPath string, settings model.Detectio
 }
 
 func getDockerComposeFileBytes(root string) ([]byte, error) {
-	return utils.ReadAnyApplicationFile(root, []model.ApplicationFileInfo{
+	return utils.ReadAnyApplicationFileExactMatch(root, []model.ApplicationFileInfo{
 		{
 			Dir:  "",
 			File: "docker-compose.yml",

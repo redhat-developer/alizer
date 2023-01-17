@@ -13,6 +13,7 @@ package utils
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"encoding/xml"
 	"errors"
@@ -280,8 +281,8 @@ func IsValidPort(port int) bool {
 	return port > FROM_PORT && port < TO_PORT
 }
 
-func GetAnyApplicationFilePath(root string, propsFiles []model.ApplicationFileInfo) string {
-	files, err := GetFilePathsFromRoot(root)
+func GetAnyApplicationFilePath(root string, propsFiles []model.ApplicationFileInfo, ctx *context.Context) string {
+	files, err := GetCachedFilePathsFromRoot(root, ctx)
 	if err != nil {
 		return ""
 	}
@@ -297,8 +298,32 @@ func GetAnyApplicationFilePath(root string, propsFiles []model.ApplicationFileIn
 	return ""
 }
 
-func ReadAnyApplicationFile(root string, propsFiles []model.ApplicationFileInfo) ([]byte, error) {
-	path := GetAnyApplicationFilePath(root, propsFiles)
+func GetAnyApplicationFilePathExactMatch(root string, propsFiles []model.ApplicationFileInfo) string {
+	for _, propsFile := range propsFiles {
+		fileToBeFound := filepath.Join(root, propsFile.Dir, propsFile.File)
+		if _, err := os.Stat(fileToBeFound); !os.IsNotExist(err) {
+			return fileToBeFound
+		}
+	}
+
+	return ""
+}
+
+func ReadAnyApplicationFile(root string, propsFiles []model.ApplicationFileInfo, ctx *context.Context) ([]byte, error) {
+	return readAnyApplicationFile(root, propsFiles, false, ctx)
+}
+
+func ReadAnyApplicationFileExactMatch(root string, propsFiles []model.ApplicationFileInfo) ([]byte, error) {
+	return readAnyApplicationFile(root, propsFiles, true, nil)
+}
+
+func readAnyApplicationFile(root string, propsFiles []model.ApplicationFileInfo, exactMatch bool, ctx *context.Context) ([]byte, error) {
+	var path string
+	if exactMatch {
+		path = GetAnyApplicationFilePathExactMatch(root, propsFiles)
+	} else {
+		path = GetAnyApplicationFilePath(root, propsFiles, ctx)
+	}
 	if path != "" {
 		return ioutil.ReadFile(path)
 	}
@@ -379,4 +404,12 @@ func getEnvFileContent(root string) (string, error) {
 		return "", err
 	}
 	return string(bytes), nil
+}
+
+func NormalizeSplit(file string) (string, string) {
+	dir, fileName := filepath.Split(file)
+	if dir == "" {
+		dir = "./"
+	}
+	return dir, fileName
 }

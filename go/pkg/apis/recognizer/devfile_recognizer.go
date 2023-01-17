@@ -11,6 +11,7 @@
 package recognizer
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
@@ -22,6 +23,11 @@ import (
 )
 
 func SelectDevFileFromTypes(path string, devFileTypes []model.DevFileType) (int, error) {
+	ctx := context.Background()
+	return selectDevFileFromTypes(path, devFileTypes, &ctx)
+}
+
+func selectDevFileFromTypes(path string, devFileTypes []model.DevFileType, ctx *context.Context) (int, error) {
 	components, _ := DetectComponentsInRoot(path)
 	if len(components) > 0 {
 		devfile, err := selectDevFileByLanguage(components[0].Languages[0], devFileTypes)
@@ -38,7 +44,7 @@ func SelectDevFileFromTypes(path string, devFileTypes []model.DevFileType) (int,
 		}
 	}
 
-	languages, err := Analyze(path)
+	languages, err := analyze(path, ctx)
 	if err != nil {
 		return -1, err
 	}
@@ -60,12 +66,17 @@ func SelectDevFileUsingLanguagesFromTypes(languages []model.Language, devFileTyp
 }
 
 func SelectDevFileFromRegistry(path string, url string) (model.DevFileType, error) {
+	ctx := context.Background()
+	return selectDevFileFromRegistry(path, url, &ctx)
+}
+
+func selectDevFileFromRegistry(path string, url string, ctx *context.Context) (model.DevFileType, error) {
 	devFileTypes, err := downloadDevFileTypesFromRegistry(url)
 	if err != nil {
 		return model.DevFileType{}, err
 	}
 
-	index, err := SelectDevFileFromTypes(path, devFileTypes)
+	index, err := selectDevFileFromTypes(path, devFileTypes, ctx)
 	if err != nil {
 		return model.DevFileType{}, err
 	}

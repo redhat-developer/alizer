@@ -11,6 +11,7 @@
 package recognizer
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -90,7 +91,8 @@ func TestComponentDetectionWithGitIgnoreRule(t *testing.T) {
 	settings := model.DetectionSettings{
 		BasePath: testingProjectPath,
 	}
-	files, err := utils.GetFilePathsFromRoot(testingProjectPath)
+	ctx := context.Background()
+	files, err := utils.GetCachedFilePathsFromRoot(testingProjectPath, &ctx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -107,7 +109,7 @@ func TestComponentDetectionWithGitIgnoreRule(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	files, err = utils.GetFilePathsFromRoot(testingProjectPath)
+	files, err = utils.GetCachedFilePathsFromRoot(testingProjectPath, &ctx)
 	if err != nil {
 		t.Error(err)
 	}
@@ -162,12 +164,8 @@ func getComponentsFromProjectInner(t *testing.T, testingProjectPath string) []mo
 }
 
 func getComponentsFromFiles(t *testing.T, files []string, settings model.DetectionSettings) []model.Component {
-	components, err := recognizer.DetectComponentsFromFilesList(files, settings)
-	if err != nil {
-		t.Error(err)
-	}
-
-	return components
+	ctx := context.Background()
+	return recognizer.DetectComponentsFromFilesList(files, settings, &ctx)
 }
 
 func isComponentsInProject(t *testing.T, project string, expectedNumber int, expectedLanguage string, expectedProjectName string) {
