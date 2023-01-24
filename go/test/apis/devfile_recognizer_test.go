@@ -11,7 +11,6 @@ package recognizer
  * Red Hat, Inc.
  ******************************************************************************/
 import (
-	"context"
 	"testing"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
@@ -96,9 +95,8 @@ func TestDetectVueDevfile(t *testing.T) {
 
 func detectDevFile(t *testing.T, projectName string, devFilesName []string) {
 	detectDevFilesFunc := func(devFileTypes []model.DevFileType) ([]int, error) {
-		ctx := context.Background()
 		testingProjectPath := GetTestProjectPath(projectName)
-		return recognizer.SelectDevFilesFromTypes(testingProjectPath, devFileTypes, &ctx)
+		return recognizer.SelectDevFilesFromTypes(testingProjectPath, devFileTypes)
 	}
 	detectDevFileInner(t, devFilesName, detectDevFilesFunc)
 }

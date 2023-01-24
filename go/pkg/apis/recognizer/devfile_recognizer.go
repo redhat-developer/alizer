@@ -23,13 +23,14 @@ import (
 	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
-func SelectDevFilesFromTypes(path string, devFileTypes []model.DevFileType, ctx *context.Context) ([]int, error) {
+func SelectDevFilesFromTypes(path string, devFileTypes []model.DevFileType) ([]int, error) {
+	ctx := context.Background()
 	devFilesIndexes := selectDevFilesFromComponentsDetectedInPath(path, devFileTypes)
 	if len(devFilesIndexes) > 0 {
 		return devFilesIndexes, nil
 	}
 
-	languages, err := analyze(path, ctx)
+	languages, err := analyze(path, &ctx)
 	if err != nil {
 		return []int{}, err
 	}
@@ -63,8 +64,7 @@ func selectDevFilesFromComponents(components []model.Component, devFileTypes []m
 }
 
 func SelectDevFileFromTypes(path string, devFileTypes []model.DevFileType) (int, error) {
-	ctx := context.Background()
-	devfiles, err := SelectDevFilesFromTypes(path, devFileTypes, &ctx)
+	devfiles, err := SelectDevFilesFromTypes(path, devFileTypes)
 	if err != nil {
 		return -1, err
 	}
@@ -94,13 +94,12 @@ func SelectDevFileUsingLanguagesFromTypes(languages []model.Language, devFileTyp
 }
 
 func SelectDevFilesFromRegistry(path string, url string) ([]model.DevFileType, error) {
-	ctx := context.Background()
 	devFileTypesFromRegistry, err := downloadDevFileTypesFromRegistry(url)
 	if err != nil {
 		return []model.DevFileType{}, err
 	}
 
-	indexes, err := SelectDevFilesFromTypes(path, devFileTypesFromRegistry, &ctx)
+	indexes, err := SelectDevFilesFromTypes(path, devFileTypesFromRegistry)
 	if err != nil {
 		return []model.DevFileType{}, err
 	}
