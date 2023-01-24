@@ -45,7 +45,7 @@ func (j JavaScriptEnricher) DoEnrichLanguage(language *model.Language, files *[]
 	if packageJson != "" {
 		language.Tools = []string{"NodeJs", "Node.js"}
 		var targetLanguage string
-		if utils.IsTagInPackageJsonFile(packageJson, "typescript") {
+		if utils.IsTagInPackageJsonFile(packageJson, "typescript") || utils.IsTagInPackageJsonFile(packageJson, "tslib") {
 			targetLanguage = "TypeScript"
 		} else {
 			targetLanguage = "JavaScript"

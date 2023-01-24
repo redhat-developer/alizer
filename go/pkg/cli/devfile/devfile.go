@@ -28,5 +28,5 @@ func doSelectDevfile(cmd *cobra.Command, args []string) {
 	if registry == "" {
 		registry = "https://registry.devfile.io/index"
 	}
-	utils.PrintPrettifyOutput(recognizer.SelectDevFileFromRegistry(args[0], registry))
+	utils.PrintPrettifyOutput(recognizer.SelectDevFilesFromRegistry(args[0], registry))
 }

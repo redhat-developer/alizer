@@ -31,6 +31,8 @@ import (
 
 const FROM_PORT = 0
 const TO_PORT = 65535
+const FRAMEWORK_WEIGHT = 10
+const TOOL_WEIGHT = 5
 
 func GetFilesByRegex(filePaths *[]string, regexFile string) []string {
 	matchedPaths := []string{}
@@ -129,11 +131,9 @@ func IsTagInPackageJsonFile(file string, tag string) bool {
 }
 
 func isTagInDependencies(deps map[string]string, tag string) bool {
-	if deps != nil {
-		for dependency := range deps {
-			if strings.Contains(dependency, tag) {
-				return true
-			}
+	for dependency := range deps {
+		if strings.Contains(dependency, tag) {
+			return true
 		}
 	}
 	return false
