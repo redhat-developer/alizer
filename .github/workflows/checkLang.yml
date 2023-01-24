@@ -12,12 +12,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.3.4
-      - uses: GuillaumeFalourd/diff-action@v1
+        # v1
+      - uses: GuillaumeFalourd/diff-action@b341507d1da990caceac1b3b31b8f55eebaa2e99
         with:
           first_file_path: resources/languages.yml
           second_file_path: go/pkg/utils/langfiles/resources/languages.yml
           expected_result: PASSED
-      - uses: GuillaumeFalourd/diff-action@v1
+        # v1
+      - uses: GuillaumeFalourd/diff-action@b341507d1da990caceac1b3b31b8f55eebaa2e99
         with:
           first_file_path: resources/languages-customization.yml
           second_file_path: go/pkg/utils/langfiles/resources/languages-customization.yml
