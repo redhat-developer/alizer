@@ -19,7 +19,6 @@ GCC Machine Description:
 Go:
   configuration_files:
     - "go.mod"
-    - "go.sum"
   component: true
 Java:
   configuration_files:
@@ -32,7 +31,7 @@ JavaScript:
   exclude_folders:
     - "node_modules"
   configuration_files:
-    - "package.json"
+    - "[^-]package.json"
   component: true
 Python:
   component: true
@@ -46,7 +45,7 @@ TypeScript:
   exclude_folders:
     - "node_modules"
   configuration_files:
-    - "package.json"
+    - "[^-]package.json"
   component: true
 Visual Basic .NET:
   aliases:

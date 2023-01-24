@@ -23,17 +23,7 @@
                         "tools": [
                             "1.14"
                         ]
-                    },
-                    {
-                        "name": "Modula-2",
-                        "frameworks": [],
-                        "tools": []
-                    },
-                    {
-                        "name": "AMPL",
-                        "frameworks": [],
-                        "tools": []
-                    }        
+                    }      
                 ]
             }
         ]
@@ -71,17 +61,7 @@
                         "tools": [
                             "1.18"
                         ]
-                    },
-                    {
-                        "name": "Smarty",
-                        "frameworks": [],
-                        "tools": []
-                    },
-                    {
-                        "name": "Shell",
-                        "frameworks": [],
-                        "tools": []
-                    }  
+                    }
                 ]
             }
         ]
@@ -100,11 +80,6 @@
                         "tools": [
                             "1.19"
                         ]
-                    },
-                    {
-                        "name": "Assembly",
-                        "frameworks": [],
-                        "tools": []
                     }
                 ],
                 "ports": [
@@ -173,7 +148,12 @@
                         "tools": [
                             "Maven"
                         ]
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "jhipster-sample-application",
+                "languages": [
                     {
                         "name": "TypeScript",
                         "frameworks": [
@@ -238,7 +218,7 @@
                             "Spring"
                         ],
                         "tools": [
-                            "Gradle"
+                            "Maven"
                         ]
                     }
                 ]
@@ -274,19 +254,12 @@
                     {
                         "name": "TypeScript",
                         "frameworks": [
-                            "Angular"
+                            "Angular",
+                            "Express"
                         ],
                         "tools": [
-                            "NodeJs"
-                        ]
-                    },
-                    {
-                        "name": "JavaScript",
-                        "frameworks": [
-                            "Angular"
-                        ],
-                        "tools": [
-                            "NodeJs"
+                            "NodeJs",
+                            "Node.js"
                         ]
                     }
                 ]
@@ -296,15 +269,6 @@
                 "languages": [
                     {
                         "name": "TypeScript",
-                        "frameworks": [
-                            "Angular"
-                        ],
-                        "tools": [
-                            "NodeJs"
-                        ]
-                    },
-                    {
-                        "name": "JavaScript",
                         "frameworks": [
                             "Angular"
                         ],
@@ -709,7 +673,7 @@
                 "name": "opossum-angular",
                 "languages": [
                     {
-                        "name": "TypeScript",
+                        "name": "JavaScript",
                         "frameworks": [
                             "Express"
                         ],

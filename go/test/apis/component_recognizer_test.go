@@ -109,7 +109,7 @@ func TestComponentDetectionWithGitIgnoreRule(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	files, err = utils.GetCachedFilePathsFromRoot(testingProjectPath, &ctx)
+	files, err = utils.GetFilePathsFromRoot(testingProjectPath)
 	if err != nil {
 		t.Error(err)
 	}

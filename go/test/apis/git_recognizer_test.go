@@ -57,7 +57,8 @@ func checkoutAndTest(resChan chan resultTest, repo string, properties test.GitTe
 			errs = []error{err}
 		} else {
 			dir := filepath.Join(root, properties.Directory)
-			errs = assertComponentsBelongToGitProject(dir, properties.Components)
+			cleanDirectory(dir)
+			errs = assertComponentsBelongToGitProject(dir, repo, properties.Components)
 		}
 		resChan <- resultTest{
 			root:   root,
@@ -67,7 +68,14 @@ func checkoutAndTest(resChan chan resultTest, repo string, properties test.GitTe
 
 }
 
-func assertComponentsBelongToGitProject(gitProjectPath string, expectedComponents []test.ComponentProperties) []error {
+func cleanDirectory(path string) {
+	gitFolder := filepath.Join(path, ".git")
+	if _, err := os.Stat(gitFolder); err == nil {
+		os.RemoveAll(gitFolder)
+	}
+}
+
+func assertComponentsBelongToGitProject(gitProjectPath string, repoName string, expectedComponents []test.ComponentProperties) []error {
 	components, err := recognizer.DetectComponents(gitProjectPath)
 	if err != nil {
 		return []error{err}
@@ -86,22 +94,22 @@ func assertComponentsBelongToGitProject(gitProjectPath string, expectedComponent
 		cont := 0
 		for cont < len(components) {
 			if expectedComponents[cont].Name != "ignore" && !strings.EqualFold(components[cont].Name, expectedComponents[cont].Name) {
-				errs = append(errs, errors.Errorf("Expected to find component %s but it was found %s", expectedComponents[cont].Name, components[cont].Name))
+				errs = append(errs, errors.Errorf("Repo %s : Expected to find component %s but it was found %s", repoName, expectedComponents[cont].Name, components[cont].Name))
 			}
 			if !assertExpectedLangsAreFound(expectedComponents[cont].Languages, components[cont].Languages) {
 				expectedPretty := printPrettyStruct(expectedComponents[cont].Languages)
 				foundPretty := printPrettyStruct(components[cont].Languages)
-				errs = append(errs, errors.Errorf("Languages found are different from those expected.\nExpected: %s\nFound: %s ", expectedPretty, foundPretty))
+				errs = append(errs, errors.Errorf("Repo %s : Languages found are different from those expected.\nExpected: %s\nFound: %s ", repoName, expectedPretty, foundPretty))
 			}
 			if !assertExpectedPortsAreFound(expectedComponents[cont].Ports, components[cont].Ports) {
 				expectedPretty := printPrettyStruct(expectedComponents[cont].Ports)
 				foundPretty := printPrettyStruct(components[cont].Ports)
-				errs = append(errs, errors.Errorf("Ports found are different from those expected.\nExpected: %s\nFound: %s ", expectedPretty, foundPretty))
+				errs = append(errs, errors.Errorf("Repo %s : Ports found are different from those expected.\nExpected: %s\nFound: %s ", repoName, expectedPretty, foundPretty))
 			}
 			cont++
 		}
 	} else {
-		errs = append(errs, errors.Errorf("Expected "+strconv.Itoa(len(expectedComponents))+" components but they were "+strconv.Itoa(len(components))))
+		errs = append(errs, errors.Errorf("Repo %s : Expected "+strconv.Itoa(len(expectedComponents))+" components but they were "+strconv.Itoa(len(components)), repoName))
 	}
 	return errs
 }
