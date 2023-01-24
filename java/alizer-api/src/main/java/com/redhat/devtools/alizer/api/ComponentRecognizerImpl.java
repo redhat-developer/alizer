@@ -152,7 +152,7 @@ public class ComponentRecognizerImpl extends Recognizer implements ComponentReco
     }
 
     private Optional<String> getConfigurationByFile(Set<String> regexes, File file) {
-        return regexes.stream().filter(regex -> Pattern.matches(regex, file.getName())).findFirst();
+        return regexes.stream().filter(regex -> Pattern.matches(regex, file.getName()) || Pattern.matches(regex, "/" + file.getName())).findFirst();
     }
 
     private List<String> getLanguagesWithWhichConfigurationIsValid(List<String> languages, File file) {

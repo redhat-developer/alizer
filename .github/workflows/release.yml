@@ -22,7 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up Graalvm
-        uses: DeLaGuardo/setup-graalvm@4.0
+        # 4.0
+        uses: DeLaGuardo/setup-graalvm@a766aa7b5fcc0a801fa3d4fd521ca299c03c9c00
         with:
           graalvm: '21.0.0.2'
           java: java11
@@ -37,7 +38,8 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Get the version
         id: get_version
-        uses: battila7/get-version-action@v2
+        # v2
+        uses: battila7/get-version-action@d97fbc34ceb64d1f5d95f4dfd6dce33521ccccf5
       - name: Set up Visual C Build Tools Workload for Visual Studio 2017 Build Tools
         run: |
           choco install visualstudio2017-workload-vctools
@@ -55,7 +57,8 @@ jobs:
           tar cfJ java/alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-${{ matrix.suffix }} java/alizer-cli/target/alizer-cli-${{ steps.get_version.outputs.version }}-runner
         if: ${{ matrix.os != 'windows-latest' }}
       - name: Simple conventional changelog
-        uses: lstocchi/simple-conventional-changelog@0.0.11
+        # 0.0.11
+        uses: lstocchi/simple-conventional-changelog@13071c09073f5deddf03d44d9af6a8b0f81ef227
         id: changelog
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -65,7 +68,8 @@ jobs:
           echo '${{ steps.changelog.outputs.changelog }}'
       - name: Create or update Release
         id: create_release
-        uses: ncipollo/release-action@v1
+        # v1
+        uses: ncipollo/release-action@a2e71bdd4e7dab70ca26a852f29600c98b33153e
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

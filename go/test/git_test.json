@@ -23,17 +23,7 @@
                         "tools": [
                             "1.14"
                         ]
-                    },
-                    {
-                        "name": "Modula-2",
-                        "frameworks": [],
-                        "tools": []
-                    },
-                    {
-                        "name": "AMPL",
-                        "frameworks": [],
-                        "tools": []
-                    }        
+                    }      
                 ]
             }
         ]
@@ -71,17 +61,7 @@
                         "tools": [
                             "1.18"
                         ]
-                    },
-                    {
-                        "name": "Smarty",
-                        "frameworks": [],
-                        "tools": []
-                    },
-                    {
-                        "name": "Shell",
-                        "frameworks": [],
-                        "tools": []
-                    }  
+                    }
                 ]
             }
         ]
@@ -100,11 +80,6 @@
                         "tools": [
                             "1.19"
                         ]
-                    },
-                    {
-                        "name": "Assembly",
-                        "frameworks": [],
-                        "tools": []
                     }
                 ],
                 "ports": [
@@ -173,7 +148,12 @@
                         "tools": [
                             "Maven"
                         ]
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "jhipster-sample-application",
+                "languages": [
                     {
                         "name": "TypeScript",
                         "frameworks": [
@@ -238,7 +218,7 @@
                             "Spring"
                         ],
                         "tools": [
-                            "Gradle"
+                            "Maven"
                         ]
                     }
                 ]
@@ -274,19 +254,12 @@
                     {
                         "name": "TypeScript",
                         "frameworks": [
-                            "Angular"
+                            "Angular",
+                            "Express"
                         ],
                         "tools": [
-                            "NodeJs"
-                        ]
-                    },
-                    {
-                        "name": "JavaScript",
-                        "frameworks": [
-                            "Angular"
-                        ],
-                        "tools": [
-                            "NodeJs"
+                            "NodeJs",
+                            "Node.js"
                         ]
                     }
                 ]
@@ -296,15 +269,6 @@
                 "languages": [
                     {
                         "name": "TypeScript",
-                        "frameworks": [
-                            "Angular"
-                        ],
-                        "tools": [
-                            "NodeJs"
-                        ]
-                    },
-                    {
-                        "name": "JavaScript",
                         "frameworks": [
                             "Angular"
                         ],
@@ -479,6 +443,759 @@
                         ],
                         "tools": [
                             "1.18"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/JoranBergfeld/webshop.git": {
+        "commit": "7cbd9ddd2207dd712369e44da56699c9393765c8",
+        "components": [
+            {
+                "name": "order-app",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ],
+                "ports": [
+                    15000
+                ]
+            },
+            {
+                "name": "payment-app",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ],
+                "ports": [
+                    15001
+                ]
+            },
+            {
+                "name": "stock-app",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ],
+                "ports": [
+                    15002
+                ]
+            }
+        ]
+    },
+    "https://github.com/bezkoder/spring-boot-data-jpa-mysql.git": {
+        "commit": "75d0e3b13635a9a7a5e5a1c6b02c04366476227a",
+        "components": [
+            {
+                "name": "spring-boot-data-jpa",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/kylebuch8/urgent-care-finder-v2.git": {
+        "commit": "c9a32ce6f53bec3b915991bb4fe95ffd7bce8e2b",
+        "components": [
+            {
+                "name": "nextjs",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Next",
+                            "Next.js",
+                            "React"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/rh-aiservices-bu/object-detection-rest.git": {
+        "commit": "cd9b8b573518c3080e3ce60f61255b9e9e164f6e",
+        "components": [
+            {
+                "name": "ignore",
+                "languages": [
+                    {
+                        "name": "Python",
+                        "frameworks": [],
+                        "tools": []
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/gothinkster/spring-boot-realworld-example-app.git": {
+        "commit": "ee17e31aafe733d98c4853c8b9a74d7f2f6c924a",
+        "components": [
+            {
+                "name": "ignore",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Gradle"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/spring-guides/gs-batch-processing.git": {
+        "commit": "19b0881fe060f15553d50aaef18a372735f2253d",
+        "components": [
+            {
+                "name": "batch-processing-complete",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Gradle"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "batch-processing-initial",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Gradle"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/patternfly/patternfly-react-seed.git": {
+        "commit": "62e92b78a64c93f3fa8c059e7482aaa3192e681d",
+        "components": [
+            {
+                "name": "patternfly-seed",
+                "languages": [
+                    {
+                        "name": "TypeScript",
+                        "frameworks": [
+                            "React"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/bucharest-gold/s2i-nodejs.git": {
+        "commit": "c7f990e02a14560b756187dd8ad21d6eb74246d9",
+        "components": [
+            {
+                "name": "s2i-nodejs",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/nodeshift-starters/opossum-examples.git": {
+        "commit": "821451be248a78dbd58a21f2f2e661ab332bf7ed",
+        "components": [
+            {
+                "name": "angular",
+                "languages": [
+                    {
+                        "name": "TypeScript",
+                        "frameworks": [
+                            "Angular"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "opossum-angular",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ],
+                "ports": [
+                    3000
+                ]
+            },
+            {
+                "name": "ember-opossum",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "ember-opossum",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "opossum-browser-example",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "database-timeout",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ],
+                "ports": [
+                    3000
+                ]
+            },
+            {
+                "name": "multiple-express",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ],
+                "ports": [
+                    8080
+                ]
+            },
+            {
+                "name": "typescript-example",
+                "languages": [
+                    {
+                        "name": "TypeScript",
+                        "frameworks": [ ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "express-prometheus-minishift",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "opossum-react-client",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "React"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ],
+                "ports": [
+                    8000
+                ]
+            },
+            {
+                "name": "opossum-react",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ],
+                "ports": [
+                    3000
+                ]
+            },
+            {
+                "name": "opossum-browser-example",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "svelte-app",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Svelte"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "opossum-svelte",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ],
+                "ports": [
+                    3000
+                ]
+            },
+            {
+                "name": "opossum-vue-client",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Vue"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "opossum-vue",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ],
+                "ports": [
+                    3000
+                ]
+            }
+        ]
+    },
+    "https://github.com/nodeshift-starters/nodejs-rest-http.git": {
+        "commit": "7b16266ce25bf4392c8f9a3a13f8fff76890ed05",
+        "components": [
+            {
+                "name": "nodejs-rest-http",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/nodeshift-starters/nodejs-circuit-breaker.git": {
+        "commit": "1879d4d716487890ecb6f98bf50aa44b8cc6f4c8",
+        "components": [
+            {
+                "name": "nodejs-circuit-breaker-greeting",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "nodejs-circuit-breaker-name",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/nodeshift-starters/reactive-example.git": {
+        "commit": "86d452aaa1170a710b33227965b0828f6c5d78af",
+        "components": [
+            {
+                "name": "consumer-backend",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "frontend",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "producer-backend",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/nodeshift-starters/nodejs-health-check.git": {
+        "commit": "8748b233c56b0f85a6a5e9a66a1caa60fb8cb3d1",
+        "components": [
+            {
+                "name": "nodejs-health-check",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/burrsutter/todo-apps.git": {
+        "commit": "9d03c47a15f9e4a651eac20b48cd8c6143d34815",
+        "directory": "quarkus-todo",
+        "components": [
+            {
+                "name": "quarkus-todo",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [ 
+                            "Quarkus"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "resources",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Vue"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/marcnuri-demo/jkube-remote-dev.git": {
+        "commit": "c56bb2124732180a5c5cc37217d1a07cd4119e4c",
+        "components": [
+            {
+                "name": "mail",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [ 
+                            "Micronaut"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "northwind",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [ 
+                            "Quarkus"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "order-faker",
+                "languages": [
+                    {
+                        "name": "Java",
+                        "frameworks": [ 
+                            "Spring"
+                        ],
+                        "tools": [
+                            "Maven"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/nodeshift-starters/nodejs-configmap.git": {
+        "commit": "9710d7a74d995de3322e378d43528706c5d5f085",
+        "components": [
+            {
+                "name": "nodejs-configmap",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/nodeshift-starters/nodejs-messaging-work-queue.git": {
+        "commit": "5b95d6fc6c004a205cb2e966a4f78da736dfb44e",
+        "components": [
+            {
+                "name": "nodejs-messaging-work-queue-frontend",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "nodejs-messaging-work-queue-worker",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/nodeshift-starters/nodejs-cache.git": {
+        "commit": "8059b4520e07d3ffaec5c3759b918d86c8b574de",
+        "components": [
+            {
+                "name": "nodejs-cache-cute-name",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "nodejs-cache-greeting",
+                "languages": [
+                    {
+                        "name": "JavaScript",
+                        "frameworks": [ 
+                            "Express"
+                        ],
+                        "tools": [
+                            "NodeJs",
+                            "Node.js"
                         ]
                     }
                 ]

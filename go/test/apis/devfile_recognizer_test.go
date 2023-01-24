@@ -18,19 +18,19 @@ import (
 )
 
 func TestDetectQuarkusDevfile(t *testing.T) {
-	detectDevFile(t, "quarkus", "java-quarkus")
+	detectDevFile(t, "quarkus", []string{"java-quarkus"})
 }
 
 func TestDetectMicronautDevfile(t *testing.T) {
-	detectDevFile(t, "micronaut", "java-maven")
+	detectDevFile(t, "micronaut", []string{"java-maven"})
 }
 
 func TestDetectNodeJSDevfile(t *testing.T) {
-	detectDevFile(t, "nodejs-ex", "nodejs")
+	detectDevFile(t, "nodejs-ex", []string{"nodejs"})
 }
 
 func TestDetectDjangoDevfile(t *testing.T) {
-	detectDevFile(t, "django", "python-django")
+	detectDevFile(t, "django", []string{"python-django"})
 }
 
 func TestDetectDjangoDevfileUsingLanguages(t *testing.T) {
@@ -58,50 +58,50 @@ func TestDetectDjangoDevfileUsingLanguages(t *testing.T) {
 			CanBeComponent: false,
 		},
 	}
-	detectDevFileUsingLanguages(t, "", languages, "python-django")
+	detectDevFileUsingLanguages(t, "", languages, []string{"python-django"})
 }
 
 func TestDetectQuarkusDevfileUsingLanguages(t *testing.T) {
-	detectDevFileUsingLanguages(t, "quarkus", []model.Language{}, "java-quarkus")
+	detectDevFileUsingLanguages(t, "quarkus", []model.Language{}, []string{"java-quarkus"})
 }
 
 func TestDetectMicronautDevfileUsingLanguages(t *testing.T) {
-	detectDevFileUsingLanguages(t, "micronaut", []model.Language{}, "java-maven")
+	detectDevFileUsingLanguages(t, "micronaut", []model.Language{}, []string{"java-maven"})
 }
 
 func TestDetectNodeJSDevfileUsingLanguages(t *testing.T) {
-	detectDevFileUsingLanguages(t, "nodejs-ex", []model.Language{}, "nodejs")
+	detectDevFileUsingLanguages(t, "nodejs-ex", []model.Language{}, []string{"nodejs"})
 }
 
 func TestDetectGoDevfile(t *testing.T) {
-	detectDevFile(t, "golang-gin-app", "go")
+	detectDevFile(t, "golang-gin-app", []string{"go"})
 }
 
 func TestDetectAngularDevfile(t *testing.T) {
-	detectDevFile(t, "angularjs", "Angular")
+	detectDevFile(t, "angularjs", []string{"Angular"})
 }
 
 func TestDetectNextJsDevfile(t *testing.T) {
-	detectDevFile(t, "nextjs-app", "Next.js")
+	detectDevFile(t, "nextjs-app", []string{"Next.js"})
 }
 
 func TestDetectNuxtJsDevfile(t *testing.T) {
-	detectDevFile(t, "nuxt-app", "nodejs-nuxtjs")
+	detectDevFile(t, "nuxt-app", []string{"nodejs-nuxtjs", "nodejs-vue"})
 }
 
 func TestDetectVueDevfile(t *testing.T) {
-	detectDevFile(t, "vue-app", "nodejs-vue")
+	detectDevFile(t, "vue-app", []string{"nodejs-vue"})
 }
 
-func detectDevFile(t *testing.T, projectName string, devFileName string) {
-	detectDevFileFunc := func(devFileTypes []model.DevFileType) (int, error) {
+func detectDevFile(t *testing.T, projectName string, devFilesName []string) {
+	detectDevFilesFunc := func(devFileTypes []model.DevFileType) ([]int, error) {
 		testingProjectPath := GetTestProjectPath(projectName)
-		return recognizer.SelectDevFileFromTypes(testingProjectPath, devFileTypes)
+		return recognizer.SelectDevFilesFromTypes(testingProjectPath, devFileTypes)
 	}
-	detectDevFileInner(t, devFileName, detectDevFileFunc)
+	detectDevFileInner(t, devFilesName, detectDevFilesFunc)
 }
 
-func detectDevFileUsingLanguages(t *testing.T, projectName string, languages []model.Language, devFileName string) {
+func detectDevFileUsingLanguages(t *testing.T, projectName string, languages []model.Language, devFileName []string) {
 	if projectName != "" {
 		testingProjectPath := GetTestProjectPath(projectName)
 		var err error
@@ -110,21 +110,31 @@ func detectDevFileUsingLanguages(t *testing.T, projectName string, languages []m
 			t.Error(err)
 		}
 	}
-	detectDevFileFunc := func(devFileTypes []model.DevFileType) (int, error) {
-		return recognizer.SelectDevFileUsingLanguagesFromTypes(languages, devFileTypes)
+	detectDevFileFunc := func(devFileTypes []model.DevFileType) ([]int, error) {
+		return recognizer.SelectDevFilesUsingLanguagesFromTypes(languages, devFileTypes)
 	}
 	detectDevFileInner(t, devFileName, detectDevFileFunc)
 }
 
-func detectDevFileInner(t *testing.T, devFileName string, detectFuncInner func([]model.DevFileType) (int, error)) {
+func detectDevFileInner(t *testing.T, expectedDevFilesName []string, detectFuncInner func([]model.DevFileType) ([]int, error)) {
 	devFileTypes := getDevFileTypes()
-	devFileTarget, err := detectFuncInner(devFileTypes)
+	foundDevFilesIndexes, err := detectFuncInner(devFileTypes)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if devFileTypes[devFileTarget].Name != devFileName {
-		t.Error("Expected value " + devFileName + " but it was" + devFileTypes[devFileTarget].Name)
+	found := false
+	for _, expectedDevFile := range expectedDevFilesName {
+		found = false
+		for _, foundDevFileIndex := range foundDevFilesIndexes {
+			if devFileTypes[foundDevFileIndex].Name == expectedDevFile {
+				found = true
+			}
+		}
+		if !found {
+			t.Error("Expected value " + expectedDevFile + " but it was not found")
+			return
+		}
 	}
 }
 

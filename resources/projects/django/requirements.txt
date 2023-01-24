@@ -1,4 +1,4 @@
-django>=1.11,<1.12
+django>=3.2.14,<1.12
 django-debug-toolbar==1.8
 gunicorn==19.5.0
 psycopg2-binary==2.8.5
