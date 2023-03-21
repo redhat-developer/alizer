@@ -1,7 +1,7 @@
 # Alizer - Java Library & CLI
 
 ## Usage
-
+*DEPRECATION WARNING: This implementation is out of date and it will be deprecated soon*
 ### Library
 Below you can find usage information about the Java library.
 

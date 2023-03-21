@@ -1,6 +1,8 @@
 # Alizer - NPM Package
 
 ## Usage
+*DEPRECATION WARNING: This implementation is out of date and it will be deprecated soon*
+
 Alizer also offers a NPM package providing helpers for recognize languages/frameworks in a project. It still doesn't support devfile selection.
 The syntax is the following:
 ```js

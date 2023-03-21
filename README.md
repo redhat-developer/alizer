@@ -18,18 +18,18 @@ detect components (the concept of component is taken from Odo and its definition
 
 In order to be easily intergrated in other projects, comes in 3 different implementations:
 
-* Java library & CLI
 * Go library & CLI
-* NPM package
+* **[Deprecated]** Java library & CLI
+* **[Deprecated]** NPM package
 
 *NOTE: Not all implementations support the same features. Please check the table at [alizer-spec](docs/public/alizer-spec.md#feature-table) for a detailed overview.*
 
 ## Usage
 As mentioned above Alizer comes with 3 different implementations. Each one has a different usage guide:
 
-* [Java library & CLI](java/README.md#Usage)
 * [Go library & CLI](go/README.md#Usage)
-* [NPM package](js/README.md#Usage)
+* **[Deprecated]** [Java library & CLI](java/README.md#Usage)
+* **[Deprecated]** [NPM package](js/README.md#Usage)
 
 ## Contributing
 This is an open source project open to anyone. This project welcomes contributions and suggestions!
