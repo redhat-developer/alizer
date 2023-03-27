@@ -37,8 +37,6 @@ Python:
   configuration_files:
     - "manage.py"
     - "app.py"
-    - "config.py"
-    - "__init__.py"
   component: true
 Rust:
   configuration_files:
