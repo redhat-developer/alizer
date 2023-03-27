@@ -25,17 +25,22 @@ func (d FlaskDetector) GetSupportedFrameworks() []string {
 
 func (d FlaskDetector) DoFrameworkDetection(language *model.Language, files *[]string) {
 	appPy := utils.GetFile(files, "app.py")
-	initPy := utils.GetFile(files, "__init__.py")
+	wsgiPy := utils.GetFile(files, "wsgi.py")
+	requirementsTxt := utils.GetFile(files, "requirements.txt")
+	projectToml := utils.GetFile(files, "project.toml")
 
-	djangoFiles := []string{}
-	utils.AddToArrayIfValueExist(&djangoFiles, appPy)
-	utils.AddToArrayIfValueExist(&djangoFiles, initPy)
+	flaskFiles := []string{}
+	configFlaskFiles := []string{}
+	utils.AddToArrayIfValueExist(&flaskFiles, appPy)
+	utils.AddToArrayIfValueExist(&flaskFiles, wsgiPy)
+	utils.AddToArrayIfValueExist(&configFlaskFiles, requirementsTxt)
+	utils.AddToArrayIfValueExist(&configFlaskFiles, projectToml)
 
-	if hasFramework(&djangoFiles, "from flask ") {
+	if hasFramework(&flaskFiles, "from flask ") || hasFramework(&configFlaskFiles, "Flask") || hasFramework(&configFlaskFiles, "flask") {
 		language.Frameworks = append(language.Frameworks, "Flask")
 	}
 }
 
 func (d FlaskDetector) DoPortsDetection(component *model.Component, ctx *context.Context) {
-	return
+	// Not implemented yet
 }
