@@ -35,8 +35,8 @@ JavaScript:
   component: true
 Python:
   configuration_files:
-    - "manage.py"
-    - "app.py"
+    - "requirements.txt"
+    - "project.toml"
   component: true
 Rust:
   configuration_files:
