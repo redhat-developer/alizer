@@ -28,6 +28,7 @@
             }
         ]
     },
+
     "https://github.com/beego/beego-example.git": {
         "commit": "9729063b688570f8d472c4755744197c0bcd833d",
         "components": [
@@ -405,6 +406,23 @@
                         "name": "Python",
                         "frameworks": [
                             "Django"
+                        ],
+                        "tools": []
+                    }
+                ]
+            }
+        ]
+    },
+    "https://github.com/blues-man/pipelines-vote-ui.git": {
+        "commit": "bee52ea4620f210a1ea5f0b0633c316bedda959a",
+        "components": [
+            {
+                "name": "ignore",
+                "languages": [
+                    {
+                        "name": "Python",
+                        "frameworks": [
+                            "Flask"
                         ],
                         "tools": []
                     }
