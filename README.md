@@ -36,6 +36,12 @@ This is an open source project open to anyone. This project welcomes contributio
 
 For information on getting started, refer to the [CONTRIBUTING instructions](CONTRIBUTING.md).
 
+## Release process
+The release process of `alizer` is very straightforward. You can create a new release [here](https://github.com/redhat-developer/alizer/releases/new).
+
+* The *title* of the release has to be the new version. `Alizer` follows the `{major}.{minor}.{bugfix}` format (e.g `0.1.0`)
+* The *description* of the release is optional. You may add a description if there were outstanding updates in the project, not mentioned in the issues or PRs of this release.
+
 ## Feedback & Questions
 If you discover an issue please file a bug and we will fix it as soon as possible.
 * File a bug in [GitHub Issues](https://github.com/redhat-developer/alizer/issues).
