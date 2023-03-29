@@ -24,7 +24,7 @@ The port detection in a `[compose|docker-compose].[yml|yaml]` file targets the `
 To search for the specific component, Alizer look at the `build` field.
 
 Example of `expose` - the result is [3000,8000]
-```
+```yaml
 services:
   web:
     ...
@@ -39,7 +39,7 @@ services:
 ```
 
 Example of short syntax `ports` (`[HOST:]CONTAINER[/PROTOCOL]`) - the result is [3000,3005,8000,8081,8002,6060]
-```
+```yaml
 services:
   web:
     ...
@@ -56,7 +56,7 @@ services:
 ```
 
 Example of long syntax `ports` - the result is [6060]
-```
+```yaml
 services:
   web:
     ...
@@ -81,7 +81,7 @@ services:
 Alizer checks if the environment variable MICRONAUT_SERVER_SSL_ENABLED is set to true. If so, both MICRONAUT_SERVER_SSL_PORT and MICRONAUT_SERVER_PORT are checked (if false, only the MICRONAUT_SERVER_PORT is used for verification). If they are not set or they do not contain valid port values, Alizer searches for the `application.[yml|yaml]` file in `src/main/resources` folder and verify if one or more ports are set.
 
 The known schema is:
-```
+```yaml
 micronaut:
     server:
         port: <port>
@@ -95,7 +95,7 @@ micronaut:
 Alizer searches for the `server.xml` file within the root or `src/main/liberty/config` folder and verify if a port is set.
 
 The known schema is:
-```
+```xml
 <server>
     <httpEndpoint id="defaultHttpEndpoint"
         httpPort="<port>"
@@ -280,7 +280,7 @@ exports = {
 Alizer searches for the `default_port` property set within the `manage.py` file
 
 Example
-```
+```python
     import django
     django.setup()
 
@@ -313,7 +313,7 @@ Alizer searches either for 2 different function calls - `ListenAndServe(:<port>)
 If `<port>` is a variable, it tries to find its value within the code.
 
 Example
-```
+```go
 func main() {
   e := echo.New()
   // add middleware and routes

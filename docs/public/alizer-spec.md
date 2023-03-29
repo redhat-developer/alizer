@@ -6,28 +6,19 @@ This document outlines the features Alizer offers and how they actually work.
 
 Currently, Alizer provides 3 detection options:
 
-- Language Detection (Language/Tools/Frameworks)
-- DevFile Detection
-- Component Detection
+- *Language Detection* (Language/Tools/Frameworks)
+- *DevFile Detection*
+- *Component Detection*
 
-in 4 different implementations:
+in 3 different implementations:
 
-- Java library
-- CLI
-- NPM package
-- Go library
-
-so that it can be integrated easily in other projects.
-
-### Inner-loop scenario
-
-As a Vscode/IntelliJ plugin developer, I would like to detect the languages, tools, frameworks, services used within the
-opened user project in the IDE to provide a better user experience and tailor the functionalities I offer them.
+- Golang library & CLI.
+- **[Deprecated]**: Java library & CLI.
+- **[Deprecated]**: NPM package.
 
 ## Language Detection
 
-Language detection is based on the file `languages.yml` taken from the [GitHub's Linguist project](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml).
-Because of that, Alizer is able to recognize almost any programming languages, with a customized deeper detection of the
+Language detection is based on the file `languages.yml` taken from the [GitHub's Linguist project](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). Because of that, Alizer is able to recognize almost any programming languages, with a customized deeper detection of the
 ones listed below:
 
 - Java
@@ -38,8 +29,7 @@ ones listed below:
 - GoLang
 
 Language recognition is performed by using files extensions within the source, and only the languages with a significant
-presence (>2% total files) are taken into account for further calculations.
-If any of languages above is detected, Alizer proceeds to check for the presence of tools and frameworks.
+presence (>2% total files) are taken into account for further calculations. If any of languages above is detected, Alizer proceeds to check for the presence of tools and frameworks.
 
 ### Java
 
@@ -167,9 +157,9 @@ a `language without a configuration file` in them. A simple Language detection i
 
 ## Feature table
 
-|                                  | Java API | CLI | Javascript | Go |
-|----------------------------------|----------|-----|------------|----|
-| Language/Framework detection     | X        | X   | X          | X  |
-| Devfile detection (metadata)     | X        | X   | X          | X  |
-| Devfile detection (registry URL) |          | X   |            |    |
-| Component detection              | X        | X   |            | X  |
+|                                  | Java API | Javascript | Go |
+|----------------------------------|----------|------------|----|
+| Language/Framework detection     | X        | X          | X  |
+| Devfile detection (metadata)     | X        | X          | X  |
+| Devfile detection (registry URL) |          |            | X  |
+| Component detection              | X        |            | X  |
