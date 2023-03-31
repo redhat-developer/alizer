@@ -36,7 +36,7 @@ JavaScript:
 Python:
   configuration_files:
     - "requirements.txt"
-    - "project.toml"
+    - "pyproject.toml"
   component: true
 Rust:
   configuration_files:

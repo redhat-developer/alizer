@@ -30,7 +30,7 @@ func (d DjangoDetector) DoFrameworkDetection(language *model.Language, files *[]
 	wsgiPy := utils.GetFile(files, "wsgi.py")
 	asgiPy := utils.GetFile(files, "asgi.py")
 	requirementsTxt := utils.GetFile(files, "requirements.txt")
-	projectToml := utils.GetFile(files, "project.toml")
+	projectToml := utils.GetFile(files, "pyproject.toml")
 
 	djangoFiles := []string{}
 	configDjangoFiles := []string{}

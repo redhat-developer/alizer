@@ -27,7 +27,7 @@ func (d FlaskDetector) DoFrameworkDetection(language *model.Language, files *[]s
 	appPy := utils.GetFile(files, "app.py")
 	wsgiPy := utils.GetFile(files, "wsgi.py")
 	requirementsTxt := utils.GetFile(files, "requirements.txt")
-	projectToml := utils.GetFile(files, "project.toml")
+	projectToml := utils.GetFile(files, "pyproject.toml")
 
 	flaskFiles := []string{}
 	configFlaskFiles := []string{}
