@@ -14,6 +14,7 @@ import (
 	"context"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	enricher "github.com/redhat-developer/alizer/go/pkg/apis/enricher"
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
@@ -41,7 +42,7 @@ func analyze(path string, ctx *context.Context) ([]model.Language, error) {
 	}
 	extensionsGrouped := extractExtensions(paths)
 	extensionHasProgrammingLanguage := false
-	totalProgrammingOccurrences := 0
+	totalProgrammingPoints := 0
 	for extension := range extensionsGrouped {
 		languages := languagesFile.GetLanguagesByExtension(extension)
 		if len(languages) == 0 {
@@ -67,15 +68,15 @@ func analyze(path string, ctx *context.Context) ([]model.Language, error) {
 			}
 		}
 		if extensionHasProgrammingLanguage {
-			totalProgrammingOccurrences += extensionsGrouped[extension]
+			totalProgrammingPoints += extensionsGrouped[extension]
 			extensionHasProgrammingLanguage = false
 		}
 	}
 
 	var languagesFound []model.Language
 	for name, item := range languagesDetected {
-		tmpWeight := float64(item.weight) / float64(totalProgrammingOccurrences)
-		tmpWeight = float64(int(tmpWeight*10000)) / 10000
+		tmpWeight := float64(item.weight) / float64(totalProgrammingPoints)
+		tmpWeight = float64(int(tmpWeight*100)) / 100
 		if tmpWeight > 0.02 {
 			tmpLanguage := model.Language{
 				Name:           name,
@@ -118,6 +119,16 @@ func AnalyzeFile(configFile string, targetLanguage string) (model.Language, erro
 	return tmpLanguage, nil
 }
 
+func isStaticFileExtension(path string) bool {
+	staticDirs := [2]string{"static/", "templates/"}
+	for _, dir := range staticDirs {
+		if strings.Contains(path, dir) {
+			return true
+		}
+	}
+	return false
+}
+
 func extractExtensions(paths []string) map[string]int {
 	extensions := make(map[string]int)
 	for _, path := range paths {
@@ -125,8 +136,13 @@ func extractExtensions(paths []string) map[string]int {
 		if len(extension) == 0 {
 			continue
 		}
-		count := extensions[extension] + 1
-		extensions[extension] = count
+		extensionPoints := extensions[extension]
+		if !isStaticFileExtension(path) {
+			extensionPoints = extensionPoints + 100
+		} else {
+			extensionPoints = extensionPoints + 10
+		}
+		extensions[extension] = extensionPoints
 	}
 	return extensions
 }
