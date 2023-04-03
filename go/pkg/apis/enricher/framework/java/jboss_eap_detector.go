@@ -12,11 +12,23 @@ package enricher
 
 import (
 	"context"
+	"encoding/xml"
+	"strings"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
+	utils "github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 type JBossEAPDetector struct{}
+
+type JBoss_Standalone_Xml struct {
+	SocketBindingGroup struct {
+		SocketBinding []struct {
+			Name string `xml:"name,attr"`
+			Port string `xml:"port,attr"`
+		} `xml:"socket-binding"`
+	} `xml:"socket-binding-group"`
+}
 
 func (o JBossEAPDetector) GetSupportedFrameworks() []string {
 	return []string{"JBoss EAP"}
@@ -29,5 +41,32 @@ func (o JBossEAPDetector) DoFrameworkDetection(language *model.Language, config 
 }
 
 func (o JBossEAPDetector) DoPortsDetection(component *model.Component, ctx *context.Context) {
-	// Not implemented yet
+	bytes, err := utils.ReadAnyApplicationFile(component.Path, []model.ApplicationFileInfo{
+		{
+			Dir:  "",
+			File: "standalone.xml",
+		},
+	}, ctx)
+	if err != nil {
+		return
+	}
+	var (
+		data       JBoss_Standalone_Xml
+		foundPorts []string
+	)
+	xml.Unmarshal(bytes, &data)
+	filters := [3]string{"${jboss.http.port:", "${jboss.https.port:", "}"}
+	for _, potentialPort := range data.SocketBindingGroup.SocketBinding {
+		if potentialPort.Name == "https" || potentialPort.Name == "http" {
+			tmpPort := potentialPort.Port
+			for _, filter := range filters {
+				tmpPort = strings.ReplaceAll(tmpPort, filter, "")
+			}
+			foundPorts = append(foundPorts, tmpPort)
+		}
+	}
+	ports := utils.GetValidPorts(foundPorts)
+	if len(ports) > 0 {
+		component.Ports = ports
+	}
 }

@@ -32,6 +32,7 @@ func getJavaFrameworkDetectors() []FrameworkDetectorWithConfigFile {
 		&framework.SpringDetector{},
 		&framework.VertxDetector{},
 		&framework.WildFlyDetector{},
+		&framework.JBossEAPDetector{},
 	}
 }
 
