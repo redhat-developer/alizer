@@ -170,7 +170,7 @@ func getDevFileTypes() []model.DevFileType {
 			ProjectType: "spring",
 			Tags: []string{
 				"Java",
-				"Spring",
+				"Spring Boot",
 			},
 		},
 		{
