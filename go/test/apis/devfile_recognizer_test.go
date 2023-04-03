@@ -94,7 +94,7 @@ func TestDetectVueDevfile(t *testing.T) {
 }
 
 func TestDetectSpringDevfile(t *testing.T) {
-	detectDevFile(t, "java-spring", []string{"java-spring", "java-springboot"})
+	detectDevFile(t, "spring", []string{"java-spring", "java-springboot"})
 }
 
 func detectDevFile(t *testing.T, projectName string, devFilesName []string) {
