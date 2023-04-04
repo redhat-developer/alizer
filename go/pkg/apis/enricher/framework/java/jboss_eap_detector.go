@@ -35,7 +35,7 @@ func (o JBossEAPDetector) GetSupportedFrameworks() []string {
 }
 
 func (o JBossEAPDetector) DoFrameworkDetection(language *model.Language, config string) {
-	if hasFwk, _ := hasFramework(config, "org.jboss.eap"); hasFwk {
+	if hasFwk, _ := hasFramework(config, "org.jboss.eap.plugins"); hasFwk {
 		language.Frameworks = append(language.Frameworks, "JBoss EAP")
 	}
 }
