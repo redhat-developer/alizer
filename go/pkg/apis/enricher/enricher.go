@@ -14,6 +14,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -47,16 +48,20 @@ type FrameworkDetectorWithoutConfigFile interface {
 }
 
 /*
-	IsConfigurationValidForLanguage check whether the configuration file is valid for current language.
-									For example when analyzing a nodejs project, we could find a package.json
-									within the node_modules folder. That is not to be considered valid
-									for component detection.
-	Paramenters:
-		language: language name
-		file: configuration file name
-	Returns:
-		bool: true if config file is valid for current language
+IsConfigurationValidForLanguage check whether the configuration file is valid for current language.
 
+	For example when analyzing a nodejs project, we could find a package.json
+	within the node_modules folder. That is not to be considered valid
+	for component detection.
+
+Paramenters:
+
+	language: language name
+	file: configuration file name
+
+Returns:
+
+	bool: true if config file is valid for current language
 */
 func IsConfigurationValidForLanguage(language string, file string) bool {
 	languageItem, err := langfiles.Get().GetLanguageByName(language)
@@ -72,12 +77,15 @@ func IsConfigurationValidForLanguage(language string, file string) bool {
 }
 
 /*
-	isFolderNameIncludedInPath check if fullpath contains potentialSubFolderName
-	Parameters:
-		fullPath: 				complete path of a file
-		potentialSubFolderName: folder name
-	Returns:
-		bool: true if potentialSubFolderName is included in fullPath
+isFolderNameIncludedInPath check if fullpath contains potentialSubFolderName
+Parameters:
+
+	fullPath: 				complete path of a file
+	potentialSubFolderName: folder name
+
+Returns:
+
+	bool: true if potentialSubFolderName is included in fullPath
 */
 func isFolderNameIncludedInPath(fullPath string, potentialSubFolderName string) bool {
 	pathSeparator := fmt.Sprintf("%c", os.PathSeparator)
@@ -125,7 +133,7 @@ func GetDefaultProjectName(path string) string {
 }
 
 func GetPortsFromDockerFile(root string) []int {
-	locations := []string{"Dockerfile", "Containerfile"}
+	locations := getLocations(root)
 	for _, location := range locations {
 		file, err := os.Open(filepath.Join(root, location))
 		if err == nil {
@@ -134,6 +142,29 @@ func GetPortsFromDockerFile(root string) []int {
 		}
 	}
 	return []int{}
+}
+
+func getLocations(root string) []string {
+	locations := []string{"Dockerfile", "Containerfile"}
+	dirItems, err := ioutil.ReadDir(root)
+	if err != nil {
+		return locations
+	}
+	for _, item := range dirItems {
+		if strings.HasPrefix(item.Name(), ".") {
+			continue
+		}
+		tmpPath := fmt.Sprintf("%s%s", root, item.Name())
+		fileInfo, err := os.Stat(tmpPath)
+		if err != nil {
+			continue
+		}
+		if fileInfo.IsDir() {
+			locations = append(locations, fmt.Sprintf("%s/%s", item.Name(), "Dockerfile"))
+			locations = append(locations, fmt.Sprintf("%s/%s", item.Name(), "Containerfile"))
+		}
+	}
+	return locations
 }
 
 func getPortsFromReader(file io.Reader) []int {
