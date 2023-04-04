@@ -27,6 +27,14 @@ func TestComponentDetectionOnMicronaut(t *testing.T) {
 	isComponentsInProject(t, "micronaut", 1, "java", "myMicronautProject")
 }
 
+func TestComponentDetectionOnWildFly(t *testing.T) {
+	isComponentsInProject(t, "wildfly", 1, "java", "wildfly")
+}
+
+func TestComponentDetectionOnJBossEAP(t *testing.T) {
+	isComponentsInProject(t, "jboss-eap", 1, "java", "jboss-eap")
+}
+
 func TestComponentDetectionOnQuarkus(t *testing.T) {
 	isComponentsInProject(t, "quarkus", 1, "java", "code-with-quarkus-maven")
 }
@@ -217,6 +225,10 @@ func TestPortDetectionJavaMicronaut(t *testing.T) {
 
 func TestPortDetectionJavaQuarkus(t *testing.T) {
 	testPortDetectionInProject(t, "projectQuarkus", []int{9898})
+}
+
+func TestPortDetectionJavaWildfly(t *testing.T) {
+	testPortDetectionInProject(t, "projectWildfly", []int{8080, 8443})
 }
 
 func TestPortDetectionJavaVertxHttpPort(t *testing.T) {
