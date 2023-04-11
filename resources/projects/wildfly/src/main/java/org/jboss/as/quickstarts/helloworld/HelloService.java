@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2020, Red Hat, Inc. and/or its affiliates, and individual
+ * Copyright 2015, Red Hat, Inc. and/or its affiliates, and individual
  * contributors by the @authors tag. See the copyright.txt in the
  * distribution for a full listing of individual contributors.
  *
@@ -14,23 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wildfly.quickstart.microprofile.openapi;
+package org.jboss.as.quickstarts.helloworld;
 
-public class Fruit {
+/**
+ * A simple CDI service which is able to say hello to someone
+ *
+ * @author Pete Muir
+ *
+ */
+public class HelloService {
 
-    private final String name;
-    private final String description;
-
-    public Fruit(String name, String description) {
-        this.name = name;
-        this.description = description;
+    String createHelloMessage(String name) {
+        return "Hello " + name + "!";
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
 }
