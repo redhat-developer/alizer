@@ -33,12 +33,12 @@ type ApplicationProsServer struct {
 }
 
 func (s SpringDetector) GetSupportedFrameworks() []string {
-	return []string{"Spring"}
+	return []string{"Spring", "Spring Boot"}
 }
 
 func (s SpringDetector) DoFrameworkDetection(language *model.Language, config string) {
 	if hasFwk, _ := hasFramework(config, "org.springframework"); hasFwk {
-		language.Frameworks = append(language.Frameworks, "Spring")
+		language.Frameworks = append(language.Frameworks, s.GetSupportedFrameworks()...)
 	}
 }
 

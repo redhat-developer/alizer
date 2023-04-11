@@ -93,6 +93,10 @@ func TestDetectVueDevfile(t *testing.T) {
 	detectDevFile(t, "vue-app", []string{"nodejs-vue"})
 }
 
+func TestDetectSpringDevfile(t *testing.T) {
+	detectDevFile(t, "spring", []string{"java-spring", "java-springboot"})
+}
+
 func detectDevFile(t *testing.T, projectName string, devFilesName []string) {
 	detectDevFilesFunc := func(devFileTypes []model.DevFileType) ([]int, error) {
 		testingProjectPath := GetTestProjectPath(projectName)
@@ -171,6 +175,15 @@ func getDevFileTypes() []model.DevFileType {
 			Tags: []string{
 				"Java",
 				"Spring",
+			},
+		},
+		{
+			Name:        "java-springboot",
+			Language:    "java",
+			ProjectType: "springboot",
+			Tags: []string{
+				"Java",
+				"Spring Boot",
 			},
 		},
 		{
