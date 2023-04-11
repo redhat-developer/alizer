@@ -23,7 +23,7 @@ func (o WildFlyDetector) GetSupportedFrameworks() []string {
 }
 
 func (o WildFlyDetector) DoFrameworkDetection(language *model.Language, config string) {
-	if hasFwk, _ := hasFramework(config, "org.wildfly.plugins"); hasFwk {
+	if hasFwk, _ := hasFramework(config, "wildfly-maven-plugin"); hasFwk {
 		language.Frameworks = append(language.Frameworks, "WildFly")
 	}
 }

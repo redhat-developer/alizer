@@ -82,6 +82,31 @@ func IsTagInFile(file string, tag string) (bool, error) {
 	return strings.Contains(content, tag), nil
 }
 
+func IsTagInPomXMLFileArtifactId(pomFilePath string, tag string) (bool, error) {
+	pom, err := GetPomFileContent(pomFilePath)
+	if err != nil {
+		return false, err
+	}
+	for _, dependency := range pom.Dependencies.Dependency {
+		if strings.Contains(dependency.ArtifactId, tag) {
+			return true, nil
+		}
+	}
+	for _, plugin := range pom.Build.Plugins.Plugin {
+		if strings.Contains(plugin.ArtifactId, tag) {
+			return true, nil
+		}
+	}
+	for _, profile := range pom.Profiles.Profile {
+		for _, plugin := range profile.Build.Plugins.Plugin {
+			if strings.Contains(plugin.ArtifactId, tag) {
+				return true, nil
+			}
+		}
+	}
+	return false, nil
+}
+
 func IsTagInPomXMLFile(pomFilePath string, tag string) (bool, error) {
 	pom, err := GetPomFileContent(pomFilePath)
 	if err != nil {
