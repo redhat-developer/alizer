@@ -88,12 +88,12 @@ func IsTagInPomXMLFileArtifactId(pomFilePath, groupdId, artifactId string) (bool
 		return false, err
 	}
 	for _, dependency := range pom.Dependencies.Dependency {
-		if strings.Contains(dependency.ArtifactId, groupdId) {
+		if strings.Contains(dependency.ArtifactId, artifactId) && strings.Contains(dependency.GroupId, groupdId) {
 			return true, nil
 		}
 	}
 	for _, plugin := range pom.Build.Plugins.Plugin {
-		if strings.Contains(plugin.ArtifactId, groupdId) {
+		if strings.Contains(plugin.ArtifactId, artifactId) && strings.Contains(plugin.GroupId, groupdId) {
 			return true, nil
 		}
 	}
