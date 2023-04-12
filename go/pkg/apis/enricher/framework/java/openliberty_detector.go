@@ -32,7 +32,7 @@ func (o OpenLibertyDetector) GetSupportedFrameworks() []string {
 }
 
 func (o OpenLibertyDetector) DoFrameworkDetection(language *model.Language, config string) {
-	if hasFwk, _ := hasFramework(config, "io.openliberty"); hasFwk {
+	if hasFwk, _ := hasFramework(config, "io.openliberty", ""); hasFwk {
 		language.Frameworks = append(language.Frameworks, "OpenLiberty")
 	}
 }

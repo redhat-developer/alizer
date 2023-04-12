@@ -19,22 +19,12 @@ type ApplicationPropertiesFile struct {
 	File string
 }
 
-func hasFramework(configFile string, tag string) (bool, error) {
+func hasFramework(configFile, groupId, artifactId string) (bool, error) {
 	if utils.IsPathOfWantedFile(configFile, "build.gradle") {
-		return utils.IsTagInFile(configFile, tag)
-	} else if tagIsIn(tag) {
-		return utils.IsTagInPomXMLFileArtifactId(configFile, tag)
+		return utils.IsTagInFile(configFile, groupId)
+	} else if artifactId != "" {
+		return utils.IsTagInPomXMLFileArtifactId(configFile, groupId, artifactId)
 	} else {
-		return utils.IsTagInPomXMLFile(configFile, tag)
+		return utils.IsTagInPomXMLFile(configFile, groupId)
 	}
-}
-
-func tagIsIn(tag string) bool {
-	artifactIds := [2]string{"eap-maven-plugin", "wildfly-maven-plugin"}
-	for _, artifactId := range artifactIds {
-		if artifactId == tag {
-			return true
-		}
-	}
-	return false
 }

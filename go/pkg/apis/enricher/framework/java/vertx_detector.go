@@ -33,7 +33,7 @@ func (v VertxDetector) GetSupportedFrameworks() []string {
 }
 
 func (v VertxDetector) DoFrameworkDetection(language *model.Language, config string) {
-	if hasFwk, _ := hasFramework(config, "io.vertx"); hasFwk {
+	if hasFwk, _ := hasFramework(config, "io.vertx", ""); hasFwk {
 		language.Frameworks = append(language.Frameworks, "Vertx")
 	}
 }

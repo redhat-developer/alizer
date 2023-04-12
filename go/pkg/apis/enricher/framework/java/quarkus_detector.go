@@ -43,7 +43,7 @@ func (q QuarkusDetector) GetSupportedFrameworks() []string {
 }
 
 func (q QuarkusDetector) DoFrameworkDetection(language *model.Language, config string) {
-	if hasFwk, _ := hasFramework(config, "io.quarkus"); hasFwk {
+	if hasFwk, _ := hasFramework(config, "io.quarkus", ""); hasFwk {
 		language.Frameworks = append(language.Frameworks, "Quarkus")
 	}
 }
