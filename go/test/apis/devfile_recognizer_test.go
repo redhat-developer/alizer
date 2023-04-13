@@ -151,6 +151,23 @@ func getDevFileTypes() []model.DevFileType {
 			Tags:        make([]string, 0),
 		},
 		{
+			Name:        "udi",
+			Language:    "Polyglot",
+			ProjectType: "default",
+			Tags: []string{
+				"Java",
+				"Maven",
+				"Scala",
+				"PHP",
+				".NET",
+				"Node.js",
+				"Go",
+				"Python",
+				"Pip",
+				"ubi8",
+			},
+		},
+		{
 			Name:        "java-quarkus",
 			Language:    "java",
 			ProjectType: "quarkus",
