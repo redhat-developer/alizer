@@ -85,6 +85,9 @@ func (j GoEnricher) DoEnrichComponent(component *model.Component, settings model
 						}
 					}
 				}
+				if len(component.Ports) == 0 {
+					framework.DoGoPortsDetection(component, ctx)
+				}
 			}
 		}
 		if len(ports) > 0 {
