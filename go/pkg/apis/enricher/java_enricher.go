@@ -31,6 +31,8 @@ func getJavaFrameworkDetectors() []FrameworkDetectorWithConfigFile {
 		&framework.QuarkusDetector{},
 		&framework.SpringDetector{},
 		&framework.VertxDetector{},
+		&framework.WildFlyDetector{},
+		&framework.JBossEAPDetector{},
 	}
 }
 
@@ -132,11 +134,14 @@ func (j JavaEnricher) IsConfigValidForComponentDetection(language string, config
 }
 
 /*
-	isParentModuleMaven checks if configuration file is a parent pom.xml
-	Parameters:
-		configPath: configuration file path
-	Returns:
-		bool: true if config file is parent
+isParentModuleMaven checks if configuration file is a parent pom.xml
+Parameters:
+
+	configPath: configuration file path
+
+Returns:
+
+	bool: true if config file is parent
 */
 func isParentModuleMaven(configPath string) bool {
 	_, file := filepath.Split(configPath)

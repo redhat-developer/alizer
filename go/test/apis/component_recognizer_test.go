@@ -27,6 +27,14 @@ func TestComponentDetectionOnMicronaut(t *testing.T) {
 	isComponentsInProject(t, "micronaut", 1, "java", "myMicronautProject")
 }
 
+func TestComponentDetectionOnWildFly(t *testing.T) {
+	isComponentsInProject(t, "wildfly", 1, "java", "wildfly")
+}
+
+func TestComponentDetectionOnJBossEAP(t *testing.T) {
+	isComponentsInProject(t, "jboss-eap", 1, "java", "jboss-eap")
+}
+
 func TestComponentDetectionOnQuarkus(t *testing.T) {
 	isComponentsInProject(t, "quarkus", 1, "java", "code-with-quarkus-maven")
 }
@@ -136,7 +144,7 @@ func updateContent(filePath string, data []byte) error {
 
 func TestComponentDetectionMultiProjects(t *testing.T) {
 	components := getComponentsFromProject(t, "")
-	nComps := 19
+	nComps := 21
 	if len(components) != nComps {
 		t.Errorf("Expected " + strconv.Itoa(nComps) + " components but found " + strconv.Itoa(len(components)))
 	}

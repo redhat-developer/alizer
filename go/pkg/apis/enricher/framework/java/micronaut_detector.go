@@ -38,7 +38,7 @@ func (m MicronautDetector) GetSupportedFrameworks() []string {
 }
 
 func (m MicronautDetector) DoFrameworkDetection(language *model.Language, config string) {
-	if hasFwk, _ := hasFramework(config, "io.micronaut"); hasFwk {
+	if hasFwk, _ := hasFramework(config, "io.micronaut", ""); hasFwk {
 		language.Frameworks = append(language.Frameworks, "Micronaut")
 	}
 }
