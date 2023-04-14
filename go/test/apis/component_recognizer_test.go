@@ -276,6 +276,10 @@ func TestPortDetectionGoGin(t *testing.T) {
 	testPortDetectionInProject(t, "projectGin", []int{8789})
 }
 
+func TestPortDetectionGo(t *testing.T) {
+	testPortDetectionInProject(t, "projectGo", []int{8080})
+}
+
 func TestPortDetectionGoFiber(t *testing.T) {
 	testPortDetectionInProject(t, "projectGoFiber", []int{3000})
 }
