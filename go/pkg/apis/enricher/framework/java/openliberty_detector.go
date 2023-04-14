@@ -21,12 +21,10 @@ import (
 type OpenLibertyDetector struct{}
 
 type Server_Xml struct {
-	Server struct {
-		HttpEndpoint struct {
-			HttpPort  string `xml:"httpPort,attr"`
-			HttpsPort string `xml:"httpsPort,attr"`
-		} `xml:"httpEndpoint"`
-	} `xml:"server"`
+	HttpEndpoint struct {
+		HttpPort  string `xml:"httpPort,attr"`
+		HttpsPort string `xml:"httpsPort,attr"`
+	} `xml:"httpEndpoint"`
 }
 
 func (o OpenLibertyDetector) GetSupportedFrameworks() []string {
@@ -34,7 +32,7 @@ func (o OpenLibertyDetector) GetSupportedFrameworks() []string {
 }
 
 func (o OpenLibertyDetector) DoFrameworkDetection(language *model.Language, config string) {
-	if hasFwk, _ := hasFramework(config, "io.openliberty"); hasFwk {
+	if hasFwk, _ := hasFramework(config, "io.openliberty", ""); hasFwk {
 		language.Frameworks = append(language.Frameworks, "OpenLiberty")
 	}
 }
@@ -55,7 +53,7 @@ func (o OpenLibertyDetector) DoPortsDetection(component *model.Component, ctx *c
 	}
 	var data Server_Xml
 	xml.Unmarshal(bytes, &data)
-	ports := utils.GetValidPorts([]string{data.Server.HttpEndpoint.HttpPort, data.Server.HttpEndpoint.HttpsPort})
+	ports := utils.GetValidPorts([]string{data.HttpEndpoint.HttpPort, data.HttpEndpoint.HttpsPort})
 	if len(ports) > 0 {
 		component.Ports = ports
 	}

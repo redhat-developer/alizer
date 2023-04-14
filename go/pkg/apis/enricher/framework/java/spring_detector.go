@@ -37,7 +37,7 @@ func (s SpringDetector) GetSupportedFrameworks() []string {
 }
 
 func (s SpringDetector) DoFrameworkDetection(language *model.Language, config string) {
-	if hasFwk, _ := hasFramework(config, "org.springframework"); hasFwk {
+	if hasFwk, _ := hasFramework(config, "org.springframework", ""); hasFwk {
 		language.Frameworks = append(language.Frameworks, s.GetSupportedFrameworks()...)
 	}
 }
