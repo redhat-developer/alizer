@@ -227,6 +227,18 @@ func TestPortDetectionJavaQuarkus(t *testing.T) {
 	testPortDetectionInProject(t, "projectQuarkus", []int{9898})
 }
 
+func TestPortDetectionJavaQuarkusDefaultPort(t *testing.T) {
+	testPortDetectionInProject(t, "projectQuarkusDefaultPort", []int{8080})
+}
+
+func TestPortDetectionJavaSpring(t *testing.T) {
+	testPortDetectionInProject(t, "projectSpring", []int{9091})
+}
+
+func TestPortDetectionJavaSpringDefaultPort(t *testing.T) {
+	testPortDetectionInProject(t, "projectSpringDefaultPort", []int{8080})
+}
+
 func TestPortDetectionJavaVertxHttpPort(t *testing.T) {
 	testPortDetectionInProject(t, "projectVertxHttpPort", []int{2321})
 }
