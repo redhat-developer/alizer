@@ -12,7 +12,6 @@ package enricher
 
 import (
 	"context"
-	"errors"
 	"io/ioutil"
 	"path/filepath"
 
@@ -76,6 +75,9 @@ func (s SpringDetector) DoPortsDetection(component *model.Component, ctx *contex
 	if err != nil {
 		return
 	}
+	if len(ports) == 0 {
+		ports = []int{8080}
+	}
 	component.Ports = ports
 
 }
@@ -94,7 +96,7 @@ func getServerPortsFromPropertiesFile(file string) ([]int, error) {
 	if len(ports) > 0 {
 		return ports, nil
 	}
-	return []int{}, errors.New("no port found")
+	return []int{}, nil
 }
 
 func getPortsFromMap(props map[string]string, keys []string) []int {
@@ -134,5 +136,5 @@ func getServerPortsFromYamlFile(file string) ([]int, error) {
 	if len(ports) > 0 {
 		return ports, nil
 	}
-	return []int{}, errors.New("no port found")
+	return []int{}, nil
 }

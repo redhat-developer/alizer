@@ -12,7 +12,6 @@ package enricher
 
 import (
 	"context"
-	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -94,6 +93,9 @@ func (q QuarkusDetector) DoPortsDetection(component *model.Component, ctx *conte
 	if err != nil {
 		return
 	}
+	if len(ports) == 0 {
+		ports = []int{8080}
+	}
 	component.Ports = ports
 }
 
@@ -127,7 +129,7 @@ func getServerPortsFromQuarkusPropertiesFile(file string) ([]int, error) {
 	if len(ports) > 0 {
 		return ports, nil
 	}
-	return []int{}, errors.New("no port found")
+	return []int{}, nil
 }
 
 func getServerPortsFromQuarkusApplicationYamlFile(file string) ([]int, error) {
@@ -149,5 +151,5 @@ func getServerPortsFromQuarkusApplicationYamlFile(file string) ([]int, error) {
 	if len(ports) > 0 {
 		return ports, nil
 	}
-	return []int{}, errors.New("no port found")
+	return []int{}, nil
 }
