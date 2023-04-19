@@ -1,16 +1,13 @@
 ## Port Detection in Alizer
 
-Port detection is one of the step included during component detection and it refers to the ports used by the component that should be opened in the container.
-Because of the different nature of frameworks supported, Alizer tries to use customized ways to detect ports from source code, if necessary.
-Only ports with value > 0 and < 65535 are valid.
+Port detection is one of the step included during component detection and it refers to the ports used by the component that should be opened in the container. Because of the different nature of frameworks supported, Alizer tries to use customized ways to detect ports from source code, if necessary. **Only ports with value > 0 and < 65535 are valid**
 
 There are three detection strategies currently available:
 1) Docker file - Alizer looks for a Dockerfile, or Containerfile, in the root folder and tries to extract ports from it.
 2) Compose file - Alizer searches for a docker-compose file in the root folder and tries to extract port of the service from it
 3) Source - If a framework has been detected during component detection, a customized detection is performed. Below a detailed overview of the different strategies for each supported framework.
 
-By default, Alizer perform a docker, compose and source detection, in this order.
-If one or more ports are found in one step, the rest are skipped. (E.g - if a port is found in the docker file, Alizer will not search and analyze 
+By default, Alizer perform a first a docker,  then a compose and finally source detection. **If one or more ports are found in one step, the rest are skipped.** (E.g - if a port is found in the docker file, Alizer will not search and analyze 
 any docker-compose file and the source code).
 
 It is also possible to customize the way Alizer searches for ports by defining the detection strategies to use and their order.
@@ -20,8 +17,7 @@ If no port is found an empty list is returned.
 
 ### Port detection with a docker-compose file
 
-The port detection in a `[compose|docker-compose].[yml|yaml]` file targets the `expose` and `ports` fields of the service related to the component, if any. 
-To search for the specific component, Alizer look at the `build` field.
+The port detection in a `[compose|docker-compose].[yml|yaml]` file targets the `expose` and `ports` fields of the service related to the component, if any. To search for the specific component, Alizer look at the `build` field.
 
 Example of `expose` - the result is [3000,8000]
 ```yaml
@@ -367,3 +363,7 @@ srv := &http.Server{
 
 log.Fatal(srv.ListenAndServe())
 ```
+
+#### Go (Raw)
+
+In case a project doesn't use one of the above frameworks, and no ports have been found, alizer will search for 2 different function calls - `ListenAndServe(:<port>)` and `Start(:<port>)` - or for the initialization of the `Addr` property of Server struct. 
