@@ -179,13 +179,13 @@ func adaptUrl(url string) string {
 }
 
 /*
-	To detect the devfiles that fit the most with a project, alizer performs a search in two steps looping through all devfiles available.
-	When a framework is detected, this is stored in a map but still not saved. A check is made eventually as there could be that a future or
-	previous devfile is more appropriate based on other infos (e.g. the tool -> quarkus gradle vs quarkus maven)
-	If no framework is detected, the devfiles are picked based on their score (language +1, tool +5). The largest score wins.
+To detect the devfiles that fit the most with a project, alizer performs a search in two steps looping through all devfiles available.
+When a framework is detected, this is stored in a map but still not saved. A check is made eventually as there could be that a future or
+previous devfile is more appropriate based on other infos (e.g. the tool -> quarkus gradle vs quarkus maven)
+If no framework is detected, the devfiles are picked based on their score (language +1, tool +5). The largest score wins.
 
-	At the end, if some framework is supported by some devfile, they are returned. Otherwise Alizer was not able to find any
-	specific devfile for the frameworks detected and returned the devfiles which got the largest score.
+At the end, if some framework is supported by some devfile, they are returned. Otherwise Alizer was not able to find any
+specific devfile for the frameworks detected and returned the devfiles which got the largest score.
 */
 func selectDevFilesByLanguage(language model.Language, devFileTypes []model.DevFileType) ([]int, error) {
 	devFileIndexes := []int{}
@@ -202,7 +202,7 @@ func selectDevFilesByLanguage(language model.Language, devFileTypes []model.DevF
 				score += utils.FRAMEWORK_WEIGHT
 			}
 			for _, tag := range devFile.Tags {
-				if frw := matches(language.Frameworks, tag); frw != "" {
+				if frw := matchesFormatted(language.Frameworks, tag); frw != "" {
 					frameworkPerDevfileTmp[frw] = nil
 					score += utils.FRAMEWORK_WEIGHT
 				}
@@ -243,6 +243,20 @@ func selectDevFilesByLanguage(language model.Language, devFileTypes []model.DevF
 		return devFileIndexes, errors.New("No valid devfile found for current language " + language.Name)
 	}
 	return devFileIndexes, nil
+}
+
+func matchesFormatted(values []string, valueToFind string) string {
+	for _, value := range values {
+		if strings.EqualFold(trim(value), trim(valueToFind)) {
+			return value
+		}
+	}
+	return ""
+}
+
+func trim(value string) string {
+	formattedValueNoSpaces := strings.ReplaceAll(value, " ", "")
+	return strings.ReplaceAll(formattedValueNoSpaces, ".", "")
 }
 
 func matches(values []string, valueToFind string) string {
