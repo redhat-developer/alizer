@@ -29,6 +29,18 @@ func TestDetectNodeJSDevfile(t *testing.T) {
 	detectDevFiles(t, "nodejs-ex", []string{"nodejs"})
 }
 
+func TestDetectDotNet50Devfile(t *testing.T) {
+	detectDevFile(t, "dotnet5.0", []string{"dotnet50"})
+}
+
+func TestDetectDotNet60Devfile(t *testing.T) {
+	detectDevFile(t, "dotnet6.0", []string{"dotnet60"})
+}
+
+func TestDetectDotNetCore31Devfile(t *testing.T) {
+	detectDevFile(t, "dotnetcore3.1", []string{"dotnetcore31"})
+}
+
 func TestDetectDjangoDevfile(t *testing.T) {
 	detectDevFiles(t, "django", []string{"python-django"})
 }
@@ -105,6 +117,15 @@ func detectDevFiles(t *testing.T, projectName string, devFilesName []string) {
 	detectDevFilesInner(t, devFilesName, detectDevFilesFunc)
 }
 
+func detectDevFile(t *testing.T, projectName string, devFilesName []string) {
+	detectDevFilesFunc := func(devFileTypes []model.DevFileType) ([]int, error) {
+		testingProjectPath := GetTestProjectPath(projectName)
+		devfileIndex, err := recognizer.SelectDevFileFromTypes(testingProjectPath, devFileTypes)
+		return []int{devfileIndex}, err
+	}
+	detectDevFilesInner(t, devFilesName, detectDevFilesFunc)
+}
+
 func detectDevFilesUsingLanguages(t *testing.T, projectName string, languages []model.Language, devFileName []string) {
 	if projectName != "" {
 		testingProjectPath := GetTestProjectPath(projectName)
@@ -165,6 +186,30 @@ func getDevFileTypes() []model.DevFileType {
 				"Python",
 				"Pip",
 				"ubi8",
+			},
+		},
+		{
+			Name:        "dotnet50",
+			Language:    ".NET",
+			ProjectType: "dotnet",
+			Tags: []string{
+				"net5.0",
+			},
+		},
+		{
+			Name:        "dotnet60",
+			Language:    ".NET",
+			ProjectType: "dotnet",
+			Tags: []string{
+				"net6.0",
+			},
+		},
+		{
+			Name:        "dotnetcore31",
+			Language:    ".NET",
+			ProjectType: "dotnet",
+			Tags: []string{
+				"netcoreapp3.1",
 			},
 		},
 		{
