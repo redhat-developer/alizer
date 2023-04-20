@@ -193,7 +193,8 @@ func getDevFileTypes() []model.DevFileType {
 			Language:    ".NET",
 			ProjectType: "dotnet",
 			Tags: []string{
-				"net5.0",
+				".Net",
+				".Net 5.0",
 			},
 		},
 		{
@@ -201,7 +202,8 @@ func getDevFileTypes() []model.DevFileType {
 			Language:    ".NET",
 			ProjectType: "dotnet",
 			Tags: []string{
-				"net6.0",
+				".Net",
+				".Net 6.0",
 			},
 		},
 		{
@@ -209,7 +211,8 @@ func getDevFileTypes() []model.DevFileType {
 			Language:    ".NET",
 			ProjectType: "dotnet",
 			Tags: []string{
-				"netcoreapp3.1",
+				".Net",
+				".Net Core App 3.1",
 			},
 		},
 		{
