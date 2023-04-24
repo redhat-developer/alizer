@@ -219,6 +219,14 @@ func TestPortDetectionWithContainerFile(t *testing.T) {
 	testPortDetectionInProject(t, "projectContainerFile", []int{8085})
 }
 
+func TestPortDetectionWithSecondLevelDockerFile(t *testing.T) {
+	testPortDetectionInProject(t, "projectNestedDockerFile", []int{8085})
+}
+
+func TestPortDetectionWithSecondLevelContainerFile(t *testing.T) {
+	testPortDetectionInProject(t, "projectNestedContainerFile", []int{8085})
+}
+
 func TestPortDetectionJavaMicronaut(t *testing.T) {
 	testPortDetectionInProject(t, "projectMicronaut", []int{4444})
 }
@@ -274,6 +282,10 @@ func TestPortDetectionDjango(t *testing.T) {
 
 func TestPortDetectionGoGin(t *testing.T) {
 	testPortDetectionInProject(t, "projectGin", []int{8789})
+}
+
+func TestPortDetectionGo(t *testing.T) {
+	testPortDetectionInProject(t, "projectGo", []int{8080})
 }
 
 func TestPortDetectionGoFiber(t *testing.T) {
