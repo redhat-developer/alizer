@@ -11,6 +11,8 @@
 package enricher
 
 import (
+	"context"
+	"os"
 	"regexp"
 	"strings"
 
@@ -26,6 +28,44 @@ func hasFramework(modules []*modfile.Require, tag string) bool {
 		}
 	}
 	return false
+}
+
+func DoGoPortsDetection(component *model.Component, ctx *context.Context) {
+	files, err := utils.GetCachedFilePathsFromRoot(component.Path, ctx)
+	if err != nil {
+		return
+	}
+
+	matchRegexRules := model.PortMatchRules{
+		MatchIndexRegexes: []model.PortMatchRule{
+			{
+				Regex:     regexp.MustCompile(`.ListenAndServe\([^,)]*`),
+				ToReplace: ".ListenAndServe(",
+			},
+			{
+				Regex:     regexp.MustCompile(`.Start\([^,)]*`),
+				ToReplace: ".Start(",
+			},
+		},
+		MatchRegexes: []model.PortMatchSubRule{
+			{
+				Regex:    regexp.MustCompile(`Addr:\s+"([^",]+)`),
+				SubRegex: regexp.MustCompile(`:*(\d+)$`),
+			},
+		},
+	}
+
+	for _, file := range files {
+		bytes, err := os.ReadFile(file)
+		if err != nil {
+			continue
+		}
+		ports := GetPortFromFileGo(matchRegexRules, string(bytes))
+		if len(ports) > 0 {
+			component.Ports = ports
+			return
+		}
+	}
 }
 
 func GetPortFromFileGo(rules model.PortMatchRules, text string) []int {
