@@ -4,4 +4,3 @@ exclude:
    - js
    - java
    - resources
-   - go
