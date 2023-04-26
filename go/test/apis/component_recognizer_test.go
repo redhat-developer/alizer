@@ -253,6 +253,16 @@ func TestPortDetectionJavascriptExpressEnv(t *testing.T) {
 	os.Unsetenv("TEST_EXPRESS_ENV")
 }
 
+func TestPortDetectionJavascriptExpressEnvOROperatorWithEnvVar(t *testing.T) {
+	os.Setenv("TEST_EXPRESS_ENV", "1111")
+	testPortDetectionInProject(t, "projectExpressEnvLogicalOROperator", []int{1111})
+	os.Unsetenv("TEST_EXPRESS_ENV")
+}
+
+func TestPortDetectionJavascriptExpressEnvOROperatorWithoutEnvVar(t *testing.T) {
+	testPortDetectionInProject(t, "projectExpressEnvLogicalOROperator", []int{8080})
+}
+
 func TestPortDetectionJavascriptExpressVariable(t *testing.T) {
 	testPortDetectionInProject(t, "projectExpressVariable", []int{3000})
 }

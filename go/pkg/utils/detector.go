@@ -356,15 +356,23 @@ func readAnyApplicationFile(root string, propsFiles []model.ApplicationFileInfo,
 }
 
 func FindPortSubmatch(re *regexp.Regexp, text string, group int) int {
-	if text != "" {
-		matches := re.FindStringSubmatch(text)
-		if len(matches) > group {
-			if port, err := GetValidPort(matches[group]); err == nil {
-				return port
-			}
+	potentialPortGroup := FindPotentialPortGroup(re, text, group)
+	if potentialPortGroup != "" {
+		if port, err := GetValidPort(potentialPortGroup); err == nil {
+			return port
 		}
 	}
 	return -1
+}
+
+func FindPotentialPortGroup(re *regexp.Regexp, text string, group int) string {
+	if text != "" {
+		matches := re.FindStringSubmatch(text)
+		if len(matches) > group {
+			return matches[group]
+		}
+	}
+	return ""
 }
 
 func FindAllPortsSubmatch(re *regexp.Regexp, text string, group int) []int {
