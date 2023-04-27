@@ -81,6 +81,10 @@ func TestDetectAngularDevfile(t *testing.T) {
 	detectDevFile(t, "angularjs", []string{"Angular"})
 }
 
+func TestDetectVertxDevfile(t *testing.T) {
+	detectDevFile(t, "vertx", []string{"java-vertx"})
+}
+
 func TestDetectNextJsDevfile(t *testing.T) {
 	detectDevFile(t, "nextjs-app", []string{"Next.js"})
 }
