@@ -97,8 +97,8 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
         assertEquals(22, components.size());
         assertEquals(1, components.stream().filter(component -> "python".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
         assertEquals(2, components.stream().filter(component -> component.getLanguages().get(0).getFrameworks().contains("Quarkus")).count());
-        assertEquals(6, components.stream().filter(component -> "javascript".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
-        assertEquals(6, components.stream().filter(component -> "java".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
+        assertEquals(5, components.stream().filter(component -> "javascript".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
+        assertEquals(7, components.stream().filter(component -> "java".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
         assertEquals(2, components.stream().filter(component -> "c#".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
         assertEquals(1, components.stream().filter(component -> "go".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
     }
