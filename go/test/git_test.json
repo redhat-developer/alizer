@@ -1,6 +1,6 @@
-{
-    "https://github.com/lstocchi/translate-example-func.git": {
-        "commit": "7faf51a95f588b32d8367aa48f61d55397ff6229",
+[
+    {
+        "directory": "translate-example-func",
         "components": [
             {
                 "languages": [
@@ -28,9 +28,8 @@
             }
         ]
     },
-
-    "https://github.com/beego/beego-example.git": {
-        "commit": "9729063b688570f8d472c4755744197c0bcd833d",
+    {
+        "directory": "beego-example",
         "components": [
             {
                 "name": "ignore",
@@ -48,8 +47,8 @@
             }
         ]
     },
-    "https://github.com/fasthttpd/fasthttpd.git": {
-        "commit": "8bdd9754732a8e4310e2fd2e7a78290ff755268f",
+    {
+        "directory": "fasthttpd",
         "components": [
             {
                 "name": "ignore",
@@ -67,8 +66,8 @@
             }
         ]
     },
-    "https://github.com/go-rel/gin-example.git": {
-        "commit": "814838563761efa05ed1ef38d87e1f28319d2d79",
+    {
+        "directory": "gin-example",
         "components": [
             {
                 "name": "ignore",
@@ -89,8 +88,7 @@
             }
         ]
     },
-    "https://github.com/gofiber/recipes.git": {
-        "commit": "7a04f52833b70b97251d8a37893d2e0c599a8c15",
+    {
         "directory": "fiber-grpc",
         "components": [
             {
@@ -112,8 +110,8 @@
             }
         ]
     },
-    "https://github.com/TomFern/go-mux-api.git": {
-        "commit": "bbb41d97b831037182984428df5b65a99d4405b3",
+    {
+        "directory": "go-mux-api",
         "components": [
             {
                 "name": "ignore",
@@ -134,8 +132,7 @@
             }
         ]
     },
-    "https://github.com/micronaut-projects/micronaut-comparisons.git": {
-        "commit": "def71de96edce0d0d7a8c6af3955f60dac1a9ecf",
+    {
         "directory": "jhipster-sample-app-micronaut",
         "components": [
             {
@@ -168,8 +165,8 @@
             }
         ]
     },
-    "https://github.com/OpenLiberty/sample-getting-started.git": {
-        "commit": "962c0f29e85a2bb4ae457ba55f70b95a4c096691",
+    {
+        "directory": "sample-getting-started",
         "components": [
             {
                 "name": "io.openliberty.sample.getting.started",
@@ -187,8 +184,7 @@
             }
         ]
     },
-    "https://github.com/quarkusio/quarkus-quickstarts.git": {
-        "commit": "181d6ade669ba4edf9ce743bb296e6ff8e9c6cda",
+    {
         "directory": "mailer-quickstart",
         "components": [
             {
@@ -207,8 +203,8 @@
             }
         ]
     },
-    "https://github.com/spring-projects/spring-petclinic.git": {
-        "commit": "9ecdc1111e3da388a750ace41a125287d9620534",
+    {
+        "directory": "spring-petclinic",
         "components": [
             {
                 "name": "spring-petclinic",
@@ -226,9 +222,8 @@
             }
         ]
     },
-    "https://github.com/vert-x3/vertx-guide-for-java-devs.git": {
-        "commit": "846b56a5b6187d5368ded6a9bfda73f4549e8b57",
-        "directory": "step-1",
+    {
+        "directory": "vertx-guide-for-java-devs",
         "components": [
             {
                 "name": "wiki-step-1",
@@ -246,8 +241,8 @@
             }
         ]
     },
-    "https://github.com/Ismaestro/angular-example-app.git": {
-        "commit": "d222814f083870ba29ad9a92f926e6c44c22fb23",
+    {
+        "directory": "angular-example-app",
         "components": [
             {
                 "name": "angular-example-app",
@@ -281,8 +276,8 @@
             }
         ]
     },
-    "https://github.com/madhums/node-express-mongoose-demo.git": {
-        "commit": "73d224c0bc7183308d0bdd6d606dcc87f9987aac",
+    {
+        "directory": "node-express-mongoose-demo",
         "components": [
             {
                 "name": "nodejs-express-mongoose-demo",
@@ -300,8 +295,8 @@
             }
         ]
     },
-    "https://github.com/vercel/example-integration.git": {
-        "commit": "c331a42059cf1e3f786308c85f61222a818004d3",
+    {
+        "directory": "example-intergration",
         "components": [
             {
                 "name": "vercel-example-integration",
@@ -319,8 +314,8 @@
             }
         ]
     },
-    "https://github.com/nuxt/example-auth0.git": {
-        "commit": "765b8584d4d08f1908974d464de33bf59ea3bb08",
+    {
+        "directory": "example-auth0",
         "components": [
             {
                 "name": "nuxt-auth0",
@@ -338,8 +333,8 @@
             }
         ]
     },
-    "https://github.com/raminr77/react_sample.git": {
-        "commit": "fac5061cbe9cc5f7393d701bf44128fddbf12dd0",
+    {
+        "directory": "react-sample",
         "components": [
             {
                 "name": "react_sample",
@@ -357,8 +352,8 @@
             }
         ]
     },
-    "https://github.com/hmmhmmhm/svelte-template.git": {
-        "commit": "7a279d4434d75c8aadb6f1396d072612385e4d36",
+    {
+        "directory": "svelte-example",
         "components": [
             {
                 "name": "svelte-template",
@@ -377,8 +372,8 @@
             }
         ]
     },
-    "https://github.com/gothinkster/vue-realworld-example-app.git": {
-        "commit": "3df3773b6be7181aadb513572458fba049fe66f9",
+    {
+        "directory": "vue-realworld-example-app",
         "components": [
             {
                 "name": "realworld-vue",
@@ -396,8 +391,8 @@
             }
         ]
     },
-    "https://github.com/sclorg/django-ex.git": {
-        "commit": "310d5bdb70f4e83a3d7c5ee9d6b06caa8d427cd6",
+    {
+        "directory": "django-ex",
         "components": [
             {
                 "name": "ignore",
@@ -413,8 +408,8 @@
             }
         ]
     },
-    "https://github.com/blues-man/pipelines-vote-ui.git": {
-        "commit": "bee52ea4620f210a1ea5f0b0633c316bedda959a",
+    {
+        "directory": "pipelines-vote-ui",
         "components": [
             {
                 "name": "ignore",
@@ -430,12 +425,11 @@
             }
         ]
     },
-    "https://github.com/dotnet/mbmlbook.git": {
-        "commit": "4a8f76a3605b28406670db0684f14d1f521f291d",
-        "directory": "src/MBMLViews",
+    {
+        "directory": "mbmlbook",
         "components": [
             {
-                "name": "MBMLViews",
+                "name": "mbmlbook",
                 "languages": [
                     {
                         "name": "C#",
@@ -448,8 +442,8 @@
             }
         ]
     },
-    "https://github.com/xesina/golang-echo-realworld-example-app.git": {
-        "commit": "e578590b51e93440c5bdfdb5a98578679c0ee383",
+    {
+        "directory": "golang-echo-realworld-example-app",
         "components": [
             {
                 "name": "ignore",
@@ -467,8 +461,8 @@
             }
         ]
     },
-    "https://github.com/JoranBergfeld/webshop.git": {
-        "commit": "7cbd9ddd2207dd712369e44da56699c9393765c8",
+    {
+        "directory": "webshop",
         "components": [
             {
                 "name": "order-app",
@@ -523,8 +517,8 @@
             }
         ]
     },
-    "https://github.com/bezkoder/spring-boot-data-jpa-mysql.git": {
-        "commit": "75d0e3b13635a9a7a5e5a1c6b02c04366476227a",
+    {
+        "directory": "spring-boot-data-jpa-mysql",
         "components": [
             {
                 "name": "spring-boot-data-jpa",
@@ -542,8 +536,8 @@
             }
         ]
     },
-    "https://github.com/kylebuch8/urgent-care-finder-v2.git": {
-        "commit": "c9a32ce6f53bec3b915991bb4fe95ffd7bce8e2b",
+    {
+        "directory": "urgent-care-finder-v2",
         "components": [
             {
                 "name": "nextjs",
@@ -564,8 +558,8 @@
             }
         ]
     },
-    "https://github.com/rh-aiservices-bu/object-detection-rest.git": {
-        "commit": "cd9b8b573518c3080e3ce60f61255b9e9e164f6e",
+    {
+        "directory": "object-detection-rest",
         "components": [
             {
                 "name": "ignore",
@@ -579,8 +573,8 @@
             }
         ]
     },
-    "https://github.com/gothinkster/spring-boot-realworld-example-app.git": {
-        "commit": "ee17e31aafe733d98c4853c8b9a74d7f2f6c924a",
+    {
+        "directory": "spring-boot-realworld-example-app",
         "components": [
             {
                 "name": "ignore",
@@ -598,8 +592,8 @@
             }
         ]
     },
-    "https://github.com/spring-guides/gs-batch-processing.git": {
-        "commit": "19b0881fe060f15553d50aaef18a372735f2253d",
+    {
+        "directory": "gs-batch-processing",
         "components": [
             {
                 "name": "batch-processing-complete",
@@ -631,8 +625,8 @@
             }
         ]
     },
-    "https://github.com/patternfly/patternfly-react-seed.git": {
-        "commit": "62e92b78a64c93f3fa8c059e7482aaa3192e681d",
+    {
+        "directory": "patternfly-react-seed",
         "components": [
             {
                 "name": "patternfly-seed",
@@ -651,8 +645,8 @@
             }
         ]
     },
-    "https://github.com/bucharest-gold/s2i-nodejs.git": {
-        "commit": "c7f990e02a14560b756187dd8ad21d6eb74246d9",
+    {
+        "directory": "s2i-nodejs",
         "components": [
             {
                 "name": "s2i-nodejs",
@@ -669,8 +663,8 @@
             }
         ]
     },
-    "https://github.com/nodeshift-starters/opossum-examples.git": {
-        "commit": "821451be248a78dbd58a21f2f2e661ab332bf7ed",
+    {
+        "directory": "opossum-examples",
         "components": [
             {
                 "name": "angular",
@@ -925,8 +919,8 @@
             }
         ]
     },
-    "https://github.com/nodeshift-starters/nodejs-rest-http.git": {
-        "commit": "7b16266ce25bf4392c8f9a3a13f8fff76890ed05",
+    {
+        "directory": "nodejs-rest-http",
         "components": [
             {
                 "name": "nodejs-rest-http",
@@ -945,8 +939,8 @@
             }
         ]
     },
-    "https://github.com/nodeshift-starters/nodejs-circuit-breaker.git": {
-        "commit": "1879d4d716487890ecb6f98bf50aa44b8cc6f4c8",
+    {
+        "directory": "nodejs-circuit-breaker",
         "components": [
             {
                 "name": "nodejs-circuit-breaker-greeting",
@@ -980,8 +974,8 @@
             }
         ]
     },
-    "https://github.com/nodeshift-starters/reactive-example.git": {
-        "commit": "86d452aaa1170a710b33227965b0828f6c5d78af",
+    {
+        "directory": "reactive-example",
         "components": [
             {
                 "name": "consumer-backend",
@@ -1028,8 +1022,8 @@
             }
         ]
     },
-    "https://github.com/nodeshift-starters/nodejs-health-check.git": {
-        "commit": "8748b233c56b0f85a6a5e9a66a1caa60fb8cb3d1",
+    {
+        "directory": "nodejs-health-check",
         "components": [
             {
                 "name": "nodejs-health-check",
@@ -1048,8 +1042,7 @@
             }
         ]
     },
-    "https://github.com/burrsutter/todo-apps.git": {
-        "commit": "9d03c47a15f9e4a651eac20b48cd8c6143d34815",
+    {
         "directory": "quarkus-todo",
         "components": [
             {
@@ -1083,8 +1076,8 @@
             }
         ]
     },
-    "https://github.com/marcnuri-demo/jkube-remote-dev.git": {
-        "commit": "c56bb2124732180a5c5cc37217d1a07cd4119e4c",
+    {
+        "directory": "northwind-traders",
         "components": [
             {
                 "name": "mail",
@@ -1130,8 +1123,8 @@
             }
         ]
     },
-    "https://github.com/nodeshift-starters/nodejs-configmap.git": {
-        "commit": "9710d7a74d995de3322e378d43528706c5d5f085",
+    {
+        "directory": "nodejs-configmap",
         "components": [
             {
                 "name": "nodejs-configmap",
@@ -1150,8 +1143,8 @@
             }
         ]
     },
-    "https://github.com/nodeshift-starters/nodejs-messaging-work-queue.git": {
-        "commit": "5b95d6fc6c004a205cb2e966a4f78da736dfb44e",
+    {
+        "directory": "nodejs-messaging-work-queue",
         "components": [
             {
                 "name": "nodejs-messaging-work-queue-frontend",
@@ -1185,8 +1178,8 @@
             }
         ]
     },
-    "https://github.com/nodeshift-starters/nodejs-cache.git": {
-        "commit": "8059b4520e07d3ffaec5c3759b918d86c8b574de",
+    {
+        "directory": "nodejs-cache",
         "components": [
             {
                 "name": "nodejs-cache-cute-name",
@@ -1220,4 +1213,4 @@
             }
         ]
     }
-}
+]
