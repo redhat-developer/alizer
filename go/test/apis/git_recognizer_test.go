@@ -17,31 +17,40 @@ import (
 	"github.com/redhat-developer/alizer/go/test"
 )
 
+const (
+	repoUrl    = "https://github.com/thepetk/alizer-test-resources.git"
+	repoCommit = "a4f5f226cf4ad9b2f56cef173aec27268a6745f1"
+)
+
 func TestExternalRepos(t *testing.T) {
-	// read git test file to retrieve all git repos and their expected properties
+	// read git test file to retrieve all test resources and their expected properties
 	jsonFile, err := ioutil.ReadFile("../git_test.json")
 	if err != nil {
 		t.Fatal("Unable to fetch git repositories file to run tests to")
 	}
-	var data test.GitTests
-	err = json.Unmarshal(jsonFile, &data)
+	var data []test.GitTestProperties
+	err = json.Unmarshal([]byte(jsonFile), &data)
 	if err != nil {
 		t.Fatal("Unable to fetch git repositories file to run tests to")
 	}
 
-	resChan := make(chan resultTest)
-	// loop over all repositories and verify expected results are correct
-	for repo, properties := range data {
-		checkoutAndTest(resChan, repo, properties)
+	// checkout to github repo
+	root, err := test.CheckoutCommit(repoUrl, repoCommit)
+	if err != nil {
+		t.Fatal("Unable to get git repository with test resources")
 	}
-
-	for i := 1; i <= len(data); i++ {
-		result := <-resChan
-		os.RemoveAll(result.root)
-		for _, err := range result.errors {
-			t.Error(err)
+	// loop over all directories and verify expected results are correct
+	for _, properties := range data {
+		result := checkoutAndTest(root, properties)
+		if len(result.errors) > 0 {
+			for _, err := range result.errors {
+				t.Error(err)
+			}
+			os.RemoveAll(root)
+			t.Fatal("TestExternalRepos failed")
 		}
 	}
+	os.RemoveAll(root)
 }
 
 type resultTest struct {
@@ -49,29 +58,12 @@ type resultTest struct {
 	errors []error
 }
 
-func checkoutAndTest(resChan chan resultTest, repo string, properties test.GitTestProperties) {
-	go func() {
-		root, err := test.CheckoutCommit(repo, properties.Commit)
-		var errs []error
-		if err != nil {
-			errs = []error{err}
-		} else {
-			dir := filepath.Join(root, properties.Directory)
-			cleanDirectory(dir)
-			errs = assertComponentsBelongToGitProject(dir, repo, properties.Components)
-		}
-		resChan <- resultTest{
-			root:   root,
-			errors: errs,
-		}
-	}()
-
-}
-
-func cleanDirectory(path string) {
-	gitFolder := filepath.Join(path, ".git")
-	if _, err := os.Stat(gitFolder); err == nil {
-		os.RemoveAll(gitFolder)
+func checkoutAndTest(root string, properties test.GitTestProperties) resultTest {
+	dir := filepath.Join(root, properties.Directory)
+	errs := assertComponentsBelongToGitProject(dir, repoUrl, properties.Components)
+	return resultTest{
+		root:   root,
+		errors: errs,
 	}
 }
 

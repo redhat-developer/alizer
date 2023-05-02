@@ -37,9 +37,6 @@ type GitTestProperties struct {
 	Directory  string                `json:"directory"`
 }
 
-type GitTests map[string]GitTestProperties
-
-//
 func CheckoutCommit(url string, commit string) (string, error) {
 	dirName := commit
 	if len(dirName) > 7 {
