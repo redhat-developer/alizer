@@ -19,7 +19,7 @@ import (
 
 const (
 	repoUrl    = "https://github.com/devfile-resources/alizer-test-resources.git"
-	repoCommit = "a4f5f226cf4ad9b2f56cef173aec27268a6745f1"
+	repoCommit = "3f89d2f05fad6aeae6d386f5c7fa722124b8c017"
 )
 
 func TestExternalRepos(t *testing.T) {
@@ -46,11 +46,13 @@ func TestExternalRepos(t *testing.T) {
 			for _, err := range result.errors {
 				t.Error(err)
 			}
-			os.RemoveAll(root)
 			t.Fatal("TestExternalRepos failed")
 		}
 	}
-	os.RemoveAll(root)
+	err = os.RemoveAll(root)
+	if err != nil {
+		t.Error("Unable to clean test resources directory")
+	}
 }
 
 type resultTest struct {
