@@ -202,7 +202,7 @@ func selectDevFilesByLanguage(language model.Language, devFileTypes []model.DevF
 				score += utils.FRAMEWORK_WEIGHT
 			}
 			for _, tag := range devFile.Tags {
-				if frw := matches(language.Frameworks, tag); frw != "" {
+				if frw := matchesFormatted(language.Frameworks, tag); frw != "" {
 					frameworkPerDevfileTmp[frw] = nil
 					score += utils.FRAMEWORK_WEIGHT
 				}
