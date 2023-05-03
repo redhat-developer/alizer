@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	repoUrl    = "https://github.com/thepetk/alizer-test-resources.git"
+	repoUrl    = "https://github.com/devfile-resources/alizer-test-resources.git"
 	repoCommit = "a4f5f226cf4ad9b2f56cef173aec27268a6745f1"
 )
 
