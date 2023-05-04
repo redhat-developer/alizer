@@ -133,6 +133,364 @@
         ]
     },
     {
+        "directory": "hypershift",
+        "components": [
+            {
+                "Name": "hypershift",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [
+                            "Mux"
+                        ],
+                        "Tools": [
+                            "1.18"
+                        ],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": [
+                    16,
+                    16,
+                    2377,
+                    2377,
+                    2377,
+                    2377,
+                    2377,
+                    2377,
+                    2377
+                ]
+            },
+            {
+                "Name": "docs",
+                "Languages": [
+                    {
+                        "Name": "Python",
+                        "Aliases": [
+                            "python3",
+                            "rusthon"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "tools",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [
+                            "1.17"
+                        ],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": [
+                    16,
+                    16,
+                    2377,
+                    2377,
+                    2377,
+                    2377,
+                    2377,
+                    2377,
+                    2377
+                ]
+            },
+            {
+                "Name": "adal",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "date",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "autorest",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "to",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "validation",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "logger",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "tracing",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "adal",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "auth",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "cli",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "date",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "autorest",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "to",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "validation",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "logger",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "tracing",
+                "Languages": [
+                    {
+                        "Name": "Go",
+                        "Aliases": [
+                            "golang"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            },
+            {
+                "Name": "semver",
+                "Languages": [
+                    {
+                        "Name": "JavaScript",
+                        "Aliases": [
+                            "js",
+                            "node",
+                            "nodejs",
+                            "TypeScript"
+                        ],
+                        "Weight": 100,
+                        "Frameworks": [],
+                        "Tools": [
+                            "NodeJs",
+                            "Node.js"
+                        ],
+                        "CanBeComponent": true
+                    }
+                ],
+                "Ports": null
+            }
+        ]
+    },    
+    {
         "directory": "jhipster-sample-app-micronaut",
         "components": [
             {
