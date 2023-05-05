@@ -12,7 +12,6 @@ package test
 
 import (
 	"errors"
-	"io/ioutil"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -37,17 +36,9 @@ type GitTestProperties struct {
 	Directory  string                `json:"directory"`
 }
 
-func CheckoutCommit(url string, commit string) (string, error) {
-	dirName := commit
-	if len(dirName) > 7 {
-		dirName = dirName[:7]
-	}
-	dir, err := ioutil.TempDir(".", dirName)
-	if err != nil {
-		return "", errors.New("Unable to create a directory where to download the git repo " + url)
-	}
+func CheckoutCommit(url, commit, tempDir string) (string, error) {
 
-	r, err := git.PlainClone(dir, false, &git.CloneOptions{
+	r, err := git.PlainClone(tempDir, false, &git.CloneOptions{
 		URL: url,
 	})
 	if err != nil {
@@ -56,7 +47,7 @@ func CheckoutCommit(url string, commit string) (string, error) {
 
 	w, err := r.Worktree()
 	if err != nil {
-		return "", errors.New("Unable to checking out to commit " + commit)
+		return "", errors.New("Unable to checking out to commit " + tempDir)
 	}
 
 	err = w.Checkout(&git.CheckoutOptions{
@@ -66,5 +57,5 @@ func CheckoutCommit(url string, commit string) (string, error) {
 		return "", errors.New("Unable to checking out to commit " + commit)
 	}
 
-	return dir, nil
+	return tempDir, nil
 }

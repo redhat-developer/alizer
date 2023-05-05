@@ -3,7 +3,6 @@ package recognizer
 import (
 	"encoding/json"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"sort"
 	"strconv"
@@ -34,8 +33,10 @@ func TestExternalRepos(t *testing.T) {
 		t.Fatal("Unable to fetch git repositories file to run tests to")
 	}
 
+	tempDir := t.TempDir()
+
 	// checkout to github repo
-	root, err := test.CheckoutCommit(repoUrl, repoCommit)
+	root, err := test.CheckoutCommit(repoUrl, repoCommit, tempDir)
 	if err != nil {
 		t.Fatal("Unable to get git repository with test resources")
 	}
@@ -48,10 +49,6 @@ func TestExternalRepos(t *testing.T) {
 			}
 			t.Fatal("TestExternalRepos failed")
 		}
-	}
-	err = os.RemoveAll(root)
-	if err != nil {
-		t.Error("Unable to clean test resources directory")
 	}
 }
 
