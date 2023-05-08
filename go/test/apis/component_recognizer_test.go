@@ -63,6 +63,10 @@ func TestComponentDetectionOnGoLang(t *testing.T) {
 	isComponentsInProject(t, "golang-gin-app", 1, "Go", "golang-gin-app")
 }
 
+func TestComponentDetectionOnBeego(t *testing.T) {
+	isComponentsInProject(t, "beego", 1, "Go", "beego")
+}
+
 func TestComponentDetectionOnAngular(t *testing.T) {
 	isComponentsInProject(t, "angularjs", 1, "typescript", "angularjs")
 }
