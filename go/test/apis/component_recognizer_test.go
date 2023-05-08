@@ -71,6 +71,10 @@ func TestComponentDetectionOnEcho(t *testing.T) {
 	isComponentsInProject(t, "echo", 1, "Go", "echo")
 }
 
+func TestComponentDetectionOnFastHTTP(t *testing.T) {
+	isComponentsInProject(t, "fasthttp", 1, "Go", "fasthttp")
+}
+
 func TestComponentDetectionOnAngular(t *testing.T) {
 	isComponentsInProject(t, "angularjs", 1, "typescript", "angularjs")
 }
