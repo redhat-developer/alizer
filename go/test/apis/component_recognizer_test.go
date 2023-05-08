@@ -31,6 +31,10 @@ func TestComponentDetectionOnWildFly(t *testing.T) {
 	isComponentsInProject(t, "wildfly", 1, "java", "wildfly")
 }
 
+func TestComponentDetectionOnOpenLiberty(t *testing.T) {
+	isComponentsInProject(t, "open-liberty", 1, "java", "openliberty")
+}
+
 func TestComponentDetectionOnJBossEAP(t *testing.T) {
 	isComponentsInProject(t, "jboss-eap", 1, "java", "jboss-eap")
 }
