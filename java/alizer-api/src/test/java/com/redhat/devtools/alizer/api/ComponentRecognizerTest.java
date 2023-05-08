@@ -94,10 +94,10 @@ public class ComponentRecognizerTest extends AbstractRecognizerTest {
     @Test
     public void testMultipleComponents() throws IOException {
         List<Component> components = recognizer.analyze(new File("../../resources/projects").getCanonicalPath());
-        assertEquals(30, components.size());
+        assertEquals(31, components.size());
         assertEquals(2, components.stream().filter(component -> "python".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
         assertEquals(2, components.stream().filter(component -> component.getLanguages().get(0).getFrameworks().contains("Quarkus")).count());
-        assertEquals(5, components.stream().filter(component -> "javascript".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
+        assertEquals(6, components.stream().filter(component -> "javascript".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
         assertEquals(8, components.stream().filter(component -> "java".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
         assertEquals(5, components.stream().filter(component -> "c#".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
         assertEquals(4, components.stream().filter(component -> "go".equalsIgnoreCase(component.getLanguages().get(0).getName())).count());
