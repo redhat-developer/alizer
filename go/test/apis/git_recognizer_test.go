@@ -18,7 +18,7 @@ import (
 
 const (
 	repoUrl    = "https://github.com/devfile-resources/alizer-test-resources.git"
-	repoCommit = "3f89d2f05fad6aeae6d386f5c7fa722124b8c017"
+	repoCommit = "2f37ba079800f2d6a33237f09153f5699614f9be"
 )
 
 func TestExternalRepos(t *testing.T) {
