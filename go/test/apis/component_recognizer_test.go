@@ -43,6 +43,10 @@ func TestComponentDetectionOnQuarkus(t *testing.T) {
 	isComponentsInProject(t, "quarkus", 1, "java", "code-with-quarkus-maven")
 }
 
+func TestComponentDetectionOnSpring(t *testing.T) {
+	isComponentsInProject(t, "spring", 1, "java", "spring")
+}
+
 func TestComponentDetectionOnJavascript(t *testing.T) {
 	isComponentsInProject(t, "nodejs-ex", 1, "javascript", "nodejs-starter")
 }
