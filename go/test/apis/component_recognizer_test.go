@@ -55,6 +55,10 @@ func TestComponentDetectionOnDjango(t *testing.T) {
 	isComponentsInProject(t, "django", 1, "python", "django")
 }
 
+func TestComponentDetectionOnFlask(t *testing.T) {
+	isComponentsInProject(t, "flask", 1, "python", "flask")
+}
+
 func TestComponentDetectionOnDotNet(t *testing.T) {
 	isComponentsInProject(t, "s2i-dotnetcore-ex", 1, "c#", "app")
 }
@@ -164,7 +168,7 @@ func updateContent(filePath string, data []byte) error {
 
 func TestComponentDetectionMultiProjects(t *testing.T) {
 	components := getComponentsFromProject(t, "")
-	nComps := 25
+	nComps := 31
 	if len(components) != nComps {
 		t.Errorf("Expected " + strconv.Itoa(nComps) + " components but found " + strconv.Itoa(len(components)))
 	}
