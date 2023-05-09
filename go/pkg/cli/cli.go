@@ -71,13 +71,13 @@ func AlizerCommands() *cobra.Command {
 	return rootCmd
 }
 
-// ShowHelp will show the help correctly (and whether or not the command is invalid...)
+// ShowHelp will show the help correctly (and whether the command is invalid...)
 // Taken from: https://github.com/redhat-developer/odo/blob/f55a4f0a7af4cd5f7c4e56dd70a66d38be0643cf/pkg/odo/cli/cli.go#L272
 func ShowHelp(cmd *cobra.Command, args []string) error {
 
 	if len(args) == 0 {
 		// We will show a custom help when typing JUST `alizer`, directing the user to use `alizer --help` for a full help.
-		// Thus we will set cmd.SilenceUsage and cmd.SilenceErrors both to true so we do not output the usage or error out.
+		// Thus, we will set cmd.SilenceUsage and cmd.SilenceErrors both to true so we do not output the usage or error out.
 		cmd.SilenceUsage = true
 		cmd.SilenceErrors = true
 

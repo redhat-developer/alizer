@@ -54,7 +54,7 @@ IsConfigurationValidForLanguage check whether the configuration file is valid fo
 	within the node_modules folder. That is not to be considered valid
 	for component detection.
 
-Paramenters:
+Parameters:
 
 	language: language name
 	file: configuration file name
@@ -110,8 +110,10 @@ func getEnrichers() []Enricher {
 	}
 }
 
+// GetEnricherByLanguage returns an enricher
 func GetEnricherByLanguage(language string) Enricher {
 	for _, enricher := range getEnrichers() {
+		// check the supported enricher languages
 		if isLanguageSupportedByEnricher(language, enricher) {
 			return enricher
 		}
@@ -119,6 +121,7 @@ func GetEnricherByLanguage(language string) Enricher {
 	return nil
 }
 
+// isLanguageSupportedByEnricher checks the language has an enricher
 func isLanguageSupportedByEnricher(nameLanguage string, enricher Enricher) bool {
 	for _, language := range enricher.GetSupportedLanguages() {
 		if strings.EqualFold(language, nameLanguage) {
@@ -132,6 +135,7 @@ func GetDefaultProjectName(path string) string {
 	return filepath.Base(path)
 }
 
+// GetPortsFromDockerFile returns a slice of port numbers from Dockerfiles in the given directory
 func GetPortsFromDockerFile(root string) []int {
 	locations := getLocations(root)
 	for _, location := range locations {
@@ -167,6 +171,7 @@ func getLocations(root string) []string {
 	return locations
 }
 
+// getPortsFromReader returns a slice of port numbers
 func getPortsFromReader(file io.Reader) []int {
 	ports := []int{}
 	res, err := parser.Parse(file)
@@ -175,6 +180,7 @@ func getPortsFromReader(file io.Reader) []int {
 	}
 
 	for _, child := range res.AST.Children {
+		// check for the potential port number in a Dockerfile/Containerfile
 		if strings.ToLower(child.Value) == "expose" {
 			for n := child.Next; n != nil; n = n.Next {
 				if port, err := strconv.Atoi(n.Value); err == nil {
@@ -187,6 +193,7 @@ func getPortsFromReader(file io.Reader) []int {
 	return ports
 }
 
+// GetPortsFromDockerComposeFile returns a slice of port numbers from a compose file
 func GetPortsFromDockerComposeFile(componentPath string, settings model.DetectionSettings) []int {
 	ports := []int{}
 	bytes, err := getDockerComposeFileBytes(settings.BasePath)
@@ -207,6 +214,7 @@ func GetPortsFromDockerComposeFile(componentPath string, settings model.Detectio
 	return getComponentPortsFromDockerComposeFileBytes(bytes, componentPath, settings.BasePath)
 }
 
+// getDockerComposeFileBytes returns a byte slice of the compose file if found in the given directory
 func getDockerComposeFileBytes(root string) ([]byte, error) {
 	return utils.ReadAnyApplicationFileExactMatch(root, []model.ApplicationFileInfo{
 		{
@@ -228,6 +236,7 @@ func getDockerComposeFileBytes(root string) ([]byte, error) {
 	})
 }
 
+// getComponentPortsFromDockerComposeFileBytes returns a slice of port numbers
 func getComponentPortsFromDockerComposeFileBytes(bytes []byte, componentPath string, basePath string) []int {
 	ports := []int{}
 	composeMap := make(map[string]interface{})

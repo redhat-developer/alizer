@@ -305,10 +305,10 @@ func detectComponentByAnalyzingConfigFile(file string, language string, settings
 }
 
 func doBelongToSameFamily(languages []string) bool {
-	return (len(languages) == 2 &&
+	return len(languages) == 2 &&
 		languages[0] != languages[1] &&
 		(strings.ToLower(languages[0]) == "typescript" || strings.ToLower(languages[0]) == "javascript") &&
-		(strings.ToLower(languages[1]) == "typescript" || strings.ToLower(languages[1]) == "javascript"))
+		(strings.ToLower(languages[1]) == "typescript" || strings.ToLower(languages[1]) == "javascript")
 }
 
 func detectComponentUsingConfigFile(file string, languages []string, settings model.DetectionSettings, ctx *context.Context) (model.Component, error) {
