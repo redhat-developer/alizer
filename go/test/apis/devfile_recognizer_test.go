@@ -45,6 +45,14 @@ func TestDetectDjangoDevfile(t *testing.T) {
 	detectDevFiles(t, "django", []string{"python-django"})
 }
 
+func TestDetectFlaskDevfile(t *testing.T) {
+	detectDevFiles(t, "flask", []string{"python"})
+}
+
+func TestDetectWildflyDevfile(t *testing.T) {
+	detectDevFiles(t, "wildfly", []string{"java-wildfly"})
+}
+
 func TestDetectDjangoDevfileUsingLanguages(t *testing.T) {
 	languages := []model.Language{
 		{
@@ -107,6 +115,14 @@ func TestDetectNuxtJsDevfile(t *testing.T) {
 
 func TestDetectVueDevfile(t *testing.T) {
 	detectDevFiles(t, "vue-app", []string{"nodejs-vue"})
+}
+
+func TestDetectReactJSDevfile(t *testing.T) {
+	detectDevFiles(t, "react", []string{"nodejs-react"})
+}
+
+func TestDetectSvelteDevfile(t *testing.T) {
+	detectDevFiles(t, "svelte-app", []string{"nodejs-svelte"})
 }
 
 func TestDetectSpringDevfile(t *testing.T) {
@@ -292,6 +308,16 @@ func getDevFileTypes() []model.DevFileType {
 			},
 		},
 		{
+			Name:        "python",
+			Language:    "python",
+			ProjectType: "Python",
+			Tags: []string{
+				"Python",
+				"pip",
+				"Flask",
+			},
+		},
+		{
 			Name:        "go",
 			Language:    "go",
 			ProjectType: "go",
@@ -315,6 +341,24 @@ func getDevFileTypes() []model.DevFileType {
 			Tags: []string{
 				"Node.js",
 				"Next.js",
+			},
+		},
+		{
+			Name:        "nodejs-react",
+			Language:    "TypeScript",
+			ProjectType: "React",
+			Tags: []string{
+				"Node.js",
+				"React",
+			},
+		},
+		{
+			Name:        "nodejs-svelte",
+			Language:    "TypeScript",
+			ProjectType: "Svelte",
+			Tags: []string{
+				"Node.js",
+				"Svelte",
 			},
 		},
 		{

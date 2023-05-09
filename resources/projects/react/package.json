@@ -1,0 +1,62 @@
+{
+  "name": "simple-react-template",
+  "version": "0.0.1",
+  "description": "A simple enough react scaffold with a node server built in.",
+  "main": "index.js",
+  "jest": {
+    "setupTestFrameworkScriptFile": "./setup.enzyme.js"
+  },
+  "scripts": {
+    "build-dev": "rm -rf dist/ && webpack --progress --mode=development",
+    "build-prod": "rm -rf dist/ && webpack --progress --mode=production",
+    "start": "PORT=5353 webpack-dev-server --mode development",
+    "test": "jest"
+  },
+  "engines": {
+    "node": ">=6.11.5"
+  },
+  "keywords": [
+    "react",
+    "scaffold",
+    "simple-react-template",
+    "yeoman-generator",
+    "generator"
+  ],
+  "author": "Munim Dibosh",
+  "license": "MIT",
+  "dependencies": {
+    "@fortawesome/fontawesome-free-webfonts": "^1.0.5",
+    "axios": "^0.18.0",
+    "bootstrap": "^4.0.0",
+    "jquery": "^3.5.0",
+    "lodash": "^4.17.5",
+    "popper.js": "^1.14.3",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "react-router-dom": "^4.2.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "@babel/preset-react": "^7.0.0",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-jest": "^24.6.0",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^2.1.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "eslint": "^4.19.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-react": "^7.7.0",
+    "file-loader": "^1.1.11",
+    "jest": "^24.6.0",
+    "node-sass": "^4.8.3",
+    "sass-loader": "^6.0.7",
+    "style-loader": "^0.20.3",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.28.1",
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-server": "^3.1.3"
+  }
+}
