@@ -406,7 +406,10 @@ func GetPortValuesFromEnvFile(root string, regexes []string) []int {
 		return ports
 	}
 	for _, regex := range regexes {
-		re := regexp.MustCompile(regex)
+		re, err := regexp.Compile(regex)
+		if err != nil {
+			continue
+		}
 		port := FindPortSubmatch(re, text, 1)
 		if port != -1 {
 			ports = append(ports, port)
@@ -420,7 +423,10 @@ func GetStringValueFromEnvFile(root string, regex string) string {
 	if err != nil {
 		return ""
 	}
-	re := regexp.MustCompile(regex)
+	re, err := regexp.Compile(regex)
+	if err != nil {
+		return ""
+	}
 	if text != "" {
 		matches := re.FindStringSubmatch(text)
 		if len(matches) > 1 {

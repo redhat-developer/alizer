@@ -103,19 +103,28 @@ func GetPortWithMatchIndexesGo(content string, matchIndexes []int, toBeReplaced 
 	//we should end up with something like ".ListenAndServe(PORT"
 	portPlaceholder = strings.Replace(portPlaceholder, toBeReplaced, "", -1)
 	// if we are lucky enough portPlaceholder contains a real HOST:PORT otherwise it is a variable/expression
-	re := regexp.MustCompile(`:*(\d+)`)
+	re, err := regexp.Compile(`:*(\d+)`)
+	if err != nil {
+		return -1
+	}
 	if port := utils.FindPortSubmatch(re, portPlaceholder, 1); port != -1 {
 		return port
 	}
 
 	// we are not dealing with a host:port, let's try to find a variable set before the listen function
 	contentBeforeMatch := content[0:matchIndexes[0]]
-	re = regexp.MustCompile(portPlaceholder + `\s+[:=]+\s"([^"]*)`)
+	re, err = regexp.Compile(portPlaceholder + `\s+[:=]+\s"([^"]*)`)
+	if err != nil {
+		return -1
+	}
 	matches := re.FindStringSubmatch(contentBeforeMatch)
 	if len(matches) > 0 {
 		// hostPortValue should be host:port
 		hostPortValue := matches[len(matches)-1]
-		re = regexp.MustCompile(`:*(\d+)$`)
+		re, err = regexp.Compile(`:*(\d+)$`)
+		if err != nil {
+			return -1
+		}
 		if port := utils.FindPortSubmatch(re, hostPortValue, 1); port != -1 {
 			return port
 		}
