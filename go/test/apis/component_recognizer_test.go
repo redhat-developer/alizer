@@ -31,6 +31,10 @@ func TestComponentDetectionOnWildFly(t *testing.T) {
 	isComponentsInProject(t, "wildfly", 1, "java", "wildfly")
 }
 
+func TestComponentDetectionOnOpenLiberty(t *testing.T) {
+	isComponentsInProject(t, "open-liberty", 1, "java", "openliberty")
+}
+
 func TestComponentDetectionOnJBossEAP(t *testing.T) {
 	isComponentsInProject(t, "jboss-eap", 1, "java", "jboss-eap")
 }
@@ -39,12 +43,20 @@ func TestComponentDetectionOnQuarkus(t *testing.T) {
 	isComponentsInProject(t, "quarkus", 1, "java", "code-with-quarkus-maven")
 }
 
+func TestComponentDetectionOnSpring(t *testing.T) {
+	isComponentsInProject(t, "spring", 1, "java", "spring")
+}
+
 func TestComponentDetectionOnJavascript(t *testing.T) {
 	isComponentsInProject(t, "nodejs-ex", 1, "javascript", "nodejs-starter")
 }
 
 func TestComponentDetectionOnDjango(t *testing.T) {
 	isComponentsInProject(t, "django", 1, "python", "django")
+}
+
+func TestComponentDetectionOnFlask(t *testing.T) {
+	isComponentsInProject(t, "flask", 1, "python", "flask")
 }
 
 func TestComponentDetectionOnDotNet(t *testing.T) {
@@ -61,6 +73,18 @@ func TestComponentDetectionOnVBNet(t *testing.T) {
 
 func TestComponentDetectionOnGoLang(t *testing.T) {
 	isComponentsInProject(t, "golang-gin-app", 1, "Go", "golang-gin-app")
+}
+
+func TestComponentDetectionOnBeego(t *testing.T) {
+	isComponentsInProject(t, "beego", 1, "Go", "beego")
+}
+
+func TestComponentDetectionOnEcho(t *testing.T) {
+	isComponentsInProject(t, "echo", 1, "Go", "echo")
+}
+
+func TestComponentDetectionOnFastHTTP(t *testing.T) {
+	isComponentsInProject(t, "fasthttp", 1, "Go", "fasthttp")
 }
 
 func TestComponentDetectionOnAngular(t *testing.T) {
@@ -144,7 +168,7 @@ func updateContent(filePath string, data []byte) error {
 
 func TestComponentDetectionMultiProjects(t *testing.T) {
 	components := getComponentsFromProject(t, "")
-	nComps := 21
+	nComps := 31
 	if len(components) != nComps {
 		t.Errorf("Expected " + strconv.Itoa(nComps) + " components but found " + strconv.Itoa(len(components)))
 	}
@@ -251,6 +275,16 @@ func TestPortDetectionJavascriptExpressEnv(t *testing.T) {
 	os.Setenv("TEST_EXPRESS_ENV", "1111")
 	testPortDetectionInProject(t, "projectExpressEnv", []int{1111})
 	os.Unsetenv("TEST_EXPRESS_ENV")
+}
+
+func TestPortDetectionJavascriptExpressEnvOROperatorWithEnvVar(t *testing.T) {
+	os.Setenv("TEST_EXPRESS_ENV", "1111")
+	testPortDetectionInProject(t, "projectExpressEnvLogicalOROperator", []int{1111})
+	os.Unsetenv("TEST_EXPRESS_ENV")
+}
+
+func TestPortDetectionJavascriptExpressEnvOROperatorWithoutEnvVar(t *testing.T) {
+	testPortDetectionInProject(t, "projectExpressEnvLogicalOROperator", []int{8080})
 }
 
 func TestPortDetectionJavascriptExpressVariable(t *testing.T) {

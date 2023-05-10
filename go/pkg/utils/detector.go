@@ -356,15 +356,23 @@ func readAnyApplicationFile(root string, propsFiles []model.ApplicationFileInfo,
 }
 
 func FindPortSubmatch(re *regexp.Regexp, text string, group int) int {
-	if text != "" {
-		matches := re.FindStringSubmatch(text)
-		if len(matches) > group {
-			if port, err := GetValidPort(matches[group]); err == nil {
-				return port
-			}
+	potentialPortGroup := FindPotentialPortGroup(re, text, group)
+	if potentialPortGroup != "" {
+		if port, err := GetValidPort(potentialPortGroup); err == nil {
+			return port
 		}
 	}
 	return -1
+}
+
+func FindPotentialPortGroup(re *regexp.Regexp, text string, group int) string {
+	if text != "" {
+		matches := re.FindStringSubmatch(text)
+		if len(matches) > group {
+			return matches[group]
+		}
+	}
+	return ""
 }
 
 func FindAllPortsSubmatch(re *regexp.Regexp, text string, group int) []int {
@@ -398,7 +406,10 @@ func GetPortValuesFromEnvFile(root string, regexes []string) []int {
 		return ports
 	}
 	for _, regex := range regexes {
-		re := regexp.MustCompile(regex)
+		re, err := regexp.Compile(regex)
+		if err != nil {
+			continue
+		}
 		port := FindPortSubmatch(re, text, 1)
 		if port != -1 {
 			ports = append(ports, port)
@@ -412,7 +423,10 @@ func GetStringValueFromEnvFile(root string, regex string) string {
 	if err != nil {
 		return ""
 	}
-	re := regexp.MustCompile(regex)
+	re, err := regexp.Compile(regex)
+	if err != nil {
+		return ""
+	}
 	if text != "" {
 		matches := re.FindStringSubmatch(text)
 		if len(matches) > 1 {
