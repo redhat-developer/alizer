@@ -1,3 +1,0 @@
-{#for lang in result}
-Language:{lang.name} Frameworks:{#for framework in lang.frameworks}{framework}{#if hasNext},{/if}{/for} Tools:{#for tool in lang.tools}{tool}{#if hasNext},{/if}{/for} Accuracy:{lang.usageInPercentage}
-{/for}

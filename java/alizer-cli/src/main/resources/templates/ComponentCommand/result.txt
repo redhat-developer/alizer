@@ -1,3 +1,0 @@
-{#for comp in result}
-Component:{comp.path} Languages:{#for language in comp.languages}{language.name}{#if hasNext},{/if}{/for}
-{/for}

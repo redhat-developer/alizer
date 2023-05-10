@@ -1,5 +1,0 @@
-com.redhat.devtools.alizer.api.spi.JavaLanguageEnricherProviderImpl
-com.redhat.devtools.alizer.api.spi.PythonLanguageEnricherProviderImpl
-com.redhat.devtools.alizer.api.spi.JavaScriptLanguageEnricherProviderImpl
-com.redhat.devtools.alizer.api.spi.DotNetLanguageEnricherProviderImpl
-com.redhat.devtools.alizer.api.spi.GoLanguageEnricherProviderImpl

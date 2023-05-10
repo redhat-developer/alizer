@@ -1,5 +1,0 @@
-{#if result != null}
-Devfile {result.name} matched
-{#else}
-No devfile found to match
-{/if}

@@ -1,7 +1,0 @@
-{ "success":  true{#if result != null},{/if}
-{#if result != null}
-  "devfile": {
-    "name": "{result.name}"
-  }
-{/if}
-}
