@@ -28,10 +28,9 @@ Thanks for understanding and for contributing to the project!
 > /area ci
 > /area cli
 > /area api
-> /area library
+> /area releng
 > /area integration-tests
 > /area test-automation
-> /area landing-page
 
 ## Issue Description
 
