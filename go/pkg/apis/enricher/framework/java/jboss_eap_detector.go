@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -22,6 +23,7 @@ func (o JBossEAPDetector) GetSupportedFrameworks() []string {
 	return []string{"JBoss EAP"}
 }
 
+// DoFrameworkDetection uses the groupId and artifactId to check for the framework name
 func (o JBossEAPDetector) DoFrameworkDetection(language *model.Language, config string) {
 	if hasFwk, _ := hasFramework(config, "org.jboss.eap.plugins", "eap-maven-plugin"); hasFwk {
 		language.Frameworks = append(language.Frameworks, "JBoss EAP")

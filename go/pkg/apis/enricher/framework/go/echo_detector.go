@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -26,6 +27,7 @@ func (e EchoDetector) GetSupportedFrameworks() []string {
 	return []string{"Echo"}
 }
 
+// DoFrameworkDetection uses a tag to check for the framework name
 func (e EchoDetector) DoFrameworkDetection(language *model.Language, goMod *modfile.File) {
 	if hasFramework(goMod.Require, "github.com/labstack/echo") {
 		language.Frameworks = append(language.Frameworks, "Echo")

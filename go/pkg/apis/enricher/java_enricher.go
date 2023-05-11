@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -19,7 +20,7 @@ import (
 
 	framework "github.com/redhat-developer/alizer/go/pkg/apis/enricher/framework/java"
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
-	utils "github.com/redhat-developer/alizer/go/pkg/utils"
+	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 type JavaEnricher struct{}
@@ -40,6 +41,8 @@ func (j JavaEnricher) GetSupportedLanguages() []string {
 	return []string{"java"}
 }
 
+// DoEnrichLanguage runs DoFrameworkDetection with found java project files.
+// java project files: build.gradle, pom.xml, build.xml
 func (j JavaEnricher) DoEnrichLanguage(language *model.Language, files *[]string) {
 	gradle := utils.GetFile(files, "build.gradle")
 	maven := utils.GetFile(files, "pom.xml")
@@ -56,6 +59,7 @@ func (j JavaEnricher) DoEnrichLanguage(language *model.Language, files *[]string
 	}
 }
 
+// DoEnrichComponent checks for the port number using a Dockerfile, Compose file, or Source strategy
 func (j JavaEnricher) DoEnrichComponent(component *model.Component, settings model.DetectionSettings, ctx *context.Context) {
 	projectName := getProjectNameMaven(component.Path)
 	if projectName == "" {
@@ -67,7 +71,7 @@ func (j JavaEnricher) DoEnrichComponent(component *model.Component, settings mod
 	component.Name = projectName
 
 	for _, algorithm := range settings.PortDetectionStrategy {
-		ports := []int{}
+		var ports []int
 		switch algorithm {
 		case model.DockerFile:
 			{
@@ -133,16 +137,7 @@ func (j JavaEnricher) IsConfigValidForComponentDetection(language string, config
 	return IsConfigurationValidForLanguage(language, config) && !isParentModuleMaven(config)
 }
 
-/*
-isParentModuleMaven checks if configuration file is a parent pom.xml
-Parameters:
-
-	configPath: configuration file path
-
-Returns:
-
-	bool: true if config file is parent
-*/
+// isParentModuleMaven checks if configPath is a parent pom.xml
 func isParentModuleMaven(configPath string) bool {
 	_, file := filepath.Split(configPath)
 	if !strings.EqualFold(file, "pom.xml") {

@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package recognizer
 
 import (
@@ -53,7 +54,7 @@ func selectDevFilesFromComponentsDetectedInPath(path string, devFileTypes []mode
 }
 
 func selectDevFilesFromComponents(components []model.Component, devFileTypes []model.DevFileType) []int {
-	devFilesIndexes := []int{}
+	var devFilesIndexes []int
 	for _, component := range components {
 		devFiles, err := selectDevFilesByLanguage(component.Languages[0], devFileTypes)
 		if err == nil {
@@ -72,7 +73,7 @@ func SelectDevFileFromTypes(path string, devFileTypes []model.DevFileType) (int,
 }
 
 func SelectDevFilesUsingLanguagesFromTypes(languages []model.Language, devFileTypes []model.DevFileType) ([]int, error) {
-	devFilesIndexes := []int{}
+	var devFilesIndexes []int
 	for _, language := range languages {
 		devFiles, err := selectDevFilesByLanguage(language, devFileTypes)
 		if err == nil {
@@ -104,7 +105,7 @@ func SelectDevFilesFromRegistry(path string, url string) ([]model.DevFileType, e
 		return []model.DevFileType{}, err
 	}
 
-	devFileTypes := []model.DevFileType{}
+	var devFileTypes []model.DevFileType
 	for _, index := range indexes {
 		devFileTypes = append(devFileTypes, devFileTypesFromRegistry[index])
 	}
@@ -178,17 +179,17 @@ func adaptUrl(url string) string {
 	return url
 }
 
-/*
-To detect the devfiles that fit the most with a project, alizer performs a search in two steps looping through all devfiles available.
-When a framework is detected, this is stored in a map but still not saved. A check is made eventually as there could be that a future or
-previous devfile is more appropriate based on other infos (e.g. the tool -> quarkus gradle vs quarkus maven)
-If no framework is detected, the devfiles are picked based on their score (language +1, tool +5). The largest score wins.
-
-At the end, if some framework is supported by some devfile, they are returned. Otherwise Alizer was not able to find any
-specific devfile for the frameworks detected and returned the devfiles which got the largest score.
-*/
+// selectDevFilesByLanguage detects devfiles that fit best with a project.
+//
+// Performs a search in two steps looping through all devfiles available.
+// When a framework is detected, this is stored in a map but still not saved. A check is made eventually as there could be that a future or
+// previous devfile is more appropriate based on other infos (e.g. the tool -> quarkus gradle vs quarkus maven).
+// If no framework is detected, the devfiles are picked based on their score (language +1, tool +5). The largest score wins.
+//
+// At the end, if some framework is supported by some devfile, they are returned. Otherwise, Alizer was not able to find any
+// specific devfile for the frameworks detected and returned the devfiles which got the largest score.
 func selectDevFilesByLanguage(language model.Language, devFileTypes []model.DevFileType) ([]int, error) {
-	devFileIndexes := []int{}
+	var devFileIndexes []int
 	frameworkPerDevFile := make(map[string]model.DevFileScore)
 	scoreTarget := 0
 

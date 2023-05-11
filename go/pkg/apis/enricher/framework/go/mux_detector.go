@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -26,6 +27,7 @@ func (m MuxDetector) GetSupportedFrameworks() []string {
 	return []string{"Mux"}
 }
 
+// DoFrameworkDetection uses a tag to check for the framework name
 func (m MuxDetector) DoFrameworkDetection(language *model.Language, goMod *modfile.File) {
 	if hasFramework(goMod.Require, "github.com/gorilla/mux") {
 		language.Frameworks = append(language.Frameworks, "Mux")

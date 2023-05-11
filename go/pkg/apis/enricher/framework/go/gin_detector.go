@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -26,6 +27,7 @@ func (g GinDetector) GetSupportedFrameworks() []string {
 	return []string{"Gin"}
 }
 
+// DoFrameworkDetection uses a tag to check for the framework name
 func (g GinDetector) DoFrameworkDetection(language *model.Language, goMod *modfile.File) {
 	if hasFramework(goMod.Require, "github.com/gin-gonic/gin") {
 		language.Frameworks = append(language.Frameworks, "Gin")

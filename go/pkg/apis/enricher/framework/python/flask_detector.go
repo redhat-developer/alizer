@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -23,6 +24,8 @@ func (d FlaskDetector) GetSupportedFrameworks() []string {
 	return []string{"Flask"}
 }
 
+// DoFrameworkDetection uses a tag to check for the framework name
+// with flask files and flask config files
 func (d FlaskDetector) DoFrameworkDetection(language *model.Language, files *[]string) {
 	appPy := utils.GetFile(files, "app.py")
 	wsgiPy := utils.GetFile(files, "wsgi.py")

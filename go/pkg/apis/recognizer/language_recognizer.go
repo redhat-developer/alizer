@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package recognizer
 
 import (
@@ -16,7 +17,7 @@ import (
 	"sort"
 	"strings"
 
-	enricher "github.com/redhat-developer/alizer/go/pkg/apis/enricher"
+	"github.com/redhat-developer/alizer/go/pkg/apis/enricher"
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/utils"
 	langfile "github.com/redhat-developer/alizer/go/pkg/utils/langfiles"

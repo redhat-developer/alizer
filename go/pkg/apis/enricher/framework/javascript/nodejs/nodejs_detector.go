@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -15,11 +16,12 @@ import (
 	"regexp"
 
 	"github.com/redhat-developer/alizer/go/pkg/schema"
-	utils "github.com/redhat-developer/alizer/go/pkg/utils"
+	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 type packageScriptFunc func(schema.PackageJson) string
 
+// hasFramework uses the package.json to check for framework
 func hasFramework(configFile string, tag string) bool {
 	return utils.IsTagInPackageJsonFile(configFile, tag)
 }
