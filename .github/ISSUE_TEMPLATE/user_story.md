@@ -18,6 +18,7 @@ assignees: ''
 > /area ci
 > /area cli
 > /area api
+> /area library
 > /area releng
 > /area integration-tests
 > /area test-automation

@@ -28,6 +28,7 @@ Thanks for understanding and for contributing to the project!
 > /area cli
 > /area api
 > /area releng
+> /area library
 > /area integration-tests
 > /area test-automation
 > /area documentation
