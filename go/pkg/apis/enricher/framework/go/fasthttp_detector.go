@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -26,6 +27,7 @@ func (f FastHttpDetector) GetSupportedFrameworks() []string {
 	return []string{"FastHttp"}
 }
 
+// DoFrameworkDetection uses a tag to check for the framework name
 func (f FastHttpDetector) DoFrameworkDetection(language *model.Language, goMod *modfile.File) {
 	if hasFramework(goMod.Require, "github.com/valyala/fasthttp") {
 		language.Frameworks = append(language.Frameworks, "FastHttp")

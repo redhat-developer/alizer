@@ -8,6 +8,12 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
+// Package enricher implements functions that detect the name and ports of a component.
+// Uses three general strategies: Dockerfile, Compose, and Source.
+// Dockerfile consists of using a dockerfile to extract information.
+// Compose consists of using a compose file to extract information.
+// Source consists of searching for specific statements of function invocations inside the source code.
 package enricher
 
 import (
@@ -23,7 +29,7 @@ import (
 
 	"github.com/moby/buildkit/frontend/dockerfile/parser"
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
-	utils "github.com/redhat-developer/alizer/go/pkg/utils"
+	"github.com/redhat-developer/alizer/go/pkg/utils"
 	"github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
 	"gopkg.in/yaml.v3"
 )
@@ -47,22 +53,11 @@ type FrameworkDetectorWithoutConfigFile interface {
 	DoPortsDetection(component *model.Component, ctx *context.Context)
 }
 
-/*
-IsConfigurationValidForLanguage check whether the configuration file is valid for current language.
-
-	For example when analyzing a nodejs project, we could find a package.json
-	within the node_modules folder. That is not to be considered valid
-	for component detection.
-
-Paramenters:
-
-	language: language name
-	file: configuration file name
-
-Returns:
-
-	bool: true if config file is valid for current language
-*/
+// IsConfigurationValidForLanguage checks whether the file is valid for the language.
+//
+// For example when analyzing a nodejs project, we could find a package.json
+// within the node_modules folder. That is not to be considered valid
+// for component detection.
 func IsConfigurationValidForLanguage(language string, file string) bool {
 	languageItem, err := langfiles.Get().GetLanguageByName(language)
 	if err != nil {
@@ -76,17 +71,7 @@ func IsConfigurationValidForLanguage(language string, file string) bool {
 	return true
 }
 
-/*
-isFolderNameIncludedInPath check if fullpath contains potentialSubFolderName
-Parameters:
-
-	fullPath: 				complete path of a file
-	potentialSubFolderName: folder name
-
-Returns:
-
-	bool: true if potentialSubFolderName is included in fullPath
-*/
+// isFolderNameIncludedInPath checks if fullPath contains potentialSubFolderName.
 func isFolderNameIncludedInPath(fullPath string, potentialSubFolderName string) bool {
 	pathSeparator := fmt.Sprintf("%c", os.PathSeparator)
 	dir, _ := filepath.Split(fullPath)
@@ -110,8 +95,10 @@ func getEnrichers() []Enricher {
 	}
 }
 
+// GetEnricherByLanguage returns an enricher.
 func GetEnricherByLanguage(language string) Enricher {
 	for _, enricher := range getEnrichers() {
+		// check the supported enricher languages
 		if isLanguageSupportedByEnricher(language, enricher) {
 			return enricher
 		}
@@ -119,6 +106,7 @@ func GetEnricherByLanguage(language string) Enricher {
 	return nil
 }
 
+// isLanguageSupportedByEnricher checks the language has an enricher.
 func isLanguageSupportedByEnricher(nameLanguage string, enricher Enricher) bool {
 	for _, language := range enricher.GetSupportedLanguages() {
 		if strings.EqualFold(language, nameLanguage) {
@@ -132,6 +120,7 @@ func GetDefaultProjectName(path string) string {
 	return filepath.Base(path)
 }
 
+// GetPortsFromDockerFile returns a slice of port numbers from Dockerfiles in the given directory.
 func GetPortsFromDockerFile(root string) []int {
 	locations := getLocations(root)
 	for _, location := range locations {
@@ -167,14 +156,16 @@ func getLocations(root string) []string {
 	return locations
 }
 
+// getPortsFromReader returns a slice of port numbers.
 func getPortsFromReader(file io.Reader) []int {
-	ports := []int{}
+	var ports []int
 	res, err := parser.Parse(file)
 	if err != nil {
 		return ports
 	}
 
 	for _, child := range res.AST.Children {
+		// check for the potential port number in a Dockerfile/Containerfile
 		if strings.ToLower(child.Value) == "expose" {
 			for n := child.Next; n != nil; n = n.Next {
 				if port, err := strconv.Atoi(n.Value); err == nil {
@@ -187,8 +178,9 @@ func getPortsFromReader(file io.Reader) []int {
 	return ports
 }
 
+// GetPortsFromDockerComposeFile returns a slice of port numbers from a compose file.
 func GetPortsFromDockerComposeFile(componentPath string, settings model.DetectionSettings) []int {
-	ports := []int{}
+	var ports []int
 	bytes, err := getDockerComposeFileBytes(settings.BasePath)
 	if err != nil {
 		return ports
@@ -198,7 +190,7 @@ func GetPortsFromDockerComposeFile(componentPath string, settings model.Detectio
 		return ports
 	}
 
-	// we already performed a search in the real root where the detection originally started. No compose file was there so we try to look for
+	// we already performed a search in the real root where the detection originally started. No compose file was there, so we try to look for
 	// one in the actual component root
 	bytes, err = getDockerComposeFileBytes(componentPath)
 	if err != nil {
@@ -207,6 +199,7 @@ func GetPortsFromDockerComposeFile(componentPath string, settings model.Detectio
 	return getComponentPortsFromDockerComposeFileBytes(bytes, componentPath, settings.BasePath)
 }
 
+// getDockerComposeFileBytes returns a byte slice of the compose file if found in the given directory.
 func getDockerComposeFileBytes(root string) ([]byte, error) {
 	return utils.ReadAnyApplicationFileExactMatch(root, []model.ApplicationFileInfo{
 		{
@@ -228,8 +221,9 @@ func getDockerComposeFileBytes(root string) ([]byte, error) {
 	})
 }
 
+// getComponentPortsFromDockerComposeFileBytes returns a slice of port numbers.
 func getComponentPortsFromDockerComposeFileBytes(bytes []byte, componentPath string, basePath string) []int {
-	ports := []int{}
+	var ports []int
 	composeMap := make(map[string]interface{})
 	err := yaml.Unmarshal(bytes, &composeMap)
 	if err != nil {

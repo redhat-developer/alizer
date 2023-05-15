@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -22,6 +23,7 @@ func (o WildFlyDetector) GetSupportedFrameworks() []string {
 	return []string{"WildFly"}
 }
 
+// DoFrameworkDetection uses the groupId and artifactId to check for the framework name
 func (o WildFlyDetector) DoFrameworkDetection(language *model.Language, config string) {
 	if hasFwk, _ := hasFramework(config, "org.wildfly.plugins", "wildfly-maven-plugin"); hasFwk {
 		language.Frameworks = append(language.Frameworks, "WildFly")

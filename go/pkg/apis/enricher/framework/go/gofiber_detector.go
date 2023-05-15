@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -26,6 +27,7 @@ func (g GoFiberDetector) GetSupportedFrameworks() []string {
 	return []string{"GoFiber"}
 }
 
+// DoFrameworkDetection uses a tag to check for the framework name
 func (g GoFiberDetector) DoFrameworkDetection(language *model.Language, goMod *modfile.File) {
 	if hasFramework(goMod.Require, "github.com/gofiber/fiber") {
 		language.Frameworks = append(language.Frameworks, "GoFiber")

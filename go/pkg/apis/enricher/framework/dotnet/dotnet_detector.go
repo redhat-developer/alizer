@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -28,6 +29,7 @@ func (d DotNetDetector) GetSupportedFrameworks() []string {
 	return []string{""}
 }
 
+// DoFrameworkDetection uses configFilePath to check for the name of the framework
 func (d DotNetDetector) DoFrameworkDetection(language *model.Language, configFilePath string) {
 	framework := getFrameworks(configFilePath)
 	if framework == "" {

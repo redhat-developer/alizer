@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -26,6 +27,7 @@ func (e ExpressDetector) GetSupportedFrameworks() []string {
 	return []string{"Express"}
 }
 
+// DoFrameworkDetection uses a tag to check for the framework name
 func (e ExpressDetector) DoFrameworkDetection(language *model.Language, config string) {
 	if hasFramework(config, "express") {
 		language.Frameworks = append(language.Frameworks, "Express")
@@ -39,7 +41,7 @@ func (e ExpressDetector) DoPortsDetection(component *model.Component, ctx *conte
 	}
 
 	re := regexp.MustCompile(`\.listen\([^,)]*`)
-	ports := []int{}
+	var ports []int
 	for _, file := range files {
 		bytes, err := os.ReadFile(file)
 		if err != nil {
@@ -108,7 +110,7 @@ func getPort(content string, matchIndexes []int) int {
 			}
 		}
 	}
-	// After double checking for env vars try to get the value of this port
+	// After double-checking for env vars try to get the value of this port
 	if len(envMatchIndexes) > 1 {
 		envPlaceholder := envPortValue[envMatchIndexes[0]:envMatchIndexes[1]]
 		port := GetEnvPort(envPlaceholder)

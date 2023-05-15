@@ -8,6 +8,7 @@
  * Contributors:
  * Red Hat, Inc.
  ******************************************************************************/
+
 package enricher
 
 import (
@@ -21,6 +22,7 @@ import (
 	"golang.org/x/mod/modfile"
 )
 
+// hasFramework uses the go.mod to check for framework
 func hasFramework(modules []*modfile.Require, tag string) bool {
 	for _, module := range modules {
 		if strings.EqualFold(module.Mod.Path, tag) || strings.HasPrefix(module.Mod.Path, tag) {
@@ -69,7 +71,7 @@ func DoGoPortsDetection(component *model.Component, ctx *context.Context) {
 }
 
 func GetPortFromFileGo(rules model.PortMatchRules, text string) []int {
-	ports := []int{}
+	var ports []int
 	for _, matchIndexRegex := range rules.MatchIndexRegexes {
 		matchIndexesSlice := matchIndexRegex.Regex.FindAllStringSubmatchIndex(text, -1)
 		for _, matchIndexes := range matchIndexesSlice {
@@ -100,7 +102,7 @@ func GetPortFromFileGo(rules model.PortMatchRules, text string) []int {
 
 func GetPortWithMatchIndexesGo(content string, matchIndexes []int, toBeReplaced string) int {
 	portPlaceholder := content[matchIndexes[0]:matchIndexes[1]]
-	//we should end up with something like ".ListenAndServe(PORT"
+	// we should end up with something like ".ListenAndServe(PORT"
 	portPlaceholder = strings.Replace(portPlaceholder, toBeReplaced, "", -1)
 	// if we are lucky enough portPlaceholder contains a real HOST:PORT otherwise it is a variable/expression
 	re, err := regexp.Compile(`:*(\d+)`)

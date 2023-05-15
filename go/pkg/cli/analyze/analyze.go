@@ -1,7 +1,7 @@
 package analyze
 
 import (
-	recognizer "github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
+	"github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
 	"github.com/redhat-developer/alizer/go/pkg/utils"
 	"github.com/spf13/cobra"
 )
