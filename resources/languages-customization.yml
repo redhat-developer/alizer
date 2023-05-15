@@ -33,6 +33,11 @@ JavaScript:
   configuration_files:
     - "[^-]package.json"
   component: true
+PHP:
+  configuration_files:
+    - "composer.json"
+    - "[^-]package.json"
+  component: true
 Python:
   configuration_files:
     - "requirements.txt"

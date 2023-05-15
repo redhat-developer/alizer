@@ -107,6 +107,10 @@ func TestComponentDetectionOnVue(t *testing.T) {
 	isComponentsInProject(t, "vue-app", 1, "typescript", "vue-app")
 }
 
+func TestComponentDetectionOnLaravel(t *testing.T) {
+	isComponentsInProject(t, "laravel", 1, "PHP", "laravel")
+}
+
 func TestComponentDetectionNoResult(t *testing.T) {
 	components := getComponentsFromProject(t, "simple")
 	if len(components) > 0 {
