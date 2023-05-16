@@ -17,6 +17,8 @@ F#:
 GCC Machine Description:
   disable_detection: true
 Go:
+  exclude_folders:
+    - "vendor"
   configuration_files:
     - "go.mod"
   component: true
