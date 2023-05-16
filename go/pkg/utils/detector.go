@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -211,9 +212,16 @@ func GetFilePathsFromRoot(root string) ([]string, error) {
 
 	var files []string
 	ignoreFile, errorIgnoreFile := getIgnoreFile(root)
+	excludedFolders := langfiles.Get().GetExcludedFolders()
 	errWalk := filepath.Walk(root,
 		func(path string, info os.FileInfo, err error) error {
 			relativePath := strings.Replace(path, root, "", 1)
+			// skip directories from excluded folders
+			for _, excludedFolder := range excludedFolders {
+				if strings.Contains(relativePath, excludedFolder) {
+					return filepath.SkipDir
+				}
+			}
 			if errorIgnoreFile == nil && ignoreFile.MatchesPath(relativePath) {
 				if info.IsDir() {
 					return filepath.SkipDir
