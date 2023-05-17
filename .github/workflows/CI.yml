@@ -12,12 +12,12 @@ jobs:
   build-go:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Go environment
-        uses: actions/setup-go@v2.1.4
+        uses: actions/setup-go@v3
         with:
-          go-version: 1.19
+          go-version: '1.19'
       - name: Set envs
         run: |
           go env -w GOPATH=$GITHUB_WORKSPACE

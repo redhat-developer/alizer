@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
         # v1
       - uses: GuillaumeFalourd/diff-action@b341507d1da990caceac1b3b31b8f55eebaa2e99
         with:
