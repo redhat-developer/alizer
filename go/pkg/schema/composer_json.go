@@ -9,11 +9,10 @@
  * Red Hat, Inc.
  ******************************************************************************/
 
-package enricher
+package schema
 
-import "github.com/redhat-developer/alizer/go/pkg/utils"
-
-// hasFramework uses the composer.json to check for framework
-func hasFramework(configFile string, tag string) bool {
-	return utils.IsTagInComposerJsonFile(configFile, tag)
+type ComposerJson struct {
+	Name       string            `json:"name"`
+	Require    map[string]string `json:"require"`
+	RequireDev map[string]string `json:"require-dev"`
 }

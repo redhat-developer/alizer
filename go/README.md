@@ -65,6 +65,7 @@ Component detection is only enabled for a subset of programming languages
 - JavaScript
 - Python
 - Rust
+- PHP
 
 It consists of two steps:
 1) Detect languages which have a configuration file such as Java (`pom.xml`, `build.gradle`)

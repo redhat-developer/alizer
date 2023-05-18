@@ -38,7 +38,7 @@ func (p PHPEnricher) DoEnrichLanguage(language *model.Language, files *[]string)
 
 	if composerJson != "" {
 		var targetLanguage string
-		if utils.IsTagInPackageJsonFile(composerJson, "php") {
+		if utils.IsTagInComposerJsonFile(composerJson, "php") {
 			targetLanguage = "PHP"
 		}
 		lang, err := langfile.Get().GetLanguageByName(targetLanguage)
