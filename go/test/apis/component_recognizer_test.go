@@ -107,6 +107,10 @@ func TestComponentDetectionOnVue(t *testing.T) {
 	isComponentsInProject(t, "vue-app", 1, "typescript", "vue-app")
 }
 
+func TestComponentDetectionOnLaravel(t *testing.T) {
+	isComponentsInProject(t, "laravel", 1, "PHP", "laravel")
+}
+
 func TestComponentDetectionNoResult(t *testing.T) {
 	components := getComponentsFromProject(t, "simple")
 	if len(components) > 0 {
@@ -168,7 +172,7 @@ func updateContent(filePath string, data []byte) error {
 
 func TestComponentDetectionMultiProjects(t *testing.T) {
 	components := getComponentsFromProject(t, "")
-	nComps := 31
+	nComps := 32
 	if len(components) != nComps {
 		t.Errorf("Expected " + strconv.Itoa(nComps) + " components but found " + strconv.Itoa(len(components)))
 	}

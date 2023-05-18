@@ -187,6 +187,32 @@ func GetPackageJsonSchemaFromFile(path string) (schema.PackageJson, error) {
 	return packageJson, nil
 }
 
+// IsTagInComposerJsonFile checks if the file is a composer.json and contains the tag.
+func IsTagInComposerJsonFile(file string, tag string) bool {
+	composerJson, err := GetComposerJsonSchemaFromFile(file)
+	if err != nil {
+		return false
+	}
+
+	hasDependency := isTagInDependencies(composerJson.Require, tag)
+	if !hasDependency {
+		hasDependency = isTagInDependencies(composerJson.RequireDev, tag)
+	}
+	return hasDependency
+}
+
+// GetComposerJsonSchemaFromFile returns the composer.json found in the path.
+func GetComposerJsonSchemaFromFile(path string) (schema.ComposerJson, error) {
+	bytes, err := os.ReadFile(path)
+	if err != nil {
+		return schema.ComposerJson{}, err
+	}
+
+	var composerJson schema.ComposerJson
+	json.Unmarshal(bytes, &composerJson)
+	return composerJson, nil
+}
+
 func AddToArrayIfValueExist(arr *[]string, val string) {
 	if val != "" {
 		*arr = append(*arr, val)

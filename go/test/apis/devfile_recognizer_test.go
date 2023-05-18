@@ -129,6 +129,10 @@ func TestDetectSpringDevfile(t *testing.T) {
 	detectDevFiles(t, "spring", []string{"java-spring", "java-springboot"})
 }
 
+func TestDetectLaravelDevfile(t *testing.T) {
+	detectDevFiles(t, "laravel", []string{"php-laravel"})
+}
+
 func detectDevFiles(t *testing.T, projectName string, devFilesName []string) {
 	detectDevFilesFunc := func(devFileTypes []model.DevFileType) ([]int, error) {
 		testingProjectPath := GetTestProjectPath(projectName)
@@ -377,6 +381,16 @@ func getDevFileTypes() []model.DevFileType {
 			Tags: []string{
 				"Node.js",
 				"Vue",
+			},
+		},
+		{
+			Name:        "php-laravel",
+			Language:    "PHP",
+			ProjectType: "Laravel",
+			Tags: []string{
+				"PHP",
+				"Composer",
+				"Laravel",
 			},
 		},
 	}

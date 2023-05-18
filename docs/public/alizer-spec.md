@@ -21,6 +21,7 @@ ones listed below:
 - Typescript
 - C#, F#, VB.NET
 - GoLang
+- PHP
 
 Language recognition is performed by using files extensions within the source, and only the languages with a significant
 presence (>2% total files) are taken into account for further calculations. If any of languages above is detected, Alizer proceeds to check for the presence of tools and frameworks.
@@ -111,6 +112,23 @@ At this point, it reads its content looking for dependencies to discover framewo
 
 NOTE: The Go version is saved as Tools inside the data structure returned by the analyze primitive
 
+### PHP
+
+The detection for PHP works similar to Javascript/Typescript. The first thing Alizer does is to check if a `composer.json`
+file is in the project. If so, Alizer assumes it is a PHP project.
+
+At this point, it reads its content looking for dependencies to discover frameworks. Currently, it recognizes:
+
+- Lavarel
+
+```
+{
+    name: 'PHP',
+    tools: [],
+    frameworks: [ 'Laravel' ]
+}
+```
+
 ## DevFile detection
 
 It is possible to select a devfile from a list of devfile metadatas provided by the caller based on information that
@@ -137,6 +155,7 @@ Component detection is only enabled for a subset of programming languages
 - JavaScript
 - Python
 - Rust
+- PHP
 
 To perform component detection Alizer splits the languages in two sets: `languages with a configuration file` (like Java
 which can have a pom.xml or a build.gradle) and `languages without a configuration file` (such as Python which does not have a
