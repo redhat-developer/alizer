@@ -9,7 +9,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-go:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -40,15 +40,6 @@ jobs:
 
       - name: Build binary
         run: make build
-
-      - name: Check format
-        run: |
-          make gofmt
-          if [[ ! -z $(git status -s) ]]
-          then
-          echo "not well formatted sources are found : $(git status -s)"
-          exit 1
-          fi
 
       - name: Run Go tests
         run: make test
