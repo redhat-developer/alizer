@@ -107,6 +107,14 @@ func (d FlaskDetector) DoPortsDetection(component *model.Component, ctx *context
 			Dir:  "",
 			File: "app.py",
 		},
+		{
+			Dir:  "",
+			File: "wsgi.py",
+		},
+		{
+			Dir:  "app",
+			File: "__init__.py",
+		},
 	}, ctx)
 
 	matchIndexRegexes := []model.PortMatchRule{
