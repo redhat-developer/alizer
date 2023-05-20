@@ -100,7 +100,7 @@ func getPortWithMatchIndexesFlask(content string, matchIndexes []int, toBeReplac
 	return -1
 }
 
-// DoPortsDetection searches for the port in app/app.py or /wsgi.py
+// DoPortsDetection searches for the port in app/__init__.py, app.py or /wsgi.py
 func (d FlaskDetector) DoPortsDetection(component *model.Component, ctx *context.Context) {
 	bytes, err := utils.ReadAnyApplicationFile(component.Path, []model.ApplicationFileInfo{
 		{
