@@ -92,24 +92,24 @@ func IsTagInFile(file string, tag string) (bool, error) {
 }
 
 // IsTagInPomXMLFileArtifactId checks if a pom file contains the artifactId.
-func IsTagInPomXMLFileArtifactId(pomFilePath, groupdId, artifactId string) (bool, error) {
+func IsTagInPomXMLFileArtifactId(pomFilePath, groupId, artifactId string) (bool, error) {
 	pom, err := GetPomFileContent(pomFilePath)
 	if err != nil {
 		return false, err
 	}
 	for _, dependency := range pom.Dependencies.Dependency {
-		if strings.Contains(dependency.ArtifactId, artifactId) && strings.Contains(dependency.GroupId, groupdId) {
+		if strings.Contains(dependency.ArtifactId, artifactId) && strings.Contains(dependency.GroupId, groupId) {
 			return true, nil
 		}
 	}
 	for _, plugin := range pom.Build.Plugins.Plugin {
-		if strings.Contains(plugin.ArtifactId, artifactId) && strings.Contains(plugin.GroupId, groupdId) {
+		if strings.Contains(plugin.ArtifactId, artifactId) && strings.Contains(plugin.GroupId, groupId) {
 			return true, nil
 		}
 	}
 	for _, profile := range pom.Profiles.Profile {
 		for _, plugin := range profile.Build.Plugins.Plugin {
-			if strings.Contains(plugin.ArtifactId, artifactId) && strings.Contains(plugin.GroupId, groupdId) {
+			if strings.Contains(plugin.ArtifactId, artifactId) && strings.Contains(plugin.GroupId, groupId) {
 				return true, nil
 			}
 		}
@@ -529,4 +529,37 @@ func NormalizeSplit(file string) (string, string) {
 		dir = "./"
 	}
 	return dir, fileName
+}
+
+// GetPortFromFilePackagingScript tries to find a port configuration inside a given file content
+func GetPortFromFilePackagingScript(matchIndexRegexes []model.PortMatchRule, text string) []int {
+	var ports []int
+	for _, matchIndexRegex := range matchIndexRegexes {
+		matchIndexesSlice := matchIndexRegex.Regex.FindAllStringSubmatchIndex(text, -1)
+		for _, matchIndexes := range matchIndexesSlice {
+			if len(matchIndexes) > 1 {
+				port := getPortWithMatchIndexesPackagingScript(text, matchIndexes, matchIndexRegex.ToReplace)
+				if port != -1 {
+					ports = append(ports, port)
+				}
+			}
+		}
+	}
+
+	return ports
+}
+
+func getPortWithMatchIndexesPackagingScript(content string, matchIndexes []int, toBeReplaced string) int {
+	// select the correct range for placeholder and remove unnecessary strings
+	portPlaceholder := content[matchIndexes[0]:matchIndexes[1]]
+	portPlaceholder = strings.Replace(portPlaceholder, toBeReplaced, "", -1)
+	// try first to check for hardcoded ports inside the app.run command. e.g port=3001
+	re, err := regexp.Compile(`port=*(\d+)`)
+	if err != nil {
+		return -1
+	}
+	if port := FindPortSubmatch(re, portPlaceholder, 1); port != -1 {
+		return port
+	}
+	return -1
 }
