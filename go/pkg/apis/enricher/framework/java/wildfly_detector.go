@@ -13,8 +13,11 @@ package enricher
 
 import (
 	"context"
+	"os"
+	"regexp"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
+	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 type WildFlyDetector struct{}
@@ -31,5 +34,30 @@ func (o WildFlyDetector) DoFrameworkDetection(language *model.Language, config s
 }
 
 func (o WildFlyDetector) DoPortsDetection(component *model.Component, ctx *context.Context) {
-	// Not implemented
+	paths, err := utils.GetCachedFilePathsFromRoot(component.Path, ctx)
+	if err != nil {
+		return
+	}
+	pomXML := utils.GetFile(&paths, "pom.xml")
+	if hasPkgScript, filePath := hasPackageScripts(pomXML, "org.wildfly.plugins", "wildfly-maven-plugin"); hasPkgScript {
+		configScript := utils.GetFile(&paths, filePath)
+		bytes, err := os.ReadFile(configScript)
+		if err != nil {
+			return
+		}
+		matchIndexRegexes := []model.PortMatchRule{
+			{
+				Regex:     regexp.MustCompile(`new-socket-binding:add\([^)]*`),
+				ToReplace: "new-socket-binding:add",
+			},
+		}
+		if err != nil {
+			return
+		}
+		ports := utils.GetPortFromFilePackagingScript(matchIndexRegexes, string(bytes))
+		if len(ports) > 0 {
+			component.Ports = ports
+			return
+		}
+	}
 }
