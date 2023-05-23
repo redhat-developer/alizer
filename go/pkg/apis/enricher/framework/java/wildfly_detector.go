@@ -33,6 +33,8 @@ func (o WildFlyDetector) DoFrameworkDetection(language *model.Language, config s
 	}
 }
 
+// DoPortsDetection for wildfly fetches the pom.xml and tries to find any packaging-script under
+// the wildfly-maven-plugin. If there is one it looks for a new-socket-binding where a port is defined.
 func (o WildFlyDetector) DoPortsDetection(component *model.Component, ctx *context.Context) {
 	paths, err := utils.GetCachedFilePathsFromRoot(component.Path, ctx)
 	if err != nil {
