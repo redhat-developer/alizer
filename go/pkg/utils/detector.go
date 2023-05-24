@@ -159,6 +159,21 @@ func GetPomFileContent(pomFilePath string) (schema.Pom, error) {
 	return pom, nil
 }
 
+// GetJbossCLIFileContent returns the pom found in the path.
+func GetJbossCLIFileContent(jbossCliFilePath string) (schema.JBossCLI, error) {
+	xmlFile, err := os.Open(jbossCliFilePath)
+	if err != nil {
+		return schema.JBossCLI{}, err
+	}
+	byteValue, _ := ioutil.ReadAll(xmlFile)
+
+	var jbossCli schema.JBossCLI
+	xml.Unmarshal(byteValue, &jbossCli)
+
+	defer xmlFile.Close()
+	return jbossCli, nil
+}
+
 // IsTagInPackageJsonFile checks if the file is a package.json and contains the tag.
 func IsTagInPackageJsonFile(file string, tag string) bool {
 	packageJson, err := GetPackageJsonSchemaFromFile(file)
