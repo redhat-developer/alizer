@@ -160,14 +160,14 @@ func GetPomFileContent(pomFilePath string) (schema.Pom, error) {
 }
 
 // GetJbossCLIFileContent returns the pom found in the path.
-func GetJbossCLIFileContent(jbossCliFilePath string) (schema.JBossCLI, error) {
+func GetJbossCLIFileContent(jbossCliFilePath string) (schema.JBossCLIXML, error) {
 	xmlFile, err := os.Open(jbossCliFilePath)
 	if err != nil {
-		return schema.JBossCLI{}, err
+		return schema.JBossCLIXML{}, err
 	}
 	byteValue, _ := ioutil.ReadAll(xmlFile)
 
-	var jbossCli schema.JBossCLI
+	var jbossCli schema.JBossCLIXML
 	xml.Unmarshal(byteValue, &jbossCli)
 
 	defer xmlFile.Close()

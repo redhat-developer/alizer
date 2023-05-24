@@ -14,7 +14,6 @@ package enricher
 import (
 	"context"
 	"path/filepath"
-	"strings"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/utils"
@@ -34,8 +33,8 @@ func (o JBossEAPDetector) DoFrameworkDetection(language *model.Language, config 
 }
 
 func (o JBossEAPDetector) DoPortsDetection(component *model.Component, ctx *context.Context) {
-	var ports []string
-	jbossCli := filepath.Join(component.Path, "bin/jboss-cli.xml")
+	var ports []int
+	jbossCli := filepath.Join(component.Path, "src/main/resources/bin/jboss-cli.xml")
 	jbossConfig, err := utils.GetJbossCLIFileContent(jbossCli)
 	if err != nil {
 		return
@@ -44,21 +43,11 @@ func (o JBossEAPDetector) DoPortsDetection(component *model.Component, ctx *cont
 	if port, err := utils.GetValidPort(jbossConfig.DefaultController.Port); err == nil {
 		ports = append(ports, port)
 	}
-	for _, profile := range pom.Profiles.Profile {
-		for _, plugin := range profile.Build.Plugins.Plugin {
-			if !(strings.Contains(plugin.ArtifactId, artifactId) && strings.Contains(plugin.GroupId, groupId)) {
-				continue
-			}
-			for _, packagingScript := range plugin.Configuration.PackagingScripts.PackagingScript {
-				for _, script := range packagingScript.Scripts.Script {
-					if strings.Contains(script, "${basedir}/") {
-						return true, strings.ReplaceAll(script, "${basedir}/", "")
-					}
-				}
-			}
+	for _, controller := range jbossConfig.Controllers.Controller {
+		if port, err := utils.GetValidPort(controller.Port); err == nil {
+			ports = append(ports, port)
 		}
 	}
-	ports := utils.GetPortFromFilePackagingScript(matchIndexRegexes, string(bytes))
 	if len(ports) > 0 {
 		component.Ports = ports
 		return
