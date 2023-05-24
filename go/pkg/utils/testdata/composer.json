@@ -1,0 +1,13 @@
+{
+  "name": "laravel/laravel",
+  "type": "project",
+  "description": "The Laravel Framework.",
+  "keywords": ["framework", "laravel"],
+  "license": "MIT",
+  "require": {
+    "php": "^8.0.2"
+  },
+  "require-dev": {
+    "dev": "^9.5.10"
+  }
+}

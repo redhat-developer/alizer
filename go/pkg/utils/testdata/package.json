@@ -1,0 +1,13 @@
+{
+  "name": "app",
+  "version": "0.0.1",
+  "dependencies": {
+    "dep-tag": "1.0.0"
+  },
+  "devDependencies": {
+    "@dev-tag": "1.1.0"
+  },
+  "peerDependencies": {
+    "peer-tag": "1.x"
+  }
+}
