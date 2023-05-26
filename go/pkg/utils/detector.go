@@ -18,13 +18,14 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
-	"github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/schema"
@@ -136,7 +137,8 @@ func IsTagInPomXMLFile(pomFilePath string, tag string) (bool, error) {
 
 // GetPomFileContent returns the pom found in the path.
 func GetPomFileContent(pomFilePath string) (schema.Pom, error) {
-	xmlFile, err := os.Open(pomFilePath)
+	cleanPomFilePath := filepath.Clean(pomFilePath)
+	xmlFile, err := os.Open(cleanPomFilePath)
 	if err != nil {
 		return schema.Pom{}, err
 	}

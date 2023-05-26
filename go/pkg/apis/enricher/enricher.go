@@ -125,7 +125,8 @@ func GetDefaultProjectName(path string) string {
 func GetPortsFromDockerFile(root string) []int {
 	locations := getLocations(root)
 	for _, location := range locations {
-		file, err := os.Open(filepath.Join(root, location))
+		filePath := filepath.Join(root, filepath.Clean(location))
+		file, err := os.Open(filePath)
 		if err == nil {
 			defer file.Close()
 			return getPortsFromReader(file)

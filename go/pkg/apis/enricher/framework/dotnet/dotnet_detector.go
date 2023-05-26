@@ -16,6 +16,7 @@ import (
 	"encoding/xml"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
@@ -53,7 +54,8 @@ func (d DotNetDetector) DoPortsDetection(component *model.Component, ctx *contex
 }
 
 func getFrameworks(configFilePath string) string {
-	xmlFile, err := os.Open(configFilePath)
+	cleanConfigPath := filepath.Clean(configFilePath)
+	xmlFile, err := os.Open(cleanConfigPath)
 	if err != nil {
 		return ""
 	}
