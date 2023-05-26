@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -147,7 +148,12 @@ func GetPomFileContent(pomFilePath string) (schema.Pom, error) {
 	var pom schema.Pom
 	xml.Unmarshal(byteValue, &pom)
 
-	defer xmlFile.Close()
+	defer func() error {
+		if err := xmlFile.Close(); err != nil {
+			return fmt.Errorf("error closing file: %s", err)
+		}
+		return nil
+	}()
 	return pom, nil
 }
 

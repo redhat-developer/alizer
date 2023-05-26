@@ -14,6 +14,7 @@ package enricher
 import (
 	"context"
 	"encoding/xml"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -64,7 +65,12 @@ func getFrameworks(configFilePath string) string {
 	var proj schema.DotNetProject
 	xml.Unmarshal(byteValue, &proj)
 
-	defer xmlFile.Close()
+	defer func() error {
+		if err := xmlFile.Close(); err != nil {
+			return fmt.Errorf("error closing file: %s", err)
+		}
+		return nil
+	}()
 	if proj.PropertyGroup.TargetFramework != "" {
 		return proj.PropertyGroup.TargetFramework
 	} else if proj.PropertyGroup.TargetFrameworkVersion != "" {
