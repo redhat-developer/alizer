@@ -14,6 +14,7 @@ package enricher
 import (
 	"context"
 	"os"
+	"path/filepath"
 	"regexp"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
@@ -43,7 +44,8 @@ func (o WildFlyDetector) DoPortsDetection(component *model.Component, ctx *conte
 	pomXML := utils.GetFile(&paths, "pom.xml")
 	if hasPkgScript, filePath := hasPackageScripts(pomXML, "org.wildfly.plugins", "wildfly-maven-plugin"); hasPkgScript {
 		configScript := utils.GetFile(&paths, filePath)
-		bytes, err := os.ReadFile(configScript)
+		cleanConfigScript := filepath.Clean(configScript)
+		bytes, err := os.ReadFile(cleanConfigScript)
 		if err != nil {
 			return
 		}
