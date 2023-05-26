@@ -161,16 +161,24 @@ func GetPomFileContent(pomFilePath string) (schema.Pom, error) {
 
 // GetJbossCLIFileContent returns the pom found in the path.
 func GetJbossCLIFileContent(jbossCliFilePath string) (schema.JBossCLIXML, error) {
-	xmlFile, err := os.Open(jbossCliFilePath)
+	cleanJbossCliFilePath := filepath.Clean(jbossCliFilePath)
+	xmlFile, err := os.Open(cleanJbossCliFilePath)
 	if err != nil {
 		return schema.JBossCLIXML{}, err
 	}
 	byteValue, _ := ioutil.ReadAll(xmlFile)
 
 	var jbossCli schema.JBossCLIXML
-	xml.Unmarshal(byteValue, &jbossCli)
-
-	defer xmlFile.Close()
+	err = xml.Unmarshal(byteValue, &jbossCli)
+	if err != nil {
+		return schema.JBossCLIXML{}, err
+	}
+	defer func() error {
+		if err := xmlFile.Close(); err != nil {
+			return fmt.Errorf("error closing file: %s", err)
+		}
+		return nil
+	}()
 	return jbossCli, nil
 }
 
