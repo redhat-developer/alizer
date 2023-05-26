@@ -146,8 +146,10 @@ func GetPomFileContent(pomFilePath string) (schema.Pom, error) {
 	byteValue, _ := ioutil.ReadAll(xmlFile)
 
 	var pom schema.Pom
-	xml.Unmarshal(byteValue, &pom)
-
+	err = xml.Unmarshal(byteValue, &pom)
+	if err != nil {
+		return schema.Pom{}, err
+	}
 	defer func() error {
 		if err := xmlFile.Close(); err != nil {
 			return fmt.Errorf("error closing file: %s", err)
@@ -191,7 +193,10 @@ func GetPackageJsonSchemaFromFile(path string) (schema.PackageJson, error) {
 	}
 
 	var packageJson schema.PackageJson
-	json.Unmarshal(bytes, &packageJson)
+	err = json.Unmarshal(bytes, &packageJson)
+	if err != nil {
+		return schema.PackageJson{}, err
+	}
 	return packageJson, nil
 }
 
@@ -217,7 +222,10 @@ func GetComposerJsonSchemaFromFile(path string) (schema.ComposerJson, error) {
 	}
 
 	var composerJson schema.ComposerJson
-	json.Unmarshal(bytes, &composerJson)
+	err = json.Unmarshal(bytes, &composerJson)
+	if err != nil {
+		return schema.ComposerJson{}, err
+	}
 	return composerJson, nil
 }
 

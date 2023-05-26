@@ -76,7 +76,10 @@ func (m MicronautDetector) DoPortsDetection(component *model.Component, ctx *con
 func getMicronautPortsFromBytes(bytes []byte) []int {
 	var ports []int
 	var data MicronautApplicationProps
-	yaml.Unmarshal(bytes, &data)
+	err := yaml.Unmarshal(bytes, &data)
+	if err != nil {
+		return []int{}
+	}
 	if data.Micronaut.Server.SSL.Enabled && utils.IsValidPort(data.Micronaut.Server.SSL.Port) {
 		ports = append(ports, data.Micronaut.Server.SSL.Port)
 	}

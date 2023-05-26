@@ -63,8 +63,10 @@ func getFrameworks(configFilePath string) string {
 	byteValue, _ := ioutil.ReadAll(xmlFile)
 
 	var proj schema.DotNetProject
-	xml.Unmarshal(byteValue, &proj)
-
+	err = xml.Unmarshal(byteValue, &proj)
+	if err != nil {
+		return ""
+	}
 	defer func() error {
 		if err := xmlFile.Close(); err != nil {
 			return fmt.Errorf("error closing file: %s", err)
