@@ -13,7 +13,6 @@ package enricher
 
 import (
 	"context"
-	"os"
 	"regexp"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
@@ -40,7 +39,7 @@ func (f FastHttpDetector) DoPortsDetection(component *model.Component, ctx *cont
 		return
 	}
 
-	matchRegexRule := model.PortMatchRules{
+	matchRegexRules := model.PortMatchRules{
 		MatchIndexRegexes: []model.PortMatchRule{
 			{
 				Regex:     regexp.MustCompile(`.ListenAndServe\([^,)]*`),
@@ -48,16 +47,8 @@ func (f FastHttpDetector) DoPortsDetection(component *model.Component, ctx *cont
 			},
 		},
 	}
-	for _, file := range files {
-		bytes, err := os.ReadFile(file)
-		if err != nil {
-			continue
-		}
-		ports := GetPortFromFileGo(matchRegexRule, string(bytes))
-		if len(ports) > 0 {
-			component.Ports = ports
-			return
-		}
+	ports := GetPortFromFilesGo(matchRegexRules, files)
+	if len(ports) > 0 {
+		component.Ports = ports
 	}
-
 }

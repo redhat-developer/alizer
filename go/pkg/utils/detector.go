@@ -187,7 +187,8 @@ func isTagInDependencies(deps map[string]string, tag string) bool {
 
 // GetPackageJsonSchemaFromFile returns the package.json found in the path.
 func GetPackageJsonSchemaFromFile(path string) (schema.PackageJson, error) {
-	bytes, err := os.ReadFile(path)
+	cleanPath := filepath.Clean(path)
+	bytes, err := os.ReadFile(cleanPath)
 	if err != nil {
 		return schema.PackageJson{}, err
 	}
@@ -216,7 +217,8 @@ func IsTagInComposerJsonFile(file string, tag string) bool {
 
 // GetComposerJsonSchemaFromFile returns the composer.json found in the path.
 func GetComposerJsonSchemaFromFile(path string) (schema.ComposerJson, error) {
-	bytes, err := os.ReadFile(path)
+	cleanPath := filepath.Clean(path)
+	bytes, err := os.ReadFile(cleanPath)
 	if err != nil {
 		return schema.ComposerJson{}, err
 	}
@@ -513,7 +515,8 @@ func GetStringValueFromEnvFile(root string, regex string) string {
 // getEnvFileContent is exposed as a global variable for the purpose of running mock tests
 var getEnvFileContent = func(root string) (string, error) {
 	envPath := filepath.Join(root, ".env")
-	bytes, err := os.ReadFile(envPath)
+	cleanEnvPath := filepath.Clean(envPath)
+	bytes, err := os.ReadFile(cleanEnvPath)
 	if err != nil {
 		return "", err
 	}

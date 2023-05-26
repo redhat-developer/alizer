@@ -107,7 +107,8 @@ func getProjectNameGradle(root string) string {
 	settingsGradlePath := filepath.Join(root, "settings.gradle")
 	if _, err := os.Stat(settingsGradlePath); err == nil {
 		re := regexp.MustCompile(`rootProject.name\s*=\s*(.*)`)
-		bytes, err := os.ReadFile(settingsGradlePath)
+		cleanSettingsGradlePath := filepath.Clean(settingsGradlePath)
+		bytes, err := os.ReadFile(cleanSettingsGradlePath)
 		if err != nil {
 			return ""
 		}
