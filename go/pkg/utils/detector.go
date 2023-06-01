@@ -494,7 +494,8 @@ func GetStringValueFromEnvFile(root string, regex string) string {
 	return ""
 }
 
-func getEnvFileContent(root string) (string, error) {
+// getEnvFileContent is exposed as a global variable for the purpose of running mock tests
+var getEnvFileContent = func(root string) (string, error) {
 	envPath := filepath.Join(root, ".env")
 	bytes, err := os.ReadFile(envPath)
 	if err != nil {
