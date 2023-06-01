@@ -140,7 +140,10 @@ func getServerPortsFromQuarkusApplicationYamlFile(file string) ([]int, error) {
 		return []int{}, err
 	}
 	var data QuarkusApplicationYaml
-	yaml.Unmarshal(yamlFile, &data)
+	err = yaml.Unmarshal(yamlFile, &data)
+	if err != nil {
+		return []int{}, err
+	}
 	var ports []int
 	if data.Quarkus.Http.SSLPort > 0 {
 		ports = append(ports, data.Quarkus.Http.SSLPort)

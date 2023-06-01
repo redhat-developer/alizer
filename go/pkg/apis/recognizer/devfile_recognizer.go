@@ -15,6 +15,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -138,7 +139,12 @@ func downloadDevFileTypesFromRegistry(url string) ([]model.DevFileType, error) {
 			return []model.DevFileType{}, err
 		}
 	}
-	defer resp.Body.Close()
+	defer func() error {
+		if err := resp.Body.Close(); err != nil {
+			return fmt.Errorf("error closing file: %s", err)
+		}
+		return nil
+	}()
 
 	// Check server response
 	if resp.StatusCode != http.StatusOK {

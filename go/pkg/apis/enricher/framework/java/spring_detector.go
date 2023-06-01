@@ -127,7 +127,10 @@ func getServerPortsFromYamlFile(file string) ([]int, error) {
 		return []int{}, err
 	}
 	var data ApplicationProsServer
-	yaml.Unmarshal(yamlFile, &data)
+	err = yaml.Unmarshal(yamlFile, &data)
+	if err != nil {
+		return []int{}, err
+	}
 	var ports []int
 	if data.Server.Port > 0 {
 		ports = append(ports, data.Server.Port)

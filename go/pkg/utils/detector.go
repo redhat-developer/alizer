@@ -18,13 +18,15 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
-	"github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/redhat-developer/alizer/go/pkg/utils/langfiles"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/schema"
@@ -136,16 +138,24 @@ func IsTagInPomXMLFile(pomFilePath string, tag string) (bool, error) {
 
 // GetPomFileContent returns the pom found in the path.
 func GetPomFileContent(pomFilePath string) (schema.Pom, error) {
-	xmlFile, err := os.Open(pomFilePath)
+	cleanPomFilePath := filepath.Clean(pomFilePath)
+	xmlFile, err := os.Open(cleanPomFilePath)
 	if err != nil {
 		return schema.Pom{}, err
 	}
 	byteValue, _ := ioutil.ReadAll(xmlFile)
 
 	var pom schema.Pom
-	xml.Unmarshal(byteValue, &pom)
-
-	defer xmlFile.Close()
+	err = xml.Unmarshal(byteValue, &pom)
+	if err != nil {
+		return schema.Pom{}, err
+	}
+	defer func() error {
+		if err := xmlFile.Close(); err != nil {
+			return fmt.Errorf("error closing file: %s", err)
+		}
+		return nil
+	}()
 	return pom, nil
 }
 
@@ -177,13 +187,17 @@ func isTagInDependencies(deps map[string]string, tag string) bool {
 
 // GetPackageJsonSchemaFromFile returns the package.json found in the path.
 func GetPackageJsonSchemaFromFile(path string) (schema.PackageJson, error) {
-	bytes, err := os.ReadFile(path)
+	cleanPath := filepath.Clean(path)
+	bytes, err := os.ReadFile(cleanPath)
 	if err != nil {
 		return schema.PackageJson{}, err
 	}
 
 	var packageJson schema.PackageJson
-	json.Unmarshal(bytes, &packageJson)
+	err = json.Unmarshal(bytes, &packageJson)
+	if err != nil {
+		return schema.PackageJson{}, err
+	}
 	return packageJson, nil
 }
 
@@ -203,13 +217,17 @@ func IsTagInComposerJsonFile(file string, tag string) bool {
 
 // GetComposerJsonSchemaFromFile returns the composer.json found in the path.
 func GetComposerJsonSchemaFromFile(path string) (schema.ComposerJson, error) {
-	bytes, err := os.ReadFile(path)
+	cleanPath := filepath.Clean(path)
+	bytes, err := os.ReadFile(cleanPath)
 	if err != nil {
 		return schema.ComposerJson{}, err
 	}
 
 	var composerJson schema.ComposerJson
-	json.Unmarshal(bytes, &composerJson)
+	err = json.Unmarshal(bytes, &composerJson)
+	if err != nil {
+		return schema.ComposerJson{}, err
+	}
 	return composerJson, nil
 }
 
@@ -497,7 +515,8 @@ func GetStringValueFromEnvFile(root string, regex string) string {
 // getEnvFileContent is exposed as a global variable for the purpose of running mock tests
 var getEnvFileContent = func(root string) (string, error) {
 	envPath := filepath.Join(root, ".env")
-	bytes, err := os.ReadFile(envPath)
+	cleanEnvPath := filepath.Clean(envPath)
+	bytes, err := os.ReadFile(cleanEnvPath)
 	if err != nil {
 		return "", err
 	}

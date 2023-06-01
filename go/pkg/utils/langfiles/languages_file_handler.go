@@ -114,7 +114,10 @@ func getLanguagesProperties() schema.LanguagesProperties {
 		return schema.LanguagesProperties{}
 	}
 	var data schema.LanguagesProperties
-	yaml.Unmarshal(yamlFile, &data)
+	err = yaml.Unmarshal(yamlFile, &data)
+	if err != nil {
+		return schema.LanguagesProperties{}
+	}
 	return data
 }
 
@@ -125,7 +128,10 @@ func getLanguageCustomizations() schema.LanguagesCustomizations {
 	}
 
 	var data schema.LanguagesCustomizations
-	yaml.Unmarshal(yamlFile, &data)
+	err = yaml.Unmarshal(yamlFile, &data)
+	if err != nil {
+		return schema.LanguagesCustomizations{}
+	}
 	return data
 }
 

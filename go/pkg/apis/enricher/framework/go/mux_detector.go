@@ -13,7 +13,6 @@ package enricher
 
 import (
 	"context"
-	"os"
 	"regexp"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
@@ -55,15 +54,8 @@ func (m MuxDetector) DoPortsDetection(component *model.Component, ctx *context.C
 		},
 	}
 
-	for _, file := range files {
-		bytes, err := os.ReadFile(file)
-		if err != nil {
-			continue
-		}
-		ports := GetPortFromFileGo(matchRegexRules, string(bytes))
-		if len(ports) > 0 {
-			component.Ports = ports
-			return
-		}
+	ports := GetPortFromFilesGo(matchRegexRules, files)
+	if len(ports) > 0 {
+		component.Ports = ports
 	}
 }

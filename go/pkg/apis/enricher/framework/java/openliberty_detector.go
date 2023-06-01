@@ -55,7 +55,10 @@ func (o OpenLibertyDetector) DoPortsDetection(component *model.Component, ctx *c
 		return
 	}
 	var data ServerXml
-	xml.Unmarshal(bytes, &data)
+	err = xml.Unmarshal(bytes, &data)
+	if err != nil {
+		return
+	}
 	ports := utils.GetValidPorts([]string{data.HttpEndpoint.HttpPort, data.HttpEndpoint.HttpsPort})
 	if len(ports) > 0 {
 		component.Ports = ports

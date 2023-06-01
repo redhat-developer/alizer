@@ -14,6 +14,7 @@ package enricher
 import (
 	"context"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -57,16 +58,9 @@ func DoGoPortsDetection(component *model.Component, ctx *context.Context) {
 		},
 	}
 
-	for _, file := range files {
-		bytes, err := os.ReadFile(file)
-		if err != nil {
-			continue
-		}
-		ports := GetPortFromFileGo(matchRegexRules, string(bytes))
-		if len(ports) > 0 {
-			component.Ports = ports
-			return
-		}
+	ports := GetPortFromFilesGo(matchRegexRules, files)
+	if len(ports) > 0 {
+		component.Ports = ports
 	}
 }
 
@@ -133,4 +127,21 @@ func GetPortWithMatchIndexesGo(content string, matchIndexes []int, toBeReplaced 
 	}
 
 	return -1
+}
+
+// GetPortFromFilesGo loops through a list of paths and tries to find a port matching the
+// given set PortMatchRules
+func GetPortFromFilesGo(matchRegexRules model.PortMatchRules, files []string) []int {
+	for _, file := range files {
+		cleanFile := filepath.Clean(file)
+		bytes, err := os.ReadFile(cleanFile)
+		if err != nil {
+			continue
+		}
+		ports := GetPortFromFileGo(matchRegexRules, string(bytes))
+		if len(ports) > 0 {
+			return ports
+		}
+	}
+	return []int{}
 }

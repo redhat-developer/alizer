@@ -13,7 +13,6 @@ package enricher
 
 import (
 	"context"
-	"os"
 	"regexp"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
@@ -40,7 +39,7 @@ func (g GinDetector) DoPortsDetection(component *model.Component, ctx *context.C
 		return
 	}
 
-	matchRegexRule := model.PortMatchRules{
+	matchRegexRules := model.PortMatchRules{
 		MatchIndexRegexes: []model.PortMatchRule{
 			{
 				Regex:     regexp.MustCompile(`.Run\(([^,)]*)`),
@@ -49,15 +48,8 @@ func (g GinDetector) DoPortsDetection(component *model.Component, ctx *context.C
 		},
 	}
 
-	for _, file := range files {
-		bytes, err := os.ReadFile(file)
-		if err != nil {
-			continue
-		}
-		ports := GetPortFromFileGo(matchRegexRule, string(bytes))
-		if len(ports) > 0 {
-			component.Ports = ports
-			return
-		}
+	ports := GetPortFromFilesGo(matchRegexRules, files)
+	if len(ports) > 0 {
+		component.Ports = ports
 	}
 }

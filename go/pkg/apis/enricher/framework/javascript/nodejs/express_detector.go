@@ -14,6 +14,7 @@ package enricher
 import (
 	"context"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -43,7 +44,8 @@ func (e ExpressDetector) DoPortsDetection(component *model.Component, ctx *conte
 	re := regexp.MustCompile(`\.listen\([^,)]*`)
 	var ports []int
 	for _, file := range files {
-		bytes, err := os.ReadFile(file)
+		cleanFile := filepath.Clean(file)
+		bytes, err := os.ReadFile(cleanFile)
 		if err != nil {
 			continue
 		}
