@@ -1185,3 +1185,37 @@ func TestNormalizeSplit(t *testing.T) {
 		})
 	}
 }
+
+func TestGetPortFromFilePackagingScript(t *testing.T) {
+	testCases := []struct {
+		name           string
+		cliFileContent string
+		expectedPorts  []int
+	}{
+		{
+			name:           "Case 1: File with ports",
+			cliFileContent: "/socket-binding-group=new-sockets/socket-binding=new-socket-binding:add(port=1234)",
+			expectedPorts:  []int{1234},
+		},
+		{
+			name:           "Case 1: File without ports",
+			cliFileContent: "/subsystem=datasources/data-source=ServletSecurityDS:add(connection-url=\"jdbc:h2:mem:servlet-security;DB_CLOSE_ON_EXIT=FALSE\", jndi-name=\"java:jboss/datasources/ServletSecurityDS\", driver-name=h2, user-name=\"sa\", password=\"sa\")",
+			expectedPorts:  nil,
+		},
+	}
+
+	matchIndexRegexes := []model.PortMatchRule{
+		{
+			Regex:     regexp.MustCompile(`new-socket-binding:add\([^)]*`),
+			ToReplace: "new-socket-binding:add",
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			// mock getEnvFileContent
+			ports := GetPortFromFilePackagingScript(matchIndexRegexes, tt.cliFileContent)
+			assert.EqualValues(t, tt.expectedPorts, ports)
+		})
+	}
+}
