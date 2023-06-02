@@ -376,6 +376,55 @@ func TestGetPomFileContent(t *testing.T) {
 	}
 }
 
+func TestGetJbossCLIFileContent(t *testing.T) {
+	missingFileErr := "no such file or directory"
+
+	testCases := []struct {
+		name           string
+		filePath       string
+		expectedResult schema.JBossCLIXML
+		expectedError  *string
+	}{
+		{
+			name:     "Case 1: Valid file",
+			filePath: "testdata/jboss-cli.xml",
+			expectedResult: schema.JBossCLIXML{
+				Text: "\n    \n",
+				DefaultController: struct {
+					Text     string `xml:",chardata"`
+					Protocol string `xml:"protocol"`
+					Host     string `xml:"host"`
+					Port     string `xml:"port"`
+				}{
+					Text:     "\n        \n        \n        \n    ",
+					Protocol: "http-remoting",
+					Host:     "localhost",
+					Port:     "9990",
+				},
+			},
+			expectedError: nil,
+		},
+		{
+			name:           "Case 2: File does not exist",
+			filePath:       "path/to/nonexistent/file.xml",
+			expectedResult: schema.JBossCLIXML{},
+			expectedError:  &missingFileErr,
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := GetJbossCLIFileContent(tt.filePath)
+
+			if err != nil {
+				assert.Regexp(t, *tt.expectedError, err.Error(), "Error message should match")
+			}
+
+			assert.EqualValues(t, tt.expectedResult, result)
+		})
+	}
+}
+
 func TestIsTagInPackageJsonFile(t *testing.T) {
 	tests := []struct {
 		name           string
