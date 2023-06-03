@@ -29,5 +29,9 @@ func doSelectDevfile(cmd *cobra.Command, args []string) {
 	if registry == "" {
 		registry = "https://registry.devfile.io/index"
 	}
+	err := utils.GenLogger(logLevel)
+	if err != nil {
+		utils.PrintWrongLoggingLevelMessage(cmd.Name())
+	}
 	utils.PrintPrettifyOutput(recognizer.SelectDevFilesFromRegistry(args[0], registry))
 }

@@ -32,6 +32,10 @@ func doDetection(cmd *cobra.Command, args []string) {
 		utils.PrintNoArgsWarningMessage(cmd.Name())
 		return
 	}
+	err := utils.GenLogger(logLevel)
+	if err != nil {
+		utils.PrintWrongLoggingLevelMessage(cmd.Name())
+	}
 	utils.PrintPrettifyOutput(recognizer.DetectComponentsWithPathAndPortStartegy(args[0], getPortDetectionStrategy()))
 }
 
