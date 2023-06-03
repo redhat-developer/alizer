@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var registry string
+var logLevel, registry string
 
 func NewCmdDevfile() *cobra.Command {
 	devfileCmd := &cobra.Command{
@@ -16,6 +16,7 @@ func NewCmdDevfile() *cobra.Command {
 		Args:  cobra.MaximumNArgs(1),
 		Run:   doSelectDevfile,
 	}
+	devfileCmd.Flags().StringVar(&logLevel, "log", "", "log level for alizer. Default value: error. Accepted values: [debug, info, warning]")
 	devfileCmd.Flags().StringVarP(&registry, "registry", "r", "", "registry where to download the devfiles. Default value: https://registry.devfile.io")
 	return devfileCmd
 }

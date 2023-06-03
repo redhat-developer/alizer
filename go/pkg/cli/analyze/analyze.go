@@ -6,6 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var logLevel string
+
 func NewCmdAnalyze() *cobra.Command {
 	analyzeCmd := &cobra.Command{
 		Use:     "analyze",
@@ -15,6 +17,8 @@ func NewCmdAnalyze() *cobra.Command {
 		Run:     doAnalyze,
 		Example: `  alizer analyze /your/local/project/path`,
 	}
+	analyzeCmd.Flags().StringVar(&logLevel, "log", "", "log level for alizer. Default value: error. Accepted values: [debug, info, warning]")
+
 	return analyzeCmd
 }
 
