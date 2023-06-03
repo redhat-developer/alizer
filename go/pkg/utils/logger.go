@@ -9,11 +9,11 @@ import (
 )
 
 type CLILogger struct {
-	Log       logr.Logger
+	Logger    logr.Logger
 	Activated bool
 }
 
-var AlizerLogger CLILogger
+var CliLogger CLILogger
 
 func getZapcoreLevel(level string) (zapcore.Level, error) {
 	switch level {
@@ -31,10 +31,10 @@ func getZapcoreLevel(level string) (zapcore.Level, error) {
 }
 
 func GetOrCreateLogger() logr.Logger {
-	if !AlizerLogger.Activated {
+	if !CliLogger.Activated {
 		GenLogger("")
 	}
-	return AlizerLogger.Log
+	return CliLogger.Logger
 }
 
 func GenLogger(logLevel string) error {
@@ -42,8 +42,8 @@ func GenLogger(logLevel string) error {
 	if err != nil {
 		return err
 	}
-	AlizerLogger = CLILogger{
-		Log: zap.New(zap.UseFlagOptions(&zap.Options{
+	CliLogger = CLILogger{
+		Logger: zap.New(zap.UseFlagOptions(&zap.Options{
 			Development: true,
 			TimeEncoder: zapcore.ISO8601TimeEncoder,
 			Level:       level,
