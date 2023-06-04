@@ -104,6 +104,9 @@ func SelectDevFileUsingLanguagesFromTypes(languages []model.Language, devFileTyp
 }
 
 func MatchDevfiles(path, url, minVersion, maxVersion string) ([]model.DevFileType, error) {
+	alizerLogger := utils.GetOrCreateLogger()
+	alizerLogger.V(0).Info("Starting devfile matching")
+	alizerLogger.V(1).Info(fmt.Sprintf("Downloading devfiles from registry %s", url))
 	devFileTypesFromRegistry, err := downloadDevFileTypesFromRegistry(url, minVersion, maxVersion)
 	if err != nil {
 		return []model.DevFileType{}, err
