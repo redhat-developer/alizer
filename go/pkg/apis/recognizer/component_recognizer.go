@@ -245,7 +245,6 @@ func detectComponentByFolderAnalysis(root string, configLanguages []string, sett
 	}
 	languages = getLanguagesWeightedByConfigFile(languages, configLanguages)
 	if len(languages) > 0 {
-		alizerLogger.V(0).Info("detecting component by folder language analysis")
 		if mainLang := languages[0]; mainLang.CanBeComponent {
 			component := model.Component{
 				Path:      root,
