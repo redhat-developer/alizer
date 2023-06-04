@@ -30,6 +30,8 @@ func getZapcoreLevel(level string) (zapcore.Level, error) {
 	}
 }
 
+// GetOrCreateLogger: Checks if the CliLogger is already
+// created, otherwise it creates it with errorLevel
 func GetOrCreateLogger() logr.Logger {
 	if !CliLogger.Activated {
 		GenLogger("")
@@ -37,6 +39,7 @@ func GetOrCreateLogger() logr.Logger {
 	return CliLogger.Logger
 }
 
+// GenLogger: Generates the logger with the given zapcore.Level
 func GenLogger(logLevel string) error {
 	level, err := getZapcoreLevel(logLevel)
 	if err != nil {

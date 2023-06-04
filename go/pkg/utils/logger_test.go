@@ -93,25 +93,26 @@ func TestGetOrCreateLogger(t *testing.T) {
 
 func TestGenLogger(t *testing.T) {
 	tests := []struct {
-		name           string
-		level          string
-		expectedIsZero bool
+		name              string
+		level             string
+		expectedActivated bool
 	}{
 		{
-			name:           "Case 1: No Logger",
-			level:          "none",
-			expectedIsZero: true,
+			name:              "Case 1: No Logger",
+			level:             "none",
+			expectedActivated: false,
 		},
 		{
-			name:           "Case 2: Gen Logger",
-			level:          "",
-			expectedIsZero: false,
+			name:              "Case 2: Gen Logger",
+			level:             "",
+			expectedActivated: true,
 		},
 	}
+	CliLogger.Activated = false
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_ = GenLogger(tt.level)
-			assert.EqualValues(t, tt.expectedIsZero, CliLogger.Logger.IsZero())
+			assert.EqualValues(t, tt.expectedActivated, CliLogger.Activated)
 		})
 	}
 }
