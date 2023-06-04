@@ -18,8 +18,7 @@ To find out more, run 'alizer %s --help'
 }
 
 func PrintWrongLoggingLevelMessage(command string) {
-	fmt.Printf(`
-Argument log has wrong value. Did you choose one of debug, warning, info?
+	fmt.Printf(`Argument log has wrong value. Did you choose one of debug, warning, info?
 
 Expected:
   alizer %s /your/local/project/path --log [debug, warning, info]

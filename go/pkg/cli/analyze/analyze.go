@@ -30,6 +30,7 @@ func doAnalyze(cmd *cobra.Command, args []string) {
 	err := utils.GenLogger(logLevel)
 	if err != nil {
 		utils.PrintWrongLoggingLevelMessage(cmd.Name())
+		return
 	}
 	utils.PrintPrettifyOutput(recognizer.Analyze(args[0]))
 }
