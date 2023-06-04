@@ -26,7 +26,7 @@ func getZapcoreLevel(level string) (zapcore.Level, error) {
 	case "":
 		return zapcore.ErrorLevel, nil
 	default:
-		return zapcore.ErrorLevel, fmt.Errorf("log leve %s does not exist", level)
+		return zapcore.ErrorLevel, fmt.Errorf("log level %s does not exist", level)
 	}
 }
 
