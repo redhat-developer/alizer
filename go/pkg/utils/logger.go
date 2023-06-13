@@ -34,7 +34,10 @@ func getZapcoreLevel(level string) (zapcore.Level, error) {
 // created, otherwise it creates it with errorLevel
 func GetOrCreateLogger() logr.Logger {
 	if !CliLogger.Activated {
-		GenLogger("")
+		err := GenLogger("")
+		if err != nil {
+			fmt.Println("error setting up logger")
+		}
 	}
 	return CliLogger.Logger
 }
