@@ -7,7 +7,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var portDetectionAlgorithms []string
+var (
+	logLevel                string
+	portDetectionAlgorithms []string
+)
 
 func NewCmdComponent() *cobra.Command {
 	componentCmd := &cobra.Command{
@@ -19,6 +22,7 @@ Examples of components: API Backend, Web Frontend, Payment Backend`,
 		Run:     doDetection,
 		Example: `  alizer component /your/local/project/path`,
 	}
+	componentCmd.Flags().StringVar(&logLevel, "log", "", "log level for alizer. Default value: error. Accepted values: [debug, info, warning]")
 	componentCmd.Flags().StringSliceVarP(&portDetectionAlgorithms, "port-detection", "p", []string{}, "port detection strategy to use when detecting a port. Currently supported strategies are 'docker', 'compose' and 'source'. You can pass more strategies at the same time. They will be executed in order. By default Alizer will execute docker, compose and source.")
 	return componentCmd
 }
@@ -26,6 +30,11 @@ Examples of components: API Backend, Web Frontend, Payment Backend`,
 func doDetection(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		utils.PrintNoArgsWarningMessage(cmd.Name())
+		return
+	}
+	err := utils.GenLogger(logLevel)
+	if err != nil {
+		utils.PrintWrongLoggingLevelMessage(cmd.Name())
 		return
 	}
 	utils.PrintPrettifyOutput(recognizer.DetectComponentsWithPathAndPortStartegy(args[0], getPortDetectionStrategy()))
