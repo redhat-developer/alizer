@@ -84,18 +84,18 @@ func DetectComponentsWithSettings(settings model.DetectionSettings) ([]model.Com
 
 func detectComponentsWithSettings(settings model.DetectionSettings, ctx *context.Context) ([]model.Component, error) {
 	alizerLogger := utils.GetOrCreateLogger()
-	alizerLogger.V(0).Info("starting component with settings detection")
-	alizerLogger.V(0).Info("getting cached filepaths from root")
+	alizerLogger.V(0).Info("Starting component with settings detection")
+	alizerLogger.V(0).Info("Getting cached filepaths from root")
 	files, err := utils.GetCachedFilePathsFromRoot(settings.BasePath, ctx)
 	if err != nil {
-		alizerLogger.V(0).Info("not able to get cached file paths from root: exiting")
+		alizerLogger.V(0).Info("Not able to get cached file paths from root: exiting")
 		return []model.Component{}, err
 	}
 	components := DetectComponentsFromFilesList(files, settings, ctx)
 
 	// it may happen that a language has no a specific configuration file (e.g opposite to JAVA -> pom.xml and Nodejs -> package.json)
 	// we then rely on the language recognizer
-	alizerLogger.V(0).Info("checking for components without configuration file")
+	alizerLogger.V(0).Info("Checking for components without configuration file")
 	directoriesNotBelongingToExistingComponent := getDirectoriesWithoutConfigFile(settings.BasePath, components)
 	components = append(components, getComponentsWithoutConfigFile(directoriesNotBelongingToExistingComponent, settings, ctx)...)
 
@@ -108,16 +108,16 @@ func getComponentsWithoutConfigFile(directories []string, settings model.Detecti
 	alizerLogger := utils.GetOrCreateLogger()
 	var components []model.Component
 	for _, dir := range directories {
-		alizerLogger.V(1).Info(fmt.Sprintf("accessing %s dir", dir))
+		alizerLogger.V(1).Info(fmt.Sprintf("Accessing %s dir", dir))
 		component, _ := detectComponentByFolderAnalysis(dir, []string{}, settings, ctx)
 		if component.Path != "" && isLangForNoConfigComponent(component.Languages[0]) {
-			alizerLogger.V(1).Info(fmt.Sprintf("component %s found for %s dir", component.Name, dir))
+			alizerLogger.V(1).Info(fmt.Sprintf("Component %s found for %s dir", component.Name, dir))
 			components = append(components, component)
 		} else {
-			alizerLogger.V(1).Info(fmt.Sprintf("no component found for %s dir", dir))
+			alizerLogger.V(1).Info(fmt.Sprintf("No component found for %s dir", dir))
 		}
 	}
-	alizerLogger.V(0).Info(fmt.Sprintf("found %d components without configuration file", len(components)))
+	alizerLogger.V(0).Info(fmt.Sprintf("Found %d components without configuration file", len(components)))
 	return components
 }
 
@@ -191,11 +191,11 @@ func isFirstPathParentOfSecond(firstPath string, secondPath string) bool {
 // Uses the settings to perform component detection on files.
 func DetectComponentsFromFilesList(files []string, settings model.DetectionSettings, ctx *context.Context) []model.Component {
 	alizerLogger := utils.GetOrCreateLogger()
-	alizerLogger.V(0).Info(fmt.Sprintf("detecting components for %d fetched file paths", len(files)))
+	alizerLogger.V(0).Info(fmt.Sprintf("Detecting components for %d fetched file paths", len(files)))
 	configurationPerLanguage := langfiles.Get().GetConfigurationPerLanguageMapping()
 	var components []model.Component
 	for _, file := range files {
-		alizerLogger.V(1).Info(fmt.Sprintf("accessing %s", file))
+		alizerLogger.V(1).Info(fmt.Sprintf("Accessing %s", file))
 		languages, err := getLanguagesByConfigurationFile(configurationPerLanguage, file)
 
 		if err != nil {
@@ -203,14 +203,14 @@ func DetectComponentsFromFilesList(files []string, settings model.DetectionSetti
 			continue
 		}
 
-		alizerLogger.V(0).Info(fmt.Sprintf("file %s detected as configuration file for %d languages", file, len(languages)))
-		alizerLogger.V(1).Info("searching for components based on this configuration file")
+		alizerLogger.V(0).Info(fmt.Sprintf("File %s detected as configuration file for %d languages", file, len(languages)))
+		alizerLogger.V(1).Info("Searching for components based on this configuration file")
 		component, err := detectComponentUsingConfigFile(file, languages, settings, ctx)
 		if err != nil {
 			alizerLogger.V(1).Info(err.Error())
 			continue
 		}
-		alizerLogger.V(0).Info(fmt.Sprintf("component %s found", component.Name))
+		alizerLogger.V(0).Info(fmt.Sprintf("Component %s found", component.Name))
 		components = appendIfMissing(components, component)
 	}
 	return components
@@ -238,7 +238,7 @@ func getLanguagesByConfigurationFile(configurationPerLanguage map[string][]strin
 // Using settings, detection starts from root and uses configLanguages as a target.
 func detectComponentByFolderAnalysis(root string, configLanguages []string, settings model.DetectionSettings, ctx *context.Context) (model.Component, error) {
 	alizerLogger := utils.GetOrCreateLogger()
-	alizerLogger.V(0).Info("detecting component by folder language analysis")
+	alizerLogger.V(0).Info("Detecting component by folder language analysis")
 	languages, err := analyze(root, ctx)
 	if err != nil {
 		return model.Component{}, err
@@ -254,7 +254,7 @@ func detectComponentByFolderAnalysis(root string, configLanguages []string, sett
 			return component, nil
 		}
 	}
-	alizerLogger.V(0).Info("no component detected")
+	alizerLogger.V(0).Info("No component detected")
 	return model.Component{}, errors.New("no component detected")
 
 }
@@ -262,7 +262,7 @@ func detectComponentByFolderAnalysis(root string, configLanguages []string, sett
 // detectComponentByAnalyzingConfigFile returns a Component if found.
 func detectComponentByAnalyzingConfigFile(file string, language string, settings model.DetectionSettings, ctx *context.Context) (model.Component, error) {
 	alizerLogger := utils.GetOrCreateLogger()
-	alizerLogger.V(1).Info("analyzing config file for singe language or family of languages")
+	alizerLogger.V(1).Info("Analyzing config file for singe language or family of languages")
 	if !isConfigurationValid(language, file) {
 		return model.Component{}, errors.New("language not valid for component detection")
 	}

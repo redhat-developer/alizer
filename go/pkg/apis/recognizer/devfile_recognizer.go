@@ -28,13 +28,13 @@ import (
 func SelectDevFilesFromTypes(path string, devFileTypes []model.DevFileType) ([]int, error) {
 	alizerLogger := utils.GetOrCreateLogger()
 	ctx := context.Background()
-	alizerLogger.V(0).Info("applying component detection to match a devfile")
+	alizerLogger.V(0).Info("Applying component detection to match a devfile")
 	devFilesIndexes := selectDevFilesFromComponentsDetectedInPath(path, devFileTypes)
 	if len(devFilesIndexes) > 0 {
-		alizerLogger.V(0).Info(fmt.Sprintf("found %d potential matches", len(devFilesIndexes)))
+		alizerLogger.V(0).Info(fmt.Sprintf("Found %d potential matches", len(devFilesIndexes)))
 		return devFilesIndexes, nil
 	}
-	alizerLogger.V(0).Info("no components found, applying language analysis for devfile matching")
+	alizerLogger.V(0).Info("No components found, applying language analysis for devfile matching")
 	languages, err := analyze(path, &ctx)
 	if err != nil {
 		return []int{}, err
@@ -79,12 +79,12 @@ func SelectDevFileFromTypes(path string, devFileTypes []model.DevFileType) (int,
 func SelectDevFilesUsingLanguagesFromTypes(languages []model.Language, devFileTypes []model.DevFileType) ([]int, error) {
 	var devFilesIndexes []int
 	alizerLogger := utils.GetOrCreateLogger()
-	alizerLogger.V(1).Info("searching potential matches from detected languages")
+	alizerLogger.V(1).Info("Searching potential matches from detected languages")
 	for _, language := range languages {
-		alizerLogger.V(1).Info(fmt.Sprintf("accessing %s language", language.Name))
+		alizerLogger.V(1).Info(fmt.Sprintf("Accessing %s language", language.Name))
 		devFiles, err := selectDevFilesByLanguage(language, devFileTypes)
 		if err == nil {
-			alizerLogger.V(1).Info(fmt.Sprintf("found %d potential matches for language %s", len(devFiles), language.Name))
+			alizerLogger.V(1).Info(fmt.Sprintf("Found %d potential matches for language %s", len(devFiles), language.Name))
 			devFilesIndexes = append(devFilesIndexes, devFiles...)
 		}
 	}
@@ -104,13 +104,13 @@ func SelectDevFileUsingLanguagesFromTypes(languages []model.Language, devFileTyp
 
 func SelectDevFilesFromRegistry(path string, url string) ([]model.DevFileType, error) {
 	alizerLogger := utils.GetOrCreateLogger()
-	alizerLogger.V(0).Info("starting devfile matching")
-	alizerLogger.V(1).Info(fmt.Sprintf("downloading devfiles from registry %s", url))
+	alizerLogger.V(0).Info("Starting devfile matching")
+	alizerLogger.V(1).Info(fmt.Sprintf("Downloading devfiles from registry %s", url))
 	devFileTypesFromRegistry, err := downloadDevFileTypesFromRegistry(url)
 	if err != nil {
 		return []model.DevFileType{}, err
 	}
-	alizerLogger.V(1).Info(fmt.Sprintf("fetched %d devfiles", len(devFileTypesFromRegistry)))
+	alizerLogger.V(1).Info(fmt.Sprintf("Fetched %d devfiles", len(devFileTypesFromRegistry)))
 	indexes, err := SelectDevFilesFromTypes(path, devFileTypesFromRegistry)
 	if err != nil {
 		return []model.DevFileType{}, err
