@@ -91,6 +91,15 @@ $ ./alizer analyze <path>
 $ ./alizer devfile <path>
 ```
 
+#### CLI Arguments
+
+##### log
+Sets the logging level of the CLI. The arg accepts only 3 values [`debug`, `info`, `warning`]. The default value is `warning` and the logging level is `ErrorLevel`. Example usage
+
+```
+$ ./alizer analyze --log debug <path>
+```
+
 #### Outputs
 Example of `analyze` command:
 ```json
