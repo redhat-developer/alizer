@@ -1,13 +1,8 @@
 # Alizer
 
-[release-svg]: https://img.shields.io/nexus/r/com.redhat.devtools.alizer/alizer?server=https%3A%2F%2Frepository.jboss.org%2Fnexus
-[nightly-svg]: https://img.shields.io/nexus/s/com.redhat.devtools.alizer/alizer?server=https%3A%2F%2Frepository.jboss.org%2Fnexus
-
+![Go](https://img.shields.io/badge/Go-1.19-blue)
 ![Build status](https://github.com/redhat-developer/alizer/actions/workflows/CI.yml/badge.svg)
-![Release][release-svg]
-![Nightly][nightly-svg]
-
-## Overview
+[![License](https://img.shields.io/badge/License-Apache%202.0-orange.svg)](./LICENSE)
 
 Alizer (which stands for Application Analyzer) is a utilily whose goal is to extract informations about an application source code.
 Such informations are:
@@ -21,7 +16,139 @@ detect components (the concept of component is taken from Odo and its definition
 
 ## Usage
 
-- [Go library & CLI](go/README.md#Usage)
+### CLI
+
+The Go CLI can be built with the below command:
+
+```bash
+# inside the go/ dir
+$ go build alizer.go
+```
+
+### CLI Arguments
+
+#### alizer analyze
+
+```shell
+./alizer analyze [OPTION]... [PATH]...
+```
+
+```sh
+  --log {debug|info|warning}    sets the logging level of the CLI. The arg accepts only 3 values [`debug`, `info`, `warning`]. The default value is `warning` and the logging level is `ErrorLevel`.
+```
+
+#### alizer component
+
+```shell
+./alizer component [OPTION]... [PATH]...
+```
+
+```sh
+  --port-detection {docker|compose|source}    port detection strategy to use when detecting a port. Currently supported strategies are 'docker', 'compose' and 'source'. You can pass more strategies at the same time. They will be executed in order. By default Alizer will execute docker, compose and source.
+```
+
+#### alizer devfile
+
+```shell
+./alizer devfile [OPTION]... [PATH]...
+```
+
+```sh
+  --registry strings    registry where to download the devfiles. Default value: https://registry.devfile.io
+```
+
+### Library Package
+
+#### Language Detection
+
+To analyze your source code with Alizer, just import it and use the recognizer:
+
+```go
+import "github.com/redhat-developer/alizer/pkg/apis/recognizer"
+
+languages, err := recognizer.Analyze("your/project/path")
+```
+
+#### Component Detection
+
+It detects all components which are found in the source tree where each component consists of:
+
+- _Name_: name of the component
+- _Path_: root of the component
+- _Languages_: list of languages belonging to the component ordered by their relevance.
+- _Ports_: list of ports used by the component
+
+```go
+import "github.com/redhat-developer/alizer/pkg/apis/recognizer"
+
+components, err := recognizer.DetectComponents("your/project/path")
+```
+
+For more info about name detection, see the [name detection](docs/public/name_detection.md) doc.
+
+For more info about port detection, see the [port detection](docs/public/port_detection.md) doc.
+
+#### Devfile Detection
+
+It selects a devfile from a list of devfiles (from a devfile registry or other storage) based on the information found in the source tree.
+
+```go
+import "github.com/redhat-developer/alizer/pkg/apis/recognizer"
+
+devfile, err := recognizer.SelectDevFileFromTypes("your/project/path", devfiles)
+```
+
+## Outputs
+
+Example of `analyze` command:
+
+```json
+[
+  {
+    "Name": "Go",
+    "Aliases": ["golang"],
+    "Weight": 94.72,
+    "Frameworks": [],
+    "Tools": ["1.18"],
+    "CanBeComponent": true
+  }
+]
+```
+
+Example of `component` command:
+
+```json
+[
+  {
+    "Name": "spring4mvc-jpa",
+    "Path": "path-of-the-component",
+    "Languages": [
+      {
+        "Name": "Java",
+        "Aliases": null,
+        "Weight": 100,
+        "Frameworks": ["Spring"],
+        "Tools": ["Maven"],
+        "CanBeComponent": true
+      }
+    ],
+    "Ports": null
+  }
+]
+```
+
+Example of `devfile` command:
+
+```json
+[
+  {
+    "Name": "nodejs",
+    "Language": "JavaScript",
+    "ProjectType": "Node.js",
+    "Tags": ["Node.js", "Express", "ubi8"]
+  }
+]
+```
 
 ## Contributing
 
@@ -41,7 +168,3 @@ The release process of `alizer` is very straightforward. You can create a new re
 If you discover an issue please file a bug and we will fix it as soon as possible.
 
 - File a bug in [GitHub Issues](https://github.com/redhat-developer/alizer/issues).
-
-## License
-
-EPL 2.0, See [LICENSE](LICENSE) for more information.
