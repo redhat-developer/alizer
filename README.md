@@ -160,7 +160,7 @@ For information on getting started, refer to the [CONTRIBUTING instructions](CON
 
 The release process of `alizer` is very straightforward. You can create a new release [here](https://github.com/redhat-developer/alizer/releases/new).
 
-- The _title_ of the release has to be the new version. `Alizer` follows the `{major}.{minor}.{bugfix}` format (e.g `0.1.0`)
+- The _title_ of the release has to be the new version. `Alizer` follows the `v{major}.{minor}.{bugfix}` format (e.g `v0.1.0`)
 - The _description_ of the release is optional. You may add a description if there were outstanding updates in the project, not mentioned in the issues or PRs of this release.
 
 ## Feedback & Questions
