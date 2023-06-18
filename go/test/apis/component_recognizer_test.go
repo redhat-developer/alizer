@@ -92,6 +92,10 @@ func TestComponentDetectionOnAngular(t *testing.T) {
 	isComponentsInProject(t, "angularjs", 1, "typescript", "angularjs")
 }
 
+func TestComponentDetectionOnExpress(t *testing.T) {
+	isComponentsInProject(t, "expressjs", 1, "javascript", "expressjs")
+}
+
 func TestComponentDetectionOnNextJs(t *testing.T) {
 	isComponentsInProject(t, "nextjs-app", 1, "typescript", "nextjs-app")
 }
