@@ -66,7 +66,10 @@ func (e ExpressDetector) DoPortsDetection(component *model.Component, ctx *conte
 
 func getPortGroup(content string, matchIndexes []int, portPlaceholder string) string {
 	contentBeforeMatch := content[0:matchIndexes[0]]
-	re := regexp.MustCompile(`(let|const|var)\s+` + portPlaceholder + `\s*=\s*([^;]*)`)
+	re, err := regexp.Compile(`(let|const|var)\s+` + portPlaceholder + `\s*=\s*([^;]*)`)
+	if err != nil {
+		return ""
+	}
 	return utils.FindPotentialPortGroup(re, contentBeforeMatch, 2)
 }
 

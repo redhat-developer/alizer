@@ -92,6 +92,10 @@ func TestComponentDetectionOnAngular(t *testing.T) {
 	isComponentsInProject(t, "angularjs", 1, "typescript", "angularjs")
 }
 
+func TestComponentDetectionOnExpress(t *testing.T) {
+	isComponentsInProject(t, "expressjs", 1, "javascript", "expressjs")
+}
+
 func TestComponentDetectionOnNextJs(t *testing.T) {
 	isComponentsInProject(t, "nextjs-app", 1, "typescript", "nextjs-app")
 }
@@ -178,7 +182,7 @@ func updateContent(filePath string, data []byte) error {
 
 func TestComponentDetectionMultiProjects(t *testing.T) {
 	components := getComponentsFromProject(t, "")
-	nComps := 32
+	nComps := 33
 	if len(components) != nComps {
 		t.Errorf("Expected " + strconv.Itoa(nComps) + " components but found " + strconv.Itoa(len(components)))
 	}

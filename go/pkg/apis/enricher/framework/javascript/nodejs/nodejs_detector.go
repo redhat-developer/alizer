@@ -47,7 +47,10 @@ func getPortFromScript(root string, getScript packageScriptFunc, regexes []strin
 	}
 
 	for _, regex := range regexes {
-		re := regexp.MustCompile(regex)
+		re, err := regexp.Compile(regex)
+		if err != nil {
+			continue
+		}
 		port := utils.FindPortSubmatch(re, getScript(packageJson), 1)
 		if port != -1 {
 			return port
