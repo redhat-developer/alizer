@@ -287,6 +287,10 @@ func TestPortDetectionJavascriptExpressEnvOROperatorWithEnvVar(t *testing.T) {
 	os.Unsetenv("TEST_EXPRESS_ENV")
 }
 
+func TestPortDetectionPHPLaravel(t *testing.T) {
+	testPortDetectionInProject(t, "projectLaravel", []int{9988})
+}
+
 func TestPortDetectionJavascriptExpressEnvOROperatorWithoutEnvVar(t *testing.T) {
 	testPortDetectionInProject(t, "projectExpressEnvLogicalOROperator", []int{8080})
 }
