@@ -14,6 +14,7 @@ package enricher
 import (
 	"context"
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
+	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
 type LaravelDetector struct{}
@@ -29,6 +30,12 @@ func (d LaravelDetector) DoFrameworkDetection(language *model.Language, config s
 	}
 }
 
+// DoPortsDetection for Laravel will check if there is any .env file inside the component
+// configuring the APP_PORT variable which is dedicated to port configuration.
 func (d LaravelDetector) DoPortsDetection(component *model.Component, ctx *context.Context) {
-	// Not implemented yet
+	regexes := []string{`APP_PORT=(\d*)`}
+	ports := utils.GetPortValuesFromEnvFile(component.Path, regexes)
+	if len(ports) > 0 {
+		component.Ports = ports
+	}
 }
