@@ -13,7 +13,8 @@ package enricher
 
 import (
 	"context"
-	"path/filepath"
+	"regexp"
+	"strings"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/utils"
@@ -33,21 +34,44 @@ func (o JBossEAPDetector) DoFrameworkDetection(language *model.Language, config 
 }
 
 func (o JBossEAPDetector) DoPortsDetection(component *model.Component, ctx *context.Context) {
-	var ports []int
-	jbossCli := filepath.Join(component.Path, "src/main/resources/bin/jboss-cli.xml")
-	jbossConfig, err := utils.GetJbossCLIFileContent(jbossCli)
+	ports := []int{}
+	portPlaceholder := ""
+	// Fetch the content of xml for this component
+	paths, err := utils.GetCachedFilePathsFromRoot(component.Path, ctx)
 	if err != nil {
 		return
 	}
-	// Check if default controller is declared
-	if port, err := utils.GetValidPort(jbossConfig.DefaultController.Port); err == nil {
-		ports = append(ports, port)
+	pomXML := utils.GetFile(&paths, "pom.xml")
+	pom, err := utils.GetPomFileContent(pomXML)
+	if err != nil {
+		return
 	}
-	for _, controller := range jbossConfig.Controllers.Controller {
-		if port, err := utils.GetValidPort(controller.Port); err == nil {
-			ports = append(ports, port)
+
+	re := regexp.MustCompile(`jboss.http.port=\d*`)
+	// Check for port configuration inside profiles
+	for _, profile := range pom.Profiles.Profile {
+		for _, plugin := range profile.Build.Plugins.Plugin {
+			if !(strings.Contains(plugin.ArtifactId, "eap-maven-plugin") && strings.Contains(plugin.GroupId, "org.jboss.eap.plugins")) {
+				continue
+			}
+			matchIndexesSlice := re.FindAllStringSubmatchIndex(plugin.Configuration.JavaOpts, -1)
+			for _, matchIndexes := range matchIndexesSlice {
+				if len(matchIndexes) > 1 {
+					tempPortPlaceholder := plugin.Configuration.JavaOpts[matchIndexes[0]:matchIndexes[1]]
+					portPlaceholder = strings.Replace(tempPortPlaceholder, `jboss.http.port=`, "", -1)
+				}
+			}
 		}
 	}
+
+	if portPlaceholder == "" {
+		return
+	}
+
+	if port, err := utils.GetValidPort(portPlaceholder); err == nil {
+		ports = append(ports, port)
+	}
+
 	if len(ports) > 0 {
 		component.Ports = ports
 		return
