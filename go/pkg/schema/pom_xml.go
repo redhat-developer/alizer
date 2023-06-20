@@ -27,10 +27,13 @@ type Pom struct {
 	Build struct {
 		Plugins struct {
 			Plugin []struct {
-				GroupId    string `xml:"groupId"`
-				ArtifactId string `xml:"artifactId"`
-				Version    string `xml:"version"`
-				Scope      string `xml:"scope"`
+				GroupId       string `xml:"groupId"`
+				ArtifactId    string `xml:"artifactId"`
+				Version       string `xml:"version"`
+				Scope         string `xml:"scope"`
+				Configuration struct {
+					JavaOpts string `xml:"javaOpts"`
+				} `xml:"configuration"`
 			} `xml:"plugin"`
 		} `xml:"plugins"`
 	} `xml:"build,omitempty"`
@@ -40,10 +43,13 @@ type Pom struct {
 			Build struct {
 				Plugins struct {
 					Plugin []struct {
-						GroupId    string `xml:"groupId"`
-						ArtifactId string `xml:"artifactId"`
-						Version    string `xml:"version"`
-						Scope      string `xml:"scope"`
+						GroupId       string `xml:"groupId"`
+						ArtifactId    string `xml:"artifactId"`
+						Version       string `xml:"version"`
+						Scope         string `xml:"scope"`
+						Configuration struct {
+							JavaOpts string `xml:"javaOpts"`
+						} `xml:"configuration"`
 					} `xml:"plugin"`
 				} `xml:"plugins"`
 			} `xml:"build,omitempty"`
