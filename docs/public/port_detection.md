@@ -287,6 +287,8 @@ Alizer searches inside the `pom.xml` file to find any configuration inside the p
 <configuration>
     ...
     <javaOpts>-Djboss.https.port=8080</javaOpts>
+    # or http
+    <javaOpts>-Djboss.http.port=8080</javaOpts>
     ...
 </configuration>
 ```
