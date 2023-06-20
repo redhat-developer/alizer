@@ -270,7 +270,7 @@ func TestPortDetectionJavaMicronaut(t *testing.T) {
 }
 
 func TestPortDetectionJavaWildfly(t *testing.T) {
-	testPortDetectionInProject(t, "projectWildfly", []int{1234})
+	testPortDetectionInProject(t, "projectWildfly", []int{8085})
 }
 
 func TestPortDetectionJavaQuarkus(t *testing.T) {

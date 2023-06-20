@@ -190,6 +190,7 @@
                         <artifactId>wildfly-maven-plugin</artifactId>
                         <version>${version.wildfly.maven.plugin}</version>
                         <configuration>
+                            <javaOpts>-Djboss.https.port=8085</javaOpts>
                             <feature-packs>
                                 <feature-pack>
                                     <location>org.wildfly:wildfly-galleon-pack:${version.server}</location>
