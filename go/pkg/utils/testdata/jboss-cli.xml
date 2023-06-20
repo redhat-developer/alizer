@@ -1,7 +1,0 @@
-<jboss-cli>
-    <default-controller>
-        <protocol>http-remoting</protocol>
-        <host>localhost</host>
-        <port>9990</port>
-    </default-controller>
-</jboss-cli>
