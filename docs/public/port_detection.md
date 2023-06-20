@@ -280,6 +280,17 @@ exports = {
 }  
 ```
 
+#### Wildfly
+
+Alizer searches inside the `pom.xml` file to find any configuration inside the profiles for plugin `wildfly-maven-plugin`:
+```xml
+<configuration>
+    ...
+    <javaOpts>-Djboss.https.port=8080</javaOpts>
+    ...
+</configuration>
+```
+
 ### Python Frameworks
 
 #### Django
