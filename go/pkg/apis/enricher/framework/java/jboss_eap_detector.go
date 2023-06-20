@@ -47,7 +47,7 @@ func (o JBossEAPDetector) DoPortsDetection(component *model.Component, ctx *cont
 		return
 	}
 
-	re := regexp.MustCompile(`jboss.http.port=\d*`)
+	re := regexp.MustCompile(`jboss.https?.port=\d*`)
 	// Check for port configuration inside profiles
 	for _, profile := range pom.Profiles.Profile {
 		for _, plugin := range profile.Build.Plugins.Plugin {
@@ -58,7 +58,9 @@ func (o JBossEAPDetector) DoPortsDetection(component *model.Component, ctx *cont
 			for _, matchIndexes := range matchIndexesSlice {
 				if len(matchIndexes) > 1 {
 					tempPortPlaceholder := plugin.Configuration.JavaOpts[matchIndexes[0]:matchIndexes[1]]
-					portPlaceholder = strings.Replace(tempPortPlaceholder, `jboss.http.port=`, "", -1)
+					for _, httpArg := range []string{"jboss.http.port=", "jboss.https.port="} {
+						portPlaceholder = strings.Replace(tempPortPlaceholder, httpArg, "", -1)
+					}
 				}
 			}
 		}
