@@ -12,8 +12,6 @@
 package enricher
 
 import (
-	"strings"
-
 	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
@@ -31,28 +29,4 @@ func hasFramework(configFile, groupId, artifactId string) (bool, error) {
 	} else {
 		return utils.IsTagInPomXMLFile(configFile, groupId)
 	}
-}
-
-// hasPackageScripts checks the pom.xml for any packaging scripts under profiles section. Returns
-// a bolean whether this script was found or not and the relative path of this file
-func hasPackageScripts(pomXML, groupId, artifactId string) (hasPkgScript bool, filepath string) {
-	pom, err := utils.GetPomFileContent(pomXML)
-	if err != nil {
-		return false, ""
-	}
-	for _, profile := range pom.Profiles.Profile {
-		for _, plugin := range profile.Build.Plugins.Plugin {
-			if !(strings.Contains(plugin.ArtifactId, artifactId) && strings.Contains(plugin.GroupId, groupId)) {
-				continue
-			}
-			for _, packagingScript := range plugin.Configuration.PackagingScripts.PackagingScript {
-				for _, script := range packagingScript.Scripts.Script {
-					if strings.Contains(script, "${basedir}/") {
-						return true, strings.ReplaceAll(script, "${basedir}/", "")
-					}
-				}
-			}
-		}
-	}
-	return false, ""
 }
