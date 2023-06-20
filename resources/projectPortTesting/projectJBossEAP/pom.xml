@@ -218,6 +218,7 @@
                                     <artifactId>eap-8.0-beta</artifactId>
                                 </channel>
                             </channels>
+                            <javaOpts>-Djboss.http.port=8380,whatever</javaOpts>
                             <feature-packs>
                                 <feature-pack>
                                     <location>org.jboss.eap:wildfly-ee-galleon-pack</location>
