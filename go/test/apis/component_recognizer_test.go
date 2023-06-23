@@ -273,6 +273,10 @@ func TestPortDetectionJavaQuarkus(t *testing.T) {
 	testPortDetectionInProject(t, "projectQuarkus", []int{9898})
 }
 
+func TestPortDetectionJavaJBossEAP(t *testing.T) {
+	testPortDetectionInProject(t, "projectJBossEAP", []int{8380})
+}
+
 func TestPortDetectionJavaVertxHttpPort(t *testing.T) {
 	testPortDetectionInProject(t, "projectVertxHttpPort", []int{2321})
 }

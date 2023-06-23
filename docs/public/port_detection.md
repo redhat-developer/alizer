@@ -163,6 +163,17 @@ Alizer searches for any `json` file in `src/main/conf` folder and verify if a po
 }
 ```
 
+#### JBoss EAP
+
+Alizer searches inside the `pom.xml` file to find any configuration inside the profiles for plugin `eap-maven-plugin`:
+```xml
+<configuration>
+    ...
+    <javaOpts>-Djboss.https.port=8080</javaOpts>
+    ...
+</configuration>
+```
+
 ### Javascript Frameworks
 
 ### Angular

@@ -2,13 +2,14 @@ package utils
 
 import (
 	"context"
-	"github.com/redhat-developer/alizer/go/pkg/apis/model"
-	"github.com/redhat-developer/alizer/go/pkg/schema"
-	"github.com/stretchr/testify/assert"
 	"os"
 	"path/filepath"
 	"regexp"
 	"testing"
+
+	"github.com/redhat-developer/alizer/go/pkg/apis/model"
+	"github.com/redhat-developer/alizer/go/pkg/schema"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetFilesByRegex(t *testing.T) {
