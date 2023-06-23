@@ -92,24 +92,24 @@ func IsTagInFile(file string, tag string) (bool, error) {
 }
 
 // IsTagInPomXMLFileArtifactId checks if a pom file contains the artifactId.
-func IsTagInPomXMLFileArtifactId(pomFilePath, groupdId, artifactId string) (bool, error) {
+func IsTagInPomXMLFileArtifactId(pomFilePath, groupId, artifactId string) (bool, error) {
 	pom, err := GetPomFileContent(pomFilePath)
 	if err != nil {
 		return false, err
 	}
 	for _, dependency := range pom.Dependencies.Dependency {
-		if strings.Contains(dependency.ArtifactId, artifactId) && strings.Contains(dependency.GroupId, groupdId) {
+		if strings.Contains(dependency.ArtifactId, artifactId) && strings.Contains(dependency.GroupId, groupId) {
 			return true, nil
 		}
 	}
 	for _, plugin := range pom.Build.Plugins.Plugin {
-		if strings.Contains(plugin.ArtifactId, artifactId) && strings.Contains(plugin.GroupId, groupdId) {
+		if strings.Contains(plugin.ArtifactId, artifactId) && strings.Contains(plugin.GroupId, groupId) {
 			return true, nil
 		}
 	}
 	for _, profile := range pom.Profiles.Profile {
 		for _, plugin := range profile.Build.Plugins.Plugin {
-			if strings.Contains(plugin.ArtifactId, artifactId) && strings.Contains(plugin.GroupId, groupdId) {
+			if strings.Contains(plugin.ArtifactId, artifactId) && strings.Contains(plugin.GroupId, groupId) {
 				return true, nil
 			}
 		}

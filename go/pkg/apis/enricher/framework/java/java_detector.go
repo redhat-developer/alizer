@@ -12,6 +12,9 @@
 package enricher
 
 import (
+	"regexp"
+	"strings"
+
 	"github.com/redhat-developer/alizer/go/pkg/utils"
 )
 
@@ -29,4 +32,34 @@ func hasFramework(configFile, groupId, artifactId string) (bool, error) {
 	} else {
 		return utils.IsTagInPomXMLFile(configFile, groupId)
 	}
+}
+
+// GetPortsForJBossFrameworks tries to detect any port information inside javaOpts of configuration
+// of a given profiles plugin
+func GetPortsForJBossFrameworks(pomFilePath, pluginArtifactId, pluginGroupId string) string {
+	portPlaceholder := ""
+	pom, err := utils.GetPomFileContent(pomFilePath)
+	if err != nil {
+		return portPlaceholder
+	}
+
+	re := regexp.MustCompile(`jboss.https?.port=\d*`)
+	// Check for port configuration inside profiles
+	for _, profile := range pom.Profiles.Profile {
+		for _, plugin := range profile.Build.Plugins.Plugin {
+			if !(strings.Contains(plugin.ArtifactId, pluginArtifactId) && strings.Contains(plugin.GroupId, pluginGroupId)) {
+				continue
+			}
+			matchIndexesSlice := re.FindAllStringSubmatchIndex(plugin.Configuration.JavaOpts, -1)
+			for _, matchIndexes := range matchIndexesSlice {
+				if len(matchIndexes) > 1 {
+					portPlaceholder = plugin.Configuration.JavaOpts[matchIndexes[0]:matchIndexes[1]]
+					for _, httpArg := range []string{"jboss.http.port=", "jboss.https.port="} {
+						portPlaceholder = strings.Replace(portPlaceholder, httpArg, "", -1)
+					}
+				}
+			}
+		}
+	}
+	return portPlaceholder
 }

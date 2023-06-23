@@ -269,6 +269,10 @@ func TestPortDetectionJavaMicronaut(t *testing.T) {
 	testPortDetectionInProject(t, "projectMicronaut", []int{4444})
 }
 
+func TestPortDetectionJavaWildfly(t *testing.T) {
+	testPortDetectionInProject(t, "projectWildfly", []int{8085})
+}
+
 func TestPortDetectionJavaQuarkus(t *testing.T) {
 	testPortDetectionInProject(t, "projectQuarkus", []int{9898})
 }
