@@ -57,9 +57,9 @@ func (o JBossEAPDetector) DoPortsDetection(component *model.Component, ctx *cont
 			matchIndexesSlice := re.FindAllStringSubmatchIndex(plugin.Configuration.JavaOpts, -1)
 			for _, matchIndexes := range matchIndexesSlice {
 				if len(matchIndexes) > 1 {
-					tempPortPlaceholder := plugin.Configuration.JavaOpts[matchIndexes[0]:matchIndexes[1]]
+					portPlaceholder = plugin.Configuration.JavaOpts[matchIndexes[0]:matchIndexes[1]]
 					for _, httpArg := range []string{"jboss.http.port=", "jboss.https.port="} {
-						portPlaceholder = strings.Replace(tempPortPlaceholder, httpArg, "", -1)
+						portPlaceholder = strings.Replace(portPlaceholder, httpArg, "", -1)
 					}
 				}
 			}
