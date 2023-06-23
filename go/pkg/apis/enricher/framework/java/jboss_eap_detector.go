@@ -13,8 +13,6 @@ package enricher
 
 import (
 	"context"
-	"regexp"
-	"strings"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/utils"
@@ -35,37 +33,13 @@ func (o JBossEAPDetector) DoFrameworkDetection(language *model.Language, config 
 
 func (o JBossEAPDetector) DoPortsDetection(component *model.Component, ctx *context.Context) {
 	ports := []int{}
-	portPlaceholder := ""
 	// Fetch the content of xml for this component
 	paths, err := utils.GetCachedFilePathsFromRoot(component.Path, ctx)
 	if err != nil {
 		return
 	}
 	pomXML := utils.GetFile(&paths, "pom.xml")
-	pom, err := utils.GetPomFileContent(pomXML)
-	if err != nil {
-		return
-	}
-
-	re := regexp.MustCompile(`jboss.https?.port=\d*`)
-	// Check for port configuration inside profiles
-	for _, profile := range pom.Profiles.Profile {
-		for _, plugin := range profile.Build.Plugins.Plugin {
-			if !(strings.Contains(plugin.ArtifactId, "eap-maven-plugin") && strings.Contains(plugin.GroupId, "org.jboss.eap.plugins")) {
-				continue
-			}
-			matchIndexesSlice := re.FindAllStringSubmatchIndex(plugin.Configuration.JavaOpts, -1)
-			for _, matchIndexes := range matchIndexesSlice {
-				if len(matchIndexes) > 1 {
-					portPlaceholder = plugin.Configuration.JavaOpts[matchIndexes[0]:matchIndexes[1]]
-					for _, httpArg := range []string{"jboss.http.port=", "jboss.https.port="} {
-						portPlaceholder = strings.Replace(portPlaceholder, httpArg, "", -1)
-					}
-				}
-			}
-		}
-	}
-
+	portPlaceholder := GetPortsForJBossFrameworks(pomXML, "eap-maven-plugin", "org.jboss.eap.plugins")
 	if portPlaceholder == "" {
 		return
 	}
