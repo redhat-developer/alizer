@@ -54,8 +54,11 @@ As a result all detectors will use the same process to read specific files for p
 ### Process Overview
 The final process for each detector will be:
 
+`Get port detection paths` > `Read port detection files` > `Apply detection logic for detector` > `Add detected ports to component`
+
 ## Implement Combined and No Strategy Options
 Currently, upon `component` command we have the `port-detection` arg which specifies the port-detection strategy
+
 
 ### Current State
 On the current state as we allow only three values for this arg:
