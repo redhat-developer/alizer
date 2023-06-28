@@ -163,6 +163,18 @@ The release process of `alizer` is very straightforward. You can create a new re
 - The _title_ of the release has to be the new version. `Alizer` follows the `v{major}.{minor}.{bugfix}` format (e.g `v0.1.0`)
 - The _description_ of the release is optional. You may add a description if there were outstanding updates in the project, not mentioned in the issues or PRs of this release.
 
+### Release Binaries
+For each release a group of binary files is generated. More detailed we have the following types:
+- `linux/amd64`
+- `linux/ppc65le`
+- `linux/s390x`
+- `windows/amd64`
+- `darwin/amd64`
+
+In order to download a binary file:
+* Go to the release you are interested for `https://github.com/thepetk/alizer/releases/tag/<release-tag>`
+* In the **Assets** section you will see the list of generated binaries for the release.
+
 ## Feedback & Questions
 
 If you discover an issue please file a bug and we will fix it as soon as possible.
