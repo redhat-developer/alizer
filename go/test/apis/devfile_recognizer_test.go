@@ -11,10 +11,12 @@ package recognizer
  * Red Hat, Inc.
  ******************************************************************************/
 import (
+	"fmt"
 	"testing"
 
 	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDetectQuarkusDevfile(t *testing.T) {
@@ -131,6 +133,100 @@ func TestDetectSpringDevfile(t *testing.T) {
 
 func TestDetectLaravelDevfile(t *testing.T) {
 	detectDevFiles(t, "laravel", []string{"php-laravel"})
+}
+
+func TestGetUrlWithVersions(t *testing.T) {
+	tests := []struct {
+		name          string
+		minVersion    string
+		maxVersion    string
+		testUrl       string
+		expectedError error
+		expectedUrl   string
+	}{
+		{
+
+			name:          "Case 1: Url with valid min and max versions",
+			minVersion:    "2.0.0",
+			maxVersion:    "2.2.0",
+			testUrl:       "http://localhost:5000/",
+			expectedError: nil,
+		},
+		{
+			name:          "Case 2: Url with valid min version",
+			minVersion:    "2.0.0",
+			maxVersion:    "",
+			testUrl:       "http://localhost:5000",
+			expectedError: nil,
+		},
+		{
+			name:          "Case 3: Url with valid max version",
+			minVersion:    "",
+			maxVersion:    "2.2.0",
+			testUrl:       "http://localhost:5000/",
+			expectedError: nil,
+		},
+		{
+			name:          "Case 4: Url with max version lower than min version",
+			minVersion:    "2.2.0",
+			maxVersion:    "2.1.0",
+			testUrl:       "http://localhost:5000/v2index",
+			expectedError: fmt.Errorf("max-version cannot be lower than min-version"),
+		},
+		{
+			name:          "Case 5: Url with max version lower than minimum allowed version",
+			minVersion:    "0.1.0",
+			maxVersion:    "1.1.0",
+			testUrl:       "http://localhost:5000/v2index",
+			expectedError: fmt.Errorf("min and/or max version are lower than the minimum allowed version (2.0.0)"),
+		},
+		{
+			name:          "Case 6: Url with max version lower than minimum allowed version & minVersion",
+			minVersion:    "2.1.0",
+			maxVersion:    "1.1.0",
+			testUrl:       "http://localhost:5000/v2index",
+			expectedError: fmt.Errorf("max-version cannot be lower than min-version"),
+		},
+		{
+			name:          "Case 7: Url with min version lower than minimum allowed version",
+			minVersion:    "1.1.0",
+			maxVersion:    "",
+			testUrl:       "http://localhost:5000/v2index",
+			expectedError: fmt.Errorf("min version is lower than the minimum allowed version (2.0.0)"),
+		},
+		{
+			name:          "Case 8: Url with max version lower than minimum allowed version",
+			minVersion:    "",
+			maxVersion:    "1.1.0",
+			testUrl:       "http://localhost:5000/v2index",
+			expectedError: fmt.Errorf("max version is lower than the minimum allowed version (2.0.0)"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := recognizer.GetUrlWithVersions(tt.testUrl, tt.minVersion, tt.maxVersion)
+			if err != nil {
+				assert.EqualValues(t, tt.expectedError, err)
+			} else {
+				assert.EqualValues(t, getExceptedVersionsUrl(tt.testUrl, tt.minVersion, tt.maxVersion, tt.expectedError), result)
+			}
+		})
+	}
+}
+
+func getExceptedVersionsUrl(url, minVersion, maxVersion string, err error) string {
+	if err != nil {
+		return ""
+	} else if minVersion != "" && maxVersion != "" {
+		return fmt.Sprintf("%s?minSchemaVersion=%s&maxSchemaVersion=%s", url, minVersion, maxVersion)
+	} else if minVersion != "" {
+		return fmt.Sprintf("%s?minSchemaVersion=%s", url, minVersion)
+	} else if maxVersion != "" {
+		return fmt.Sprintf("%s?maxSchemaVersion=%s", url, maxVersion)
+	} else {
+		return url
+	}
 }
 
 func detectDevFiles(t *testing.T, projectName string, devFilesName []string) {
