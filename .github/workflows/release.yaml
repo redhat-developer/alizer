@@ -1,0 +1,54 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+name: Build Release
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: 'ubuntu-latest'
+    strategy:
+      matrix:
+        goosarch:
+          - 'darwin/amd64'
+          - 'linux/amd64'
+          - 'linux/ppc64le'
+          - 'linux/s390x'
+          - 'windows/amd64'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.19.5'
+      - name: Get OS and arch info
+        run: |
+          GOOSARCH=${{matrix.goosarch}}
+          GOOS=${GOOSARCH%/*}
+          GOARCH=${GOOSARCH#*/}
+          BINARY_NAME=alizer-$GOOS-$GOARCH
+          echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
+          echo "GOOS=$GOOS" >> $GITHUB_ENV
+          echo "GOARCH=$GOARCH" >> $GITHUB_ENV
+      - name: Build
+        run: |
+          cd go/
+          go build -o "$BINARY_NAME" -v
+      - name: Release with Notes and Binaries
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: false
+          files: go/${{env.BINARY_NAME}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
