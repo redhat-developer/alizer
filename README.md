@@ -45,6 +45,7 @@ $ go build alizer.go
 
 ```sh
   --port-detection {docker|compose|source}    port detection strategy to use when detecting a port. Currently supported strategies are 'docker', 'compose' and 'source'. You can pass more strategies at the same time. They will be executed in order. By default Alizer will execute docker, compose and source.
+  --log {debug|info|warning}    sets the logging level of the CLI. The arg accepts only 3 values [`debug`, `info`, `warning`]. The default value is `warning` and the logging level is `ErrorLevel`.
 ```
 
 #### alizer devfile
@@ -55,6 +56,9 @@ $ go build alizer.go
 
 ```sh
   --registry strings    registry where to download the devfiles. Default value: https://registry.devfile.io
+  --log {debug|info|warning}    sets the logging level of the CLI. The arg accepts only 3 values [`debug`, `info`, `warning`]. The default value is `warning` and the logging level is `ErrorLevel`.
+  --min-version strings the minimum SchemaVersion of the matched devfile(s). The minimum accepted value is `2.0.0`, otherwise an error is returned.
+  --max-version strings the maximum SchemaVersion of the matched devfile(s). The minimum accepted value is `2.0.0`, otherwise an error is returned.
 ```
 
 ### Library Package
