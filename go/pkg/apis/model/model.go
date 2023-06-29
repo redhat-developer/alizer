@@ -56,6 +56,11 @@ type DevFileType struct {
 	Versions    []Version
 }
 
+type DevfileFilter struct {
+	MinVersion string
+	MaxVersion string
+}
+
 type ApplicationFileInfo struct {
 	Dir  string
 	File string
