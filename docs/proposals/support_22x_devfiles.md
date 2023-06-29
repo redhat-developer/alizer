@@ -185,7 +185,7 @@ filter := map[string]interface{} {
         "max-version": "2.1.0",
         "min-version": "2.0.0",
 }
-devfiles, err := recognizer.SelectDevFilesFromTypesWithArgs("myproject", devfiles, filter)
+devfiles, err := recognizer.MatchDevfiles("myproject", devfiles, filter)
 ```
 
 ### model.DevfileType
