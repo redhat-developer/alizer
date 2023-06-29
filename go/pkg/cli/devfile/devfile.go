@@ -1,6 +1,7 @@
 package devfile
 
 import (
+	"github.com/redhat-developer/alizer/go/pkg/apis/model"
 	"github.com/redhat-developer/alizer/go/pkg/apis/recognizer"
 	"github.com/redhat-developer/alizer/go/pkg/utils"
 	"github.com/spf13/cobra"
@@ -17,8 +18,8 @@ func NewCmdDevfile() *cobra.Command {
 		Run:   doSelectDevfile,
 	}
 	devfileCmd.Flags().StringVar(&logLevel, "log", "", "log level for alizer. Default value: error. Accepted values: [debug, info, warning]")
-	devfileCmd.Flags().StringVar(&minVersion, "min-version", "", "minimum version of devfile schemaVersion")
-	devfileCmd.Flags().StringVar(&maxVersion, "max-version", "", "maximum version of devfile schemaVersion")
+	devfileCmd.Flags().StringVar(&minVersion, "min-version", "", "minimum version of devfile schemaVersion. Minimum allowed version: 2.0.0")
+	devfileCmd.Flags().StringVar(&maxVersion, "max-version", "", "maximum version of devfile schemaVersion. Minimum allowed version: 2.0.0")
 	devfileCmd.Flags().StringVarP(&registry, "registry", "r", "", "registry where to download the devfiles. Default value: https://registry.devfile.io")
 	return devfileCmd
 }
@@ -36,5 +37,9 @@ func doSelectDevfile(cmd *cobra.Command, args []string) {
 		utils.PrintWrongLoggingLevelMessage(cmd.Name())
 		return
 	}
-	utils.PrintPrettifyOutput(recognizer.MatchDevfiles(args[0], registry, minVersion, maxVersion))
+	filter := model.DevfileFilter{
+		MinVersion: minVersion,
+		MaxVersion: maxVersion,
+	}
+	utils.PrintPrettifyOutput(recognizer.MatchDevfiles(args[0], registry, filter))
 }
