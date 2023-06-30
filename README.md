@@ -1,18 +1,10 @@
 # Alizer
 
-![Go](https://img.shields.io/badge/Go-1.19-blue)
-![Build status](https://github.com/redhat-developer/alizer/actions/workflows/CI.yml/badge.svg)
-[![License](https://img.shields.io/badge/License-Apache%202.0-orange.svg)](./LICENSE)
-
 Alizer (which stands for Application Analyzer) is a utilily whose goal is to extract informations about an application source code.
-Such informations are:
 
-- Programming languages.
-- Frameworks.
-- Tools used to build the application.
+## 🚨 DEPRECATION WARNING
 
-Additionaly, Alizer can also select one devfile (cloud workspace file) from a list of available devfiles and/or
-detect components (the concept of component is taken from Odo and its definition can be read on [odo.dev](https://odo.dev/docs/getting-started/basics/#component)).
+This repository is deprecated and will be archived. Active developement of this tool has been moved to [devfile/alizer](https://github.com/devfile/alizer).
 
 ## Usage
 
@@ -164,7 +156,9 @@ The release process of `alizer` is very straightforward. You can create a new re
 - The _description_ of the release is optional. You may add a description if there were outstanding updates in the project, not mentioned in the issues or PRs of this release.
 
 ### Release Binaries
+
 For each release a group of binary files is generated. More detailed we have the following types:
+
 - `linux/amd64`
 - `linux/ppc65le`
 - `linux/s390x`
@@ -172,8 +166,9 @@ For each release a group of binary files is generated. More detailed we have the
 - `darwin/amd64`
 
 In order to download a binary file:
-* Go to the release you are interested for `https://github.com/thepetk/alizer/releases/tag/<release-tag>`
-* In the **Assets** section you will see the list of generated binaries for the release.
+
+- Go to the release you are interested for `https://github.com/thepetk/alizer/releases/tag/<release-tag>`
+- In the **Assets** section you will see the list of generated binaries for the release.
 
 ## Feedback & Questions
 
