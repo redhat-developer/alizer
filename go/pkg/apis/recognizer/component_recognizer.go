@@ -194,6 +194,7 @@ func DetectComponentsFromFilesList(files []string, settings model.DetectionSetti
 	alizerLogger.V(0).Info(fmt.Sprintf("Detecting components for %d fetched file paths", len(files)))
 	configurationPerLanguage := langfiles.Get().GetConfigurationPerLanguageMapping()
 	var components []model.Component
+	hasFrameworks := false
 	for _, file := range files {
 		alizerLogger.V(1).Info(fmt.Sprintf("Accessing %s", file))
 		languages, err := getLanguagesByConfigurationFile(configurationPerLanguage, file)
@@ -212,6 +213,28 @@ func DetectComponentsFromFilesList(files []string, settings model.DetectionSetti
 		}
 		alizerLogger.V(0).Info(fmt.Sprintf("Component %s found", component.Name))
 		components = appendIfMissing(components, component)
+		if len(component.Languages) > 0 {
+			if mainLang := component.Languages[0]; len(mainLang.Frameworks) > 0 {
+				hasFrameworks = true
+			}
+		}
+	}
+	if hasFrameworks {
+		var newComponents []model.Component
+		for i := range components {
+			component := components[i]
+			if len(component.Languages) > 0 {
+				if mainLang := component.Languages[0]; mainLang.FrameworkPreferred {
+					if len(mainLang.Frameworks) == 0 {
+						//skip this component, as the language is framework based
+						//and this module does not actually have a framework
+						continue
+					}
+				}
+			}
+			newComponents = append(newComponents, component)
+		}
+		components = newComponents
 	}
 	return components
 }

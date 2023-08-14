@@ -51,11 +51,14 @@ func (j JavaEnricher) DoEnrichLanguage(language *model.Language, files *[]string
 	if gradle != "" {
 		language.Tools = []string{"Gradle"}
 		detectJavaFrameworks(language, gradle)
+		language.FrameworkPreferred = true
 	} else if maven != "" {
 		language.Tools = []string{"Maven"}
 		detectJavaFrameworks(language, maven)
+		language.FrameworkPreferred = true
 	} else if ant != "" {
 		language.Tools = []string{"Ant"}
+		language.FrameworkPreferred = true
 	}
 }
 

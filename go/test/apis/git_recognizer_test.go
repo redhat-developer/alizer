@@ -45,6 +45,7 @@ func TestExternalRepos(t *testing.T) {
 		result := checkoutAndTest(root, properties)
 		if len(result.errors) > 0 {
 			for _, err := range result.errors {
+				println("Failed on project " + properties.Directory)
 				t.Error(err)
 			}
 			t.Fatal("TestExternalRepos failed")

@@ -45,7 +45,10 @@ func (q QuarkusDetector) GetSupportedFrameworks() []string {
 
 // DoFrameworkDetection uses the groupId to check for the framework name
 func (q QuarkusDetector) DoFrameworkDetection(language *model.Language, config string) {
-	if hasFwk, _ := hasFramework(config, "io.quarkus", ""); hasFwk {
+	//note that we don't specify the group id because this can sometimes be a property substitution
+	if hasFwk, _ := hasFramework(config, "", "quarkus-maven-plugin"); hasFwk {
+		language.Frameworks = append(language.Frameworks, "Quarkus")
+	} else if hasFwk, _ = hasFramework(config, "", "io.quarkus.gradle.plugin"); hasFwk {
 		language.Frameworks = append(language.Frameworks, "Quarkus")
 	}
 }
